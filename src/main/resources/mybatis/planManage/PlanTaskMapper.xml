@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.planManage.dao.PlanTaskDao">
+
+	<sql id="planTaskColumns">
+		a.`id` As id,
+		a.`sort_no` As sortNo,
+		a.`plan_main_id` As planMainId,
+		a.`name` As name,
+		a.`content` As content,
+		a.`liability_man` As liabilityMan,
+		a.`mobile` As mobile,
+		a.`create_by` As createBy,
+		a.`create_date` As createDate,
+		a.`update_by` As updateBy ,
+		a.`update_date` As updateDate,
+		a.`type` As type,
+		a.`liability_id` As liabilityId
+	</sql>
+	
+	<sql id="planTaskJoins">
+		LEFT JOIN plan_main planMain ON planMain.id = a.plan_main_id
+	</sql>
+	
+	<select id="get" resultType="com.bootdo.planManage.domain.PlanTaskDO">
+		select  
+			<include refid="planTaskColumns"/>
+		from plan_task a
+		<include refid="planTaskJoins"/>
+		where a.id = #{value}
+	</select>
+	
+	<select id="getByPlanId" resultType="com.bootdo.planManage.domain.PlanTaskDO">
+		select  
+			<include refid="planTaskColumns"/>
+		from plan_task a
+		<include refid="planTaskJoins"/>
+		where a.plan_main_id = #{value}
+		order by a.sort_no ASC
+	</select>
+
+	<select id="list" resultType="com.bootdo.planManage.domain.PlanTaskDO">
+		select 
+			<include refid="planTaskColumns"/>
+		from plan_task a
+		<include refid="planTaskJoins"/>
+        <where>  
+		  		  <if test="id != null and id != ''"> and a.id = #{id} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and a.sort_no = #{sortNo} </if>
+		  		  <if test="planMainId != null and planMainId != ''"> and a.plan_main_id = #{planMainId} </if>
+		  		  <if test="name != null and name != ''"> and a.name = #{name} </if>
+		  		  <if test="content != null and content != ''"> and a.content = #{content} </if>
+		  		  <if test="liabilityMan != null and liabilityMan != ''"> and a.liability_man = #{liabilityMan} </if>
+		  		  <if test="mobile != null and mobile != ''"> and a.mobile = #{mobile} </if>
+		  		  <if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+		  		  <if test="type != null and type != ''"> and update_date = #{type} </if>
+		  		  <if test="liabilityId != null and liabilityId != ''"> and liability_id = #{liabilityId} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from plan_task
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="planMainId != null and planMainId != ''"> and plan_main_id = #{planMainId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="liabilityMan != null and liabilityMan != ''"> and liability_man = #{liabilityMan} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="type != null and type != ''"> and update_date = #{type} </if>
+		  		  <if test="liabilityId != null and liabilityId != ''"> and liability_id = #{liabilityId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.planManage.domain.PlanTaskDO"  useGeneratedKeys="true" keyProperty="id" >
+		insert into plan_task
+		(
+			`id`, 
+			`sort_no`, 
+			`plan_main_id`, 
+			`name`, 
+			`content`, 
+			`mobile`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`,
+			`type`,
+			`liability_id`,
+			`task_type`
+		)
+		values
+		(
+			#{id}, 
+			#{sortNo}, 
+			#{planMainId}, 
+			#{name}, 
+			#{content}, 
+			#{mobile}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{type}, 
+			#{liabilityId},
+			#{taskType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.planManage.domain.PlanTaskDO">
+		update plan_task 
+		<set>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="planMainId != null">`plan_main_id` = #{planMainId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate},</if>
+			<if test="type != null">`type` = #{type},</if>
+			<if test="liabilityId != null">`liability_id` = #{liabilityId}</if>
+			 <if test="taskType != null">`task_type` = #{taskType} </if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from plan_task where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from plan_task where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="deleteByPlanMainId">
+		delete from plan_task where plan_main_id = #{value}
+	</delete>
+
+	<delete id="deleteByNotInTaskIds">
+		delete from plan_task
+		where plan_main_id = #{planMainId} and id not in
+		<foreach item="id" collection="planTaskIds" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

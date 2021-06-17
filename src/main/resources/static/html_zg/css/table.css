@@ -1,0 +1,334 @@
+
+
+.tc-f {
+	width: 100%;
+}
+
+.tc th {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.tc th ,
+.tc td ,
+.tc input ,
+.tc select ,
+.tc textarea {
+	font-size: 13px;
+	color: #fff;
+}
+
+/*tc-b*/
+
+.tc-b {
+	border-right: 1px solid rgba(255, 255, 255, 0.15);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tc-b > thead > tr >th ,
+.tc-b > tbody > tr >th ,
+.tc-b > tbody > tr >td {
+	border-left: 1px solid rgba(255, 255, 255, 0.15);
+	border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tc-b-w3 ,
+.tc-b-w3 > thead > tr >th ,
+.tc-b-w3 > tbody > tr >th ,
+.tc-b-w3 > tbody > tr >td {
+	border-width: 3px;
+}
+
+.tc-b-w5 ,
+.tc-b-w5 > thead > tr >th ,
+.tc-b-w5 > tbody > tr >th ,
+.tc-b-w5 > tbody > tr >td {
+	border-width: 5px;
+}
+
+/*tc-bb*/
+
+.tc-bb > thead > tr ,
+.tc-bb > tbody > tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tc-bb > thead > tr:last-child ,
+.tc-bb > tbody > tr:last-child {
+    border-bottom: 0;
+}
+
+/*tc-bg*/
+
+.tc-bg {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+.tc-bg-h {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+/*tc-sd-x*/
+
+.tc-sd-x > tbody > tr:hover >td {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+/*tc-sd-y*/
+
+.tc-sd-y {
+	overflow: hidden;
+}
+.tc-sd-y td,
+.tc-sd-y th {
+	position: relative;
+}
+
+.tc-sd-y td:hover::after,
+.tc-sd-y thead>th:not(:empty):hover::after,
+.tc-sd-y td:focus::after,
+.tc-sd-y thead>th:not(:empty):focus::after { 
+	content: '';  
+	height: 10000px;
+	left: 0;
+	position: absolute;  
+	top: -5000px;
+	width: 100%;
+	z-index: -1;
+}
+
+.tc-sd-y td:hover::after,
+.tc-sd-y th:hover::after {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+/*tc-nsd*/
+
+.tc-nsd > tbody > tr:hover >td {
+	background: none;
+}
+
+/*tc-top tc-mid tc-btm*/
+
+.tc-top > tbody > tr >td {
+	vertical-align: top;
+}
+
+.tc-mid > tbody > tr >td {
+	vertical-align: middle;
+}
+
+.tc-btm > tbody > tr >td {
+	vertical-align: bottom;
+}
+
+/*tc-pdt0 tc-pdt5 tc-pdt10 tc-pdt15 tc-pdt20*/
+
+.tc-pdt0 > thead > tr >th ,
+.tc-pdt0 > tbody > tr >th ,
+.tc-pdt0 > tbody > tr >td {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.tc-pdt5 > thead > tr >th ,
+.tc-pdt5 > tbody > tr >th ,
+.tc-pdt5 > tbody > tr >td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.tc-pdt8 > thead > tr >th ,
+.tc-pdt8 > tbody > tr >th ,
+.tc-pdt8 > tbody > tr >td {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.tc-pdt10 > thead > tr >th ,
+.tc-pdt10 > tbody > tr >th ,
+.tc-pdt10 > tbody > tr >td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.tc-pdt15 > thead > tr >th ,
+.tc-pdt15 > tbody > tr >th ,
+.tc-pdt15 > tbody > tr >td {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.tc-pdt20 > thead > tr >th ,
+.tc-pdt20 > tbody > tr >th ,
+.tc-pdt20 > tbody > tr >td {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+/*tc-pdl0 tc-pdl5 tc-pdl10 tc-pdl15 tc-pdl20*/
+
+.tc-pdl0 > thead > tr >th ,
+.tc-pdl0 > tbody > tr >th ,
+.tc-pdl0 > tbody > tr >td {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.tc-pdl5 > thead > tr >th ,
+.tc-pdl5 > tbody > tr >td ,
+.tc-pdl5 > tbody > tr >th {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.tc-pdl8 > thead > tr >th ,
+.tc-pdl8 > tbody > tr >th ,
+.tc-pdl8 > tbody > tr >td {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.tc-pdl10 > thead > tr >th ,
+.tc-pdl10 > tbody > tr >th ,
+.tc-pdl10 > tbody > tr >td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.tc-pdl15 > thead > tr >th ,
+.tc-pdl15 > tbody > tr >th ,
+.tc-pdl15 > tbody > tr >td {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.tc-pdl20 > thead > tr >th ,
+.tc-pdl20 > tbody > tr >th ,
+.tc-pdl20 > tbody > tr >td {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/*tc-nth*/
+
+.tc-nth1 > tbody > tr:nth-of-type(2n+0) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tc-nth2 > tbody > tr:nth-of-type(2n+1) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/*tc-sel*/
+
+.tc-sel > tbody > tr.selected {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tc-sel > tbody > tr.selected > td {
+	background: none;
+}
+
+.tc .br {
+	height: 10px;
+	line-height: 0;
+	overflow: hidden;
+}
+
+.tc .line {
+	margin: 10px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tc .f-pd-t {
+	padding-top: 6px;
+}
+
+.tc .f-pd-l {
+	padding-left: 5px;
+}
+
+.tc .f-pd-r {
+	padding-right: 5px;
+}
+
+.tc .tc-list {
+	min-height: 250px;
+}
+
+.tc .pd10 {
+	padding-right: 10px;
+}
+
+.tc .pd20 {
+	padding-right: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+/* dark */
+.tc.dark th ,
+.tc.dark td ,
+.tc.dark input ,
+.tc.dark select ,
+.tc.dark textarea {
+	color: #444;
+}
+.tc.dark th {
+	background: rgba(215, 220, 222, 0.3);
+}
+.tc-b.dark {
+	border-right-color: rgba(0, 0, 0, 0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+.tc-b.dark > thead > tr >th ,
+.tc-b.dark > tbody > tr >th ,
+.tc-b.dark > tbody > tr >td {
+	border-left-color: rgba(0, 0, 0, 0.1);
+	border-top-color: rgba(0, 0, 0, 0.1);
+}
+.tc-bb.dark > thead > tr ,
+.tc-bb.dark > tbody > tr {
+    border-bottom-color:  rgba(0, 0, 0, 0.1);
+}
+.tc-bg.dark {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+.tc-bg-h.dark {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+.tc-sd-x.dark > tbody > tr:hover >td {
+	background-color: rgba(215, 220, 222, 0.3);
+}
+.tc-sd-y.dark td:hover::after,
+.tc-sd-y.dark th:hover::after {
+	background-color: rgba(215, 220, 222, 0.3);
+}
+.tc-nth1.dark > tbody > tr:nth-of-type(2n+0) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.tc-nth2.dark > tbody > tr:nth-of-type(2n+1) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.tc-sel.dark > tbody > tr.selected {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+.tc.dark .line {
+	border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+

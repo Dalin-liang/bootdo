@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.planManage.dao.PlanEarlywarnTypeDao">
+
+	<sql id="planEarlywarnTypeColumns">
+		a.`id` As id,
+		a.`name` As name,
+		a.`accident_type_id` As accidentTypeId,
+		a.`status` As status,
+		a.`remarks` As remarks,
+		a.`create_by` As createBy,
+		a.`create_date` As createDate,
+		a.`update_by` As updateBy,
+		a.`update_date` As updateDate,
+		accidentType.name As accidentTypeName 
+	</sql>
+	
+	<sql id="planEarlywarnTypeJoins">
+		LEFT JOIN plan_accident_type accidentType ON accidentType.id = a.accident_type_id
+	</sql>
+	
+	<select id="get" resultType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		select 
+			<include refid="planEarlywarnTypeColumns"/>
+		from plan_earlywarn_type a
+		<include refid="planEarlywarnTypeJoins"/>
+		where a.id = #{value}
+	</select>
+	
+	<select id="getEarlywarnType" resultType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		select 
+			<include refid="planEarlywarnTypeColumns"/>
+		from plan_earlywarn_type a
+		<include refid="planEarlywarnTypeJoins"/>
+		where a.status ='1' OR a.status ='2'
+		ORDER BY a.create_date desc, a.update_date desc
+	</select>
+
+	<select id="list" resultType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		select 
+			<include refid="planEarlywarnTypeColumns"/>
+		from plan_earlywarn_type a
+		<include refid="planEarlywarnTypeJoins"/>
+        <where>  
+  			<if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+  		</where>
+        <choose>
+           <when test="sort != null and sort.trim() != ''">
+                order by a.create_date desc, a.update_date desc , ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.create_date desc, a.update_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from plan_earlywarn_type
+		 <where>  
+		  		  <if test="name != null and name != ''"> and name like concat('%',#{name},'%')  </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		insert into plan_earlywarn_type
+		(
+			`id`, 
+			`name`, 
+			`accident_type_id`, 
+			`status`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{name}, 
+			#{accidentTypeId}, 
+			#{status}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update plan_earlywarn_type set `status` = #{status}
+		where id = #{id}
+	</update>
+	 
+	<update id="update" parameterType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		update plan_earlywarn_type 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="accidentTypeId != null">`accident_type_id` = #{accidentTypeId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from plan_earlywarn_type where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from plan_earlywarn_type where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<resultMap id="earlyWarnTypeTree" type="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<collection property="experInfo" ofType="com.bootdo.support.entity.SupportExpertInfo">
+			<id column="expertid" property="id"/>
+			<result column="expertname" property="name"/>
+			<result column="expertmobile" property="mobile"/>
+			<result column="expertposition" property="position"/>
+		</collection>
+	</resultMap>
+
+	<select id="getEarlyWarnTypeAndExpertInfo" resultMap="earlyWarnTypeTree">
+		select pet.*, sei.name as expertname,sei.id as expertid,sei.mobile as expertmobile,sei.position as expertposition
+		from plan_earlywarn_type pet left join safeguard_expert_plantype sep on sep.earlywarn_type_id=pet.id
+		left join safeguard_expert_info sei  on sei.id=sep.expert_info_id
+	</select>
+
+	<select id="getIdByName" resultType="String">
+		SELECT id
+		FROM plan_earlywarn_type
+		WHERE NAME = #{name}
+		LIMIT 1
+	</select>
+
+	<select id="getIdByNames" resultType="String">
+		SELECT w.id
+		FROM plan_earlywarn_type w
+		left join plan_accident_type p on p.id = w.accident_type_id
+		WHERE w.NAME = #{earlywarnTypeName} and p.name = #{accidentTypeName}
+		LIMIT 1
+	</select>
+</mapper>

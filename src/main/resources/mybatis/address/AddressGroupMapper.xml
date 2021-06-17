@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.address.dao.AddressGroupDao">
+
+	<select id="get" resultType="com.bootdo.address.domain.AddressGroupDO">
+		select `id`,`type`,`NAME`,`enabled`,`sortno`,`remarks`,`create_by`,`create_date` from address_group where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.address.domain.AddressGroupDO">
+		select `id`,`type`,`NAME`,`enabled`,`sortno`,`remarks`,`create_by`,`create_date` from address_group
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="name != null and name != ''"> and NAME like concat('%',#{name},'%') </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="sortno != null and sortno != ''"> and sortno = #{sortno} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by sortno asc,id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from address_group
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="name != null and name != ''"> and NAME = #{name} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="sortno != null and sortno != ''"> and sortno = #{sortno} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.address.domain.AddressGroupDO">
+		insert into address_group
+		(
+			`id`, 
+			`type`, 
+			`NAME`, 
+			`enabled`, 
+			`sortno`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{type}, 
+			#{name}, 
+			#{enabled}, 
+			#{sortno}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.address.domain.AddressGroupDO">
+		update address_group 
+		<set>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="name != null">`NAME` = #{name}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="sortno != null">`sortno` = #{sortno}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from address_group where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from address_group where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update address_group set `enabled` = #{enabled}
+		where id = #{id}
+	</update>
+
+
+	<resultMap id="groupPersonTree" type="com.bootdo.address.domain.AddressGroupDO">
+		<id column="id" property="id" />
+		<result column="name" property="name"/>
+		<collection property="deptperson" ofType="com.bootdo.support.entity.SupportDeptPerson">
+			<id column="personid" property="id"/>
+			<result column="personname" property="name"/>
+			<result column="personmobile" property="mobile"/>
+			<result column="personposition" property="position"/>
+		</collection>
+	</resultMap>
+	<!-- 查询群组和对应的群组人员 -->
+	<select id="getGroupAndPerson" resultMap="groupPersonTree">
+		SELECT t.id,t.name ,p.id AS personid,p.name AS personname,p.mobile AS personmobile,
+		(CASE WHEN p.position IS NULL THEN '职员' WHEN p.position ='' THEN '职员' ELSE p.position END) AS personposition
+		FROM address_group t
+		INNER JOIN address_group_book gb ON t.id = gb.groupid
+		INNER JOIN safeguard_deptperson p ON gb.bookid = p.id
+	</select>
+
+</mapper>

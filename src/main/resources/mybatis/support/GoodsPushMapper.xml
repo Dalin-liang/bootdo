@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.GoodsPushMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportGoodsPush">
+        insert into safeguard_goodspush(
+            id,
+            goodsinfo_id,
+            goodsstorehouse_id,
+            supplier,
+            goodsbrand,
+            pushnum,
+            pushdate,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{goodsinfo_id,jdbcType=VARCHAR},
+            #{goodsstorehouse_id,jdbcType=VARCHAR},
+            #{supplier,jdbcType=VARCHAR},
+            #{goodsbrand,jdbcType=VARCHAR},
+            #{pushnum,jdbcType=INTEGER},
+            #{pushdate,jdbcType=TIMESTAMP},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportGoodsPushDTO">
+          select hc.*,(@rowNum:=@rowNum+1) RN,
+          (select g.goodsname from safeguard_goodsinfo g where hc.goodsinfo_id=g.id) goodsname,
+          (select gs.name from safeguard_goodsstorehouse gs where hc.goodsstorehouse_id=gs.id) storehousename
+          from safeguard_goodspush hc,(select (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="goodsinfo_id != null  and goodsinfo_id != '' ">
+	            AND HC.goodsinfo_id = #{goodsinfo_id}
+	        </if>
+			<if test="goodsstorehouse_id != null and goodsstorehouse_id != '' ">
+                AND HC.goodsstorehouse_id = #{goodsstorehouse_id}
+	        </if>
+			<if test="supplier != null and supplier != '' ">
+	            AND HC.supplier like concat('%',#{supplier},'%')
+	        </if>
+			<if test="goodsbrand != null and goodsbrand != '' ">
+	            AND HC.goodsbrand like concat('%',#{goodsbrand},'%')
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+	             AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="pushdate != null and pushdate != '' ">
+	            AND  HC.pushdate = #{pushdate}
+	        </if>
+			<if test="pushnum != null and pushnum != '' ">
+	            AND  HC.pushnum = #{pushnum}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+			<if test="update_by != null and update_by != '' ">
+				AND HC.update_by like concat('%',#{update_by},'%')
+			</if>
+			<if test="update_date != null and update_date != '' ">
+				AND  HC.update_date = #{update_date}
+			</if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportGoodsPush">
+        update safeguard_goodspush set
+            goodsinfo_id=#{goodsinfo_id,jdbcType=VARCHAR},
+            goodsstorehouse_id=#{goodsstorehouse_id,jdbcType=VARCHAR},
+            supplier=#{supplier,jdbcType=VARCHAR},
+            goodsbrand=#{goodsbrand,jdbcType=VARCHAR},
+            pushnum=#{pushnum,jdbcType=INTEGER},
+            pushdate=#{pushdate,jdbcType=TIMESTAMP},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=TIMESTAMP}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_goodspush where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_goodspush set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_goodspush where id=#{id}
+    </select>
+
+    <select id="getStoreHouse" resultType="java.util.Map">
+        select rs.id,rs.name from safeguard_goodsstorehouse rs where rs.enabled !=0
+    </select>
+
+    <select id="getGoods" resultType="java.util.Map">
+        select rs.id,rs.goodsname from safeguard_goodsinfo rs where rs.enabled !=0
+    </select>
+    
+    
+    <select id="getAllStoreHouse" resultType="java.util.Map">
+        select rs.id,rs.name from safeguard_goodsstorehouse rs 
+    </select>
+
+    <select id="getAllGoods" resultType="java.util.Map">
+        select rs.id,rs.goodsname from safeguard_goodsinfo rs
+    </select>
+
+</mapper>

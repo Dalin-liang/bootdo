@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.newData.dao.DutyPersonDao">
+
+	<select id="get" resultType="com.bootdo.newData.domain.DutyPersonDO">
+		select `id`,`name`,`job`,`mobile`,`towns`,`duty`,`dutyjob`,`dutymobile`,`coop`,`coopduty`,`coopjob`,`coopmobile`,`remarks`,`deleted`,`submitDate` from cooperative_duty_person where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.newData.domain.DutyPersonDO">
+		select `id`,`name`,`job`,`mobile`,`towns`,`duty`,`dutyjob`,`dutymobile`,`coop`,`coopduty`,`coopjob`,`coopmobile`,`remarks`,`deleted`,`submitDate` from cooperative_duty_person
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="job != null and job != ''"> and job = #{job} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="towns != null and towns != ''"> and towns = #{towns} </if>
+		  		  <if test="duty != null and duty != ''"> and duty = #{duty} </if>
+		  		  <if test="dutyjob != null and dutyjob != ''"> and dutyjob = #{dutyjob} </if>
+		  		  <if test="dutymobile != null and dutymobile != ''"> and dutymobile = #{dutymobile} </if>
+		  		  <if test="coop != null and coop != ''"> and coop = #{coop} </if>
+		  		  <if test="coopduty != null and coopduty != ''"> and coopduty = #{coopduty} </if>
+		  		  <if test="coopjob != null and coopjob != ''"> and coopjob = #{coopjob} </if>
+		  		  <if test="coopmobile != null and coopmobile != ''"> and coopmobile = #{coopmobile} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from cooperative_duty_person
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="job != null and job != ''"> and job = #{job} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="towns != null and towns != ''"> and towns = #{towns} </if>
+		  		  <if test="duty != null and duty != ''"> and duty = #{duty} </if>
+		  		  <if test="dutyjob != null and dutyjob != ''"> and dutyjob = #{dutyjob} </if>
+		  		  <if test="dutymobile != null and dutymobile != ''"> and dutymobile = #{dutymobile} </if>
+		  		  <if test="coop != null and coop != ''"> and coop = #{coop} </if>
+		  		  <if test="coopduty != null and coopduty != ''"> and coopduty = #{coopduty} </if>
+		  		  <if test="coopjob != null and coopjob != ''"> and coopjob = #{coopjob} </if>
+		  		  <if test="coopmobile != null and coopmobile != ''"> and coopmobile = #{coopmobile} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.newData.domain.DutyPersonDO" useGeneratedKeys="true" keyProperty="id">
+		insert into cooperative_duty_person
+		(
+			`name`, 
+			`job`, 
+			`mobile`, 
+			`towns`, 
+			`duty`, 
+			`dutyjob`, 
+			`dutymobile`, 
+			`coop`, 
+			`coopduty`, 
+			`coopjob`, 
+			`coopmobile`, 
+			`remarks`, 
+			`deleted`, 
+			`submitDate`
+		)
+		values
+		(
+			#{name}, 
+			#{job}, 
+			#{mobile}, 
+			#{towns}, 
+			#{duty}, 
+			#{dutyjob}, 
+			#{dutymobile}, 
+			#{coop}, 
+			#{coopduty}, 
+			#{coopjob}, 
+			#{coopmobile}, 
+			#{remarks}, 
+			#{deleted}, 
+			#{submitdate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.newData.domain.DutyPersonDO">
+		update cooperative_duty_person 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="job != null">`job` = #{job}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="towns != null">`towns` = #{towns}, </if>
+			<if test="duty != null">`duty` = #{duty}, </if>
+			<if test="dutyjob != null">`dutyjob` = #{dutyjob}, </if>
+			<if test="dutymobile != null">`dutymobile` = #{dutymobile}, </if>
+			<if test="coop != null">`coop` = #{coop}, </if>
+			<if test="coopduty != null">`coopduty` = #{coopduty}, </if>
+			<if test="coopjob != null">`coopjob` = #{coopjob}, </if>
+			<if test="coopmobile != null">`coopmobile` = #{coopmobile}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="deleted != null">`deleted` = #{deleted}, </if>
+			<if test="submitdate != null">`submitDate` = #{submitdate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from cooperative_duty_person where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from cooperative_duty_person where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

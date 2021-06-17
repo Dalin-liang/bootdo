@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title></title>
+		<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+		
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!--<link rel="stylesheet" href="css/table.css" />-->
+		<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/echarts.js"></script>
+		<!--<script type="text/javascript" src="administration.js"></script>-->
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+		
+	</head>
+
+	<body>
+		<div class="map">
+			<div class="example-map" style="background-image: url(images/map.png)"></div>
+		</div>
+		<div class="header flex flex-m">
+			<div class="title PangMen">正果镇产业大数据分析</div>
+		</div>
+		<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="cont pad10">
+			<div class="cont_l col-3">
+				<div class="comborder1" style="height: 35%;">
+					<div class="title">
+						营业情况
+					</div>
+					<div class="border">
+						<div class="pad10" id="chart1" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 mt15" style="height: calc(35% - 15px);">
+					<div class="title">
+						发展排行
+					</div>
+					<div class="border">
+						<div class="" id="chart2" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>
+				<div class="comborder mt15" style="height: calc(30% - 15px);">
+					<div class="border text-center pad10">
+						<div class="ind_num font18 chart3 mt10">
+							第一产业从业人数：  <span class="Digital num">4549</span> 人
+						</div>
+						<div class="ind_num font18 chart3 mt10">
+							第二产业从业人数：  <span class="Digital num">6548</span> 人
+						</div>
+						<div class="ind_num font18 chart3 mt10">
+							第三产业从业人数：  <span class="Digital num">7534</span> 人
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cont_c col-6">
+				<div class="comborder" style="height: 100%;">
+					<div class="border chart4" style="height: 100%;">
+						<div class="map_cont" id="map_main" style="height: 100%;width: 100%;">
+						
+						</div>
+						<div class="data text-center" style="position: relative;z-index: 100;">
+							<div class="inblock data_li">							
+								<p class="colornum font24"><span class="num Digital">19</span>亿元</p>
+								<p class="colorblue">当月生产总值</p>
+							</div>
+							<div class="inblock data_li">							
+								<p class="colornum font24"><span class="num Digital">1</span>亿元</p>
+								<p class="colorblue">当月财政收入</p>
+							</div>
+							<div class="inblock data_li">							
+								<p class="colornum font24"><span class="num Digital">13</span>亿元</p>
+								<p class="colorblue">当月零售总额</p>
+							</div>
+						</div>
+						<!--<div class="map">
+							<img src="../img/chart4.png"/>								
+						</div>-->
+					</div>
+				</div>
+			</div>
+			<div class="cont_r col-3">
+				<div class="comborder1" style="height: 50%;">
+					<div class="title">
+						产业信息
+					</div>
+					<div class="border pad10">
+						<div class="" id="chart3" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 mt15" style="height: calc(50% - 15px);">
+					<div class="title">
+						产业分析
+					</div>
+					<div class="border pad10">
+						<div class="" id="chart4" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		
+		var mapComp;
+		var map;
+		var MapComp = function(){
+			var domId="map_main";
+			var _center = [113.892436,23.416955];
+			var _map;
+			var _def_zoom=12;
+			var _curr_zoom = _def_zoom;
+			var _max_zoom=20;
+			var _min_zoom=8;
+			this.init = function(){
+		        _map = new AMap.Map(domId, {
+		        	mapStyle: "amap://styles/dark"	,
+		            zoom:_curr_zoom,//级别
+		            center: _center,//中心点坐标
+		            expandZoomRange:true,
+		            zooms:[_min_zoom,_max_zoom],
+		            layers:[
+		                new AMap.TileLayer.Satellite(),
+		                new AMap.TileLayer.RoadNet()
+		            ]
+		        });
+		        map=_map;
+			};
+		
+		}
+		mapComp = new MapComp();
+    	mapComp.init();
+
+//		营业情况
+		var dom1 = document.getElementById("chart1");
+		var myChart1 = echarts.init(dom1);
+		var option1 = null;
+		option1 = {
+		    tooltip : {
+		        trigger: 'axis',
+		    },
+		    legend: {
+		        data:['零售额','销售额','营业收入'],
+		        textStyle:{
+		        	color:"#fff",		        	
+		        },
+		        top:20
+		    },
+		    toolbox: {
+		    },
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    grid:{
+		    	left:60,
+		    	bottom:20
+		    },
+		    calculable : true,
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+		        },
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value',
+		            axisLabel: {
+		                formatter: '{value} 百万'
+		            },
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'零售额',
+		            type:'bar',
+		            data:[142.0, 123.9, 12.0, 223.2, 252.6, 71.7, 135.6, 162.2, 132.6, 210.0, 61.4, 31.3],
+		            markPoint : {
+		                data : [
+		                    {type : 'max', name: '最大值'},
+		                    {type : 'min', name: '最小值'}
+		                ]
+		            },
+		            markLine : {
+		                data : [
+		                    {type : 'average', name: '平均值'}
+		                ]
+		            }
+		        },
+		        {
+		            name:'销售额',
+		            type:'bar',
+		            data:[226, 53.9, 94.0, 216.4, 218.7, 120.7, 175.6, 182.2, 148.7, 118.8, 76.0, 22.3],
+		            markPoint : {
+		                data : [
+		                    {name : '年最高', value : 226, xAxis: 0, yAxis: 226},
+		                    {name : '年最低', value : 22.3, xAxis: 11, yAxis: 3}
+		                ]
+		            },
+		            markLine : {
+		                data : [
+		                    {type : 'average', name : '平均值'}
+		                ]
+		            }
+		        } ,
+		        {
+		            name:'营业收入',
+		            type:'bar',
+		            data:[72.6, 55.9, 119.0, 126.4, 128.7, 70.7, 175.6, 182.2, 48.7, 18.8,46.0, 92.3],
+		            markPoint : {
+		                data : [
+		                    {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183},
+		                    {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
+		                ]
+		            },
+		            markLine : {
+		                data : [
+		                    {type : 'average', name : '平均值'}
+		                ]
+		            }
+		        }
+		    ]
+		};
+		if (option1 && typeof option1 === "object") {
+		    myChart1.setOption(option1, true);
+		}
+		
+//		发展行业
+		var dom2 = document.getElementById("chart2");
+		var myChart2 = echarts.init(dom2);
+		var option2 = null;
+		option2 ={
+		    title: {
+//		        text: '发展排行'
+		    },
+		    tooltip: {
+		        trigger: 'axis',
+		        axisPointer: {
+		            type: 'shadow'
+		        },
+		    },
+		    legend: {
+		        data: ['2017年', '2018年'],
+		        textStyle:{
+		        	color:"#fff",		        	
+		        },
+		        top:20
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '5%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    xAxis: {
+		        type: 'value',
+		        boundaryGap: [0, 0.01],
+		            axisLabel: {
+		                formatter: '{value}'
+		            }
+		    },
+		    yAxis: {
+		        type: 'category',
+		        data: ['飓风公司','阿代工厂','家具产业','木材产业','大众产业','圣峰木业'],
+		        axisLabel: {
+		            formatter: '{value}'
+		        }
+		    },
+		    series: [
+		        {
+		            name: '2017年',
+		            type: 'bar',
+		            data: [18203, 23489, 29034, 104970, 131744, 140230]
+		        },
+		        {
+		            name: '2018年',
+		            type: 'bar',
+		            data: [19325, 23438, 31000, 121594, 134141, 181807]
+		        }
+		    ]
+		};
+		if (option2 && typeof option2 === "object") {
+		    myChart2.setOption(option2, true);
+		}
+		
+//		产业信息
+		var dom3 = document.getElementById("chart3");
+		var myChart3 = echarts.init(dom3);
+		var option3 = null;
+		option3 ={
+		    title: {
+//		        text: '产值信息'
+		    },
+		    tooltip: {
+		        trigger: 'axis',
+		        axisPointer: {
+		            type: 'cross',
+		            crossStyle: {
+		                color: '#999'
+		            }
+		        }
+		    },
+		    legend: {
+		        data:['产业数量','总值','产值增长率'],
+		        textStyle:{
+		        	color:"#fff",		        	
+		        },
+		    },
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '5%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    xAxis: [
+		        {
+		            type: 'category',
+		            data: ['2010年','2011年','2012年','2013年','2014年','2015年','2016年','2017','2018'],
+		            axisPointer: {
+		                type: 'shadow'
+		            }
+		        }
+		    ],
+		    yAxis: [
+		        {
+		            type: 'value',
+		            name: '产业数量',
+		            min: 0,
+		            max: 250,
+		            interval: 50,
+		            axisLabel: {
+		                formatter: '{value} 个'
+		            }
+		        },
+		        {
+		            type: 'value',
+		            name: '总值',
+		            min: 0,
+		            max: 25,
+		            interval: 5,
+		            axisLabel: {
+		                formatter: '{value} 千万'
+		            }
+		        }
+		    ],
+		    series: [
+		        {
+		            name:'产业数量',
+		            type:'bar',
+		            data:[62,72,83,99,158,160,169,170,178]
+		        },
+		        {
+		            name:'总值',
+		            type:'bar',
+		            data:[44.6, 45.9, 59.0, 66.4, 68.7, 70.7, 75.6, 108.2, 148.7]
+		        },
+		        {
+		            name:'产值增长率',
+		            type:'line',
+		            yAxisIndex: 1,
+		            data:[7.0, 8.2, 12.3, 13.5, 18.3,19.2, 19.3, 19.4, 19.0]
+		        }
+		    ]
+		};
+		if (option3 && typeof option3 === "object") {
+		    myChart3.setOption(option3, true);
+		}
+		
+//		产业分析
+		var dom4 = document.getElementById("chart4");
+		var myChart4 = echarts.init(dom4);
+		var option4 = null;
+		option4 ={
+		    title: {
+		        text: '产业分析'
+		    },
+		    tooltip : {
+		        trigger: 'axis',
+		        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		        }
+		    },
+		    legend: {
+		        data:['第一产业','第二产业','第三产业'],
+		        textStyle:{
+		        	color:"#fff",		        	
+		        },
+		    },
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : ['1','2','3','4','5','6','7','8','9','10','11','12']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value',
+		            axisLabel: {
+		                formatter: '{value} 亿'
+		            }
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'第一产业',
+		            type:'bar',
+		            stack: '产业',
+		            data:[1.3, 1.4, 1.8, 0.6, 0.8, 0.9, 1.1,1.3,1.5,0.8,0.7,1.4]
+		        },
+		        {
+		            name:'第二产业',
+		            type:'bar',
+		            stack: '产业',
+		            data:[1.1, 1.2, 1.5, 0.5, 0.7, 0.8, 0.9,1.1,1.3,0.7,0.6,1.2]
+		        },
+		        {
+		            name:'第三产业',
+		            type:'bar',
+		            stack: '产业',
+		            data:[1, 1.1, 1.4, 0.5, 0.6, 0.7, 0.8,0.9,1.2,0.7,0.6,1.2]
+		        }
+		    ]
+		};
+		if (option4 && typeof option4 === "object") {
+		    myChart4.setOption(option4, true);
+		}
+		$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+	</script>
+</html>

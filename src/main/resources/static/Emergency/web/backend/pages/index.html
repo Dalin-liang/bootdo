@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../css/main.css" />
+		<!--<link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">-->
+
+		<script>
+			/^http(s*):\/\//.test(location.href) || alert('请先部署到 localhost 下再访问');
+		</script>
+	</head>
+
+	<body class="layui-layout-body">
+
+		<div id="LAY_app">
+			<div class="layui-layout layui-layout-admin">
+				<div class="layui-header">					
+<!--					<div class="layui-logo" lay-href="test.html">-->
+<!--						<span>智慧正果综合指挥调度系统</span>-->
+<!--					</div>-->
+					<div class="layui-logo">
+						<span>智慧正果综合指挥调度系统</span>
+					</div>
+					<!-- 头部区域 -->
+					<!--<ul class="layui-nav layui-layout-left ">
+						<li class="layui-nav-item layadmin-flexible" lay-unselect>
+							<a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+								<i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+							</a>
+						</li>
+						<li class="layui-nav-item" lay-unselect>
+							<a href="javascript:;" layadmin-event="refresh" title="刷新">
+								<i class="layui-icon layui-icon-refresh-3"></i>
+							</a>
+						</li>
+						<li class="layui-nav-item layui-hide-xs" lay-unselect>
+							<input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search.html?keywords=">
+						</li>
+					</ul>-->
+					<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+
+						<li class="layui-nav-item" lay-unselect>
+							<a lay-href="" layadmin-event="message" lay-text="消息中心">
+								<i class="layui-icon layui-icon-notice"></i>
+
+								<!-- 如果有新消息，则显示小圆点 -->
+								<span class="layui-badge-dot"></span>
+							</a>
+						</li>
+						<!--<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+				            <a href="javascript:;" layadmin-event="theme">
+				              <i class="layui-icon layui-icon-theme"></i>
+				            </a>
+				          </li>-->
+						<li class="layui-nav-item layui-hide-xs" lay-unselect>
+							<a href="javascript:;" layadmin-event="fullscreen">
+								<i class="layui-icon layui-icon-screen-full"></i>
+							</a>
+						</li>
+						<li class="layui-nav-item" lay-unselect>
+							<a href="javascript:;">
+								<cite id="curUserName"></cite>
+							</a>
+							<dl class="layui-nav-child">
+								<!--<dd>
+									<a lay-href="">基本资料</a>
+								</dd>
+								<dd>
+									<a lay-href="">修改密码</a>
+								</dd>
+								<hr>-->
+								<dd layadmin-event="logout" style="text-align: center;">
+									<a href="/logout">退出</a>
+								</dd>
+							</dl>
+						</li>
+
+					</ul>
+				</div>
+
+				<!-- 侧边菜单 -->
+				<div class="layui-side layui-side-menu">
+					<div class="layui-side-scroll">
+
+						<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+							<li data-name="guard" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="应急值守" lay-direction="2">
+									<i class="layui-icon layui-icon-home"></i>
+									<cite>应急值守</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="guard" >
+										<a lay-href="support/receiveInfoTable.html">信息接报管理</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/dutyBusiness.html">值班业务管理</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/receiveInfoQuery.html">信息综合查询</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/receiveInfoChart.html">信息综合统计</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/watchsource/source.html">接报途径管理</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/watchsource/sourceMenu.html">接报途径短信配置</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/planConfig/source.html">预案启动配置</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="support/endWarn/warnTable.html">清除报警</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="guarantee" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="三防管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>三防管理</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="guard" >
+										<a lay-href="/newData/protectPerson">水利所设施责任人名单</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="/newData/person">汛期检查孤独老人转移</a>
+									</dd>
+									<dd data-name="guard">
+										<a lay-href="/newData/dutyPerson">合作社及三防责任人</a>
+									</dd>
+								</dl>
+							</li>
+
+							<li data-name="guarantee" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="保障管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>保障管理</cite>
+								</a>
+								
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a href="javascript:;">应急物资管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="support/goodsInfoTable.html">应急物资信息管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/storagePlanTable.html">应急物资储备计划</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/goodsPushTable.html">应急物资入库</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/goodsPopTable.html">应急物资出库</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/goodsTranTable.html">应急物资调拨</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/goodsStoreHouseTable.html">应急储备库管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/stockTakingTable.html">应急物资库存管理</a>
+											</dd>
+										</dl>
+									</dd>
+									<dd data-name="">
+										<a href="javascript:;">应急队伍管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="support/teamTypeTable.html">队伍类型管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/teamTable.html">队伍信息管理</a>
+											</dd>
+										</dl>
+									</dd>
+									<dd data-name="">
+										<a href="javascript:;">应急装备管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="support/equipment/equipment.html">装备信息管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/equipment/equipStatus.html">装备状态管理</a>
+											</dd>
+										</dl>
+									</dd>
+									<dd data-name="">
+										<a href="javascript:;">应急值班管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="support/deptperson/deptperson.html">值班人员管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/duty/duty.html">值排班</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/daily/daily.html">值班日报编辑</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/importantThing/importantThing.html">值班要情编辑</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/duty/count.html">值排统计</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="support/twoViolations/twoViolationsDaily.html">两违值班日志</a>
+											</dd>
+
+										</dl>
+									</dd>
+									<dd data-name="">
+										<a lay-href="expertpairing/expertInfo.html">应急专家管理</a>
+									</dd>
+									
+									
+									<dd data-name="">
+										<a href="javascript:;">地理信息管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="expertpairing/emergencyGeoInfo.html">地理信息管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="expertpairing/geoTypeInfo.html">地理信息类别管理</a>
+											</dd>
+										</dl>
+									</dd>
+									<dd data-name="">
+										<a lay-href="expertpairing/supportDeptInfo.html">应急部门管理</a>
+									</dd>
+									<dd data-name="">
+										<a lay-href="expertpairing/supportDeptpersonInfo.html">应急人员管理</a>
+									</dd>
+									<!-- <dd data-name="">
+										<a lay-href="support/knowledge/knowledge.html">知识库管理</a>
+									</dd> -->
+									<dd data-name="">
+										<a lay-href="support/knowledge/knowledgeDangerType.html">危险性类别管理</a>
+									</dd>
+									<dd data-name="">
+										<a lay-href="support/knowledge/knowledgeInfo.html">知识库管理</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="plan" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="预案管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>预案管理</cite>
+								</a>
+								
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a href="javascript:;">预案类型管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="planManage/accidentType.html">事故类型</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="planManage/earlyWarnType.html">预警类型</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="planManage/earlyWarnLevel.html">预警级别</a>
+											</dd>
+										</dl>
+									</dd>
+									<dd data-name="plan">
+										<a lay-href="planManage/planMain.html">预案管理</a>
+									</dd>
+									<!-- <dd data-name="">
+										<a href="javascript:;">预案执行</a>
+									</dd> -->
+									<dd data-name="">
+										<a lay-href="planManage/planMainActionRecord.html">预案执行记录查询</a>
+									</dd>
+								</dl>
+							</li>
+							
+							<li data-name="decision" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="应急决策" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>应急决策</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<!-- <dd data-name="guarantee">
+										<a href="javascript:;">方案生成</a>										
+									</dd>
+									<dd data-name="">
+										<a href="javascript:;">方案调整</a>
+									</dd> -->
+									<dd data-name="">
+										<a lay-href="actionprogramManage/actionprogram.html">方案管理</a>
+									</dd>
+									<dd data-name="">
+										<a lay-href="archiveManage/archive.html">结案查询</a>
+									</dd>
+									<!-- <dd data-name="">
+										<a href="javascript:;">方案模板管理</a>
+									</dd> -->
+								</dl>
+							</li>
+							<li data-name="disposition" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="应急处置" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>应急处置</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a lay-href="archiveManage/report.html">事件评估</a>
+									</dd>
+									<dd data-name="guarantee">
+										<a lay-href="archiveManage/procession.html">归档处理</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="appraise" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="应急评估" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>应急评估</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a lay-href="appraise/appraiseManage.html">评估指标管理</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="analyze" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="应急分析" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>应急分析</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a lay-href="support/importantPlaceChart.html">重点对象统计</a>
+									</dd>
+									<dd data-name="guarantee">
+										<a lay-href="support/eventChart.html">预警事件统计分析</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="sign" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="方案模板管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>方案模板管理</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="sign">
+										<a lay-href="archiveManage/planModel.html">生成预案</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="sign" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="日常巡查" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>日常巡查</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="sign">
+										<a lay-href="support/app/appsign.html">巡查打卡维护</a>
+									</dd>
+									<dd data-name="sign">
+										<a lay-href="support/app/presonWayPoint.html">巡查轨迹维护</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="sms" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="短信管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>短信管理</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="sms">
+										<a lay-href="sms/smsSendConfig.html">短信配置</a>
+									</dd>
+								</dl>
+							</li>
+                            <li data-name="sms" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="通讯录群组管理" lay-direction="2">
+                                    <i class="layui-icon layui-icon-component"></i>
+                                    <cite>通讯录群组管理</cite>
+                                </a>
+                                <dl class="layui-nav-child">
+                                    <dd data-name="sms">
+                                        <a lay-href="address/group.html">通讯录群组</a>
+                                    </dd>
+                                </dl>
+                            </li>
+							<li data-name="sms" class="layui-nav-item">
+								<a href="javascript:;" lay-tips="天气信息" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>天气信息</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="sms">
+										<a lay-href="weather/weather.html">天气信息</a>
+									</dd>
+								</dl>
+							</li>
+							<li data-name="system " class="layui-nav-item">
+								<a href="javascript:;" lay-tips="系统管理" lay-direction="2">
+									<i class="layui-icon layui-icon-component"></i>
+									<cite>系统管理</cite>
+								</a>
+								<dl class="layui-nav-child">
+									<dd data-name="sms">
+										<a lay-href="expertpairing/supportDeptInfo.html">组织机构管理</a>
+									</dd>
+									<dd data-name="">
+										<a lay-href="/system/sysDept">部门管理</a>
+									</dd>
+									<dd data-name="">
+										<a lay-href="/sys/user/">用户管理</a>
+									</dd>
+								</dl>
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a href="javascript:;">权限管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="/sys/menu/">菜单管理</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="/sys/role">角色管理</a>
+											</dd>
+										</dl>
+									</dd>
+								</dl>
+								<dl class="layui-nav-child">
+									<dd data-name="guarantee">
+										<a href="javascript:;">运行管理</a>
+										<dl class="layui-nav-child">
+											<dd data-name="">
+												<a lay-href="/common/log">系统日志</a>
+											</dd>
+											<dd data-name="">
+												<a lay-href="/sys/online">在线用户</a>
+											</dd>
+										</dl>
+									</dd>
+								</dl>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 页面标签 -->
+				<div class="layadmin-pagetabs" id="LAY_app_tabs">
+					
+					<div class="layui-icon layadmin-tabs-control" style="left: 0;">
+						<li class="layui-nav-item layadmin-flexible"   layadmin-event="flexible">
+							<a href="javascript:;" title="侧边伸缩">
+								<i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+							</a>
+						</li>
+					</div>
+					<div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+					<div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+					<div class="layui-icon layadmin-tabs-control layui-icon-down">
+						<ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+							<li class="layui-nav-item" lay-unselect>
+								<a href="javascript:;"></a>
+								<dl class="layui-nav-child layui-anim-fadein">
+									<dd layadmin-event="closeThisTabs">
+										<a href="javascript:;">关闭当前标签页</a>
+									</dd>
+									<dd layadmin-event="closeOtherTabs">
+										<a href="javascript:;">关闭其它标签页</a>
+									</dd>
+									<dd layadmin-event="closeAllTabs">
+										<a href="javascript:;">关闭全部标签页</a>
+									</dd>
+								</dl>
+							</li>
+						</ul>
+					</div>
+					<div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+						<ul class="layui-tab-title" id="LAY_app_tabsheader">
+							<li lay-id="" lay-attr="index.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 主体内容 -->
+				<div class="layui-body" id="LAY_app_body">
+					<div class="layadmin-tabsbody-item layui-show">
+						<!-- <iframe src="test.html" frameborder="0" class="layadmin-iframe"></iframe> -->
+					</div>
+				</div>
+
+				<!-- 辅助元素，一般用于移动设备下遮罩 -->
+				<div class="layadmin-body-shade" layadmin-event="shade"></div>
+			</div>
+		</div>
+
+
+		<script type="text/javascript" src="../layui/layui.js" ></script>
+		<script>
+			layui.config({
+				base: '../pages/', //静态资源所在路径
+			}).extend({
+				index: '../js/index' //主入口模块
+			}).use('index');
+
+			var $;
+			layui.use(['layer', 'form','element'], function(){
+		        var element = layui.element;
+				$ = layui.$;
+		        element.on('tab', function(data){
+					// console.log(data);
+				});
+
+		    });
+		</script>
+
+		<script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+		<script type="text/javascript" src="../layui/lay/modules/layer.js"></script>
+		<script type="text/javascript" src="../js/loginValidate.js"></script>
+	</body>
+
+</html>

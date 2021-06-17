@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title></title>
+		<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+		
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!--<link rel="stylesheet" href="css/table.css" />-->
+		<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/echarts.js"></script>
+		<!--<script type="text/javascript" src="administration.js"></script>-->
+	</head>
+
+	<body>
+		<div class="map">
+			<div class="example-map" style="background-image: url(images/map.png)"></div>
+		</div>
+		<div class="header flex flex-m">
+			<div class="title PangMen">正果镇工业增加值贡献分析</div>
+		</div>
+
+		<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="cont pad10">
+			<div class="col-6 pull-left" style="height: calc(50% - 30px)">				
+				<div class="comborder fullh">
+					<div class="title">
+						2018年工业产值分析
+					</div>
+					<div class="border" style="padding-top: 30px;">
+						<div class="clearfix text-center">
+							<div class="col-7 pull-left">
+								<div class="ind_num pover_li">
+									全镇完成增加值：<span class="Digital font24 colornum">14370</span> 人
+									<span class="colorblue font12">（同比：2%）</span>
+								</div>
+							</div>
+							<div class="col-5 pull-left">
+								<div class="ind_num pover_li">
+									规模以上企业：<span class="Digital font24 colornum">14</span> 家
+								</div>
+							</div>					
+						</div>
+						<div class="pad10 mt15" id="chart1" style="height: calc(100% - 60px);width: 100%;">
+							
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="col-6 pull-left" style="height: calc(50% - 30px)">
+				<div class="comborder" style="height: 100%;">
+					<div class="title">
+						工业增加值分析
+					</div>
+					<div class="border" style="padding-top: 30px;">
+						<div class="pad10" id="chart2" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="col-5 pull-left" style="height: calc(50% - 30px);margin-top: 40px;">
+				<div class="comborder" style="height: 100%;">
+					<div class="title">
+						经济指标分析
+					</div>
+					<div class="border" style="padding-top: 30px;">
+						<div class="pad10" id="chart3" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="col-3 pull-left" style="height: calc(50% - 30px);margin-top: 40px;">
+				<div class="comborder1" style="height: 100%;">
+					<div class="title">
+						企业排名top6
+					</div>
+					<div class="border pad10">
+						<div class="srcollcom" style="height: 100%;">
+							<table class="table table_com tablelayout ranktable text-center">
+								<tr>
+									<td>
+										1     
+									</td>
+									<td class="text-left" style="width: 70%;">
+										<p class="ellipsis">广州市光裕汽车空调制造有限公司</p>
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										2    
+									</td>
+									<td  class="text-left">
+										广州市增城正果圣峰木业制品厂 
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										3     
+									</td>
+									<td class="text-left">
+										广州市升晖木业有限公司
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										4     
+									</td>
+									<td class="text-left">
+										广州市澳悦食品有限公司
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										5     
+									</td>
+									<td class="text-left">
+										广州市增城南华木器加工厂 
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										6     
+									</td>
+									<td class="text-left">
+										广州市泽天橡塑制品有限公司     
+									</td>
+									<td>
+										89万
+									</td>
+									<td>
+										  ↑ 
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="col-4 pull-left" style="height: calc(50% - 30px);margin-top: 40px;">
+				<div class="comborder" style="height: 100%;">
+					<div class="title">
+						工业增加值分析
+					</div>
+					<div class="border" style="padding-top: 30px;">
+						<div class="pad10" id="chart4" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</body>
+	<script>
+//		2018年工业产值分析
+		var dom1 = document.getElementById("chart1");
+		var myChart1 = echarts.init(dom1);
+		var option1 = null;
+		option1 = {
+		    tooltip: {
+		        trigger: 'axis'
+		    },
+		    legend: {
+		        data:['当月产值','工业总产值','主营业务收入','能源消费'],		        
+			    textStyle:{
+			    	color:"#fff",
+			    },
+		    },		    
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    toolbox: {
+		        feature: {
+//		            saveAsImage: {}
+		        }
+		    },
+		    xAxis: {
+		        type: 'category',
+		        boundaryGap: false,
+		        data: ['一月','二月','三月','四月','五月','六月','七月']
+		    },
+		    yAxis: {
+		        type: 'value'
+		    },
+		    series: [
+		        {
+		            name:'当月产值',
+		            type:'line',
+		            data:[16723, 15381, 11708, 14809, 12472, 12331, 13242]
+		        },
+		        {
+		            name:'工业总产值',
+		            type:'line',
+		            data:[23749, 41498, 53206, 60816, 80518, 92849, 109321]
+		        },
+		        {
+		            name:'主营业务收入',
+		            type:'line',
+		            
+		            data:[20459, 32831, 44388, 56239, 78406, 84532, 79783]
+		        },
+		        {
+		            name:'能源消费',
+		            type:'line',
+		            data:[93, 115, 114, 160, 184, 206, 219]
+		        }
+		    ]
+		};
+		if (option1 && typeof option1 === "object") {
+		    myChart1.setOption(option1, true);
+		}
+		
+//		工业增加值分析
+		var dom2 = document.getElementById("chart2");
+		var myChart2 = echarts.init(dom2);
+		var option2 = null;
+		option2 ={
+	        tooltip: {
+	            trigger: 'axis',
+	            axisPointer: {
+	                type: 'cross',
+	                crossStyle: {
+	                    color: '#fff'
+	                }
+	            }
+	        },
+	        toolbox: {
+	            feature: {
+	                dataView: {show: true, readOnly: false},
+	                magicType: {show: true, type: ['line', 'bar']},
+	                restore: {show: true},
+//	                saveAsImage: {show: true}
+	            }
+	        },
+	        legend: {
+	            data:['规模以上工业企业数量','累计完成增加值'],	            	    
+			    textStyle:{
+			    	color:"#fff",
+			    },
+	        },	        	    
+		    textStyle:{
+		    	color:"#fff",
+		    },
+	        xAxis: [
+	            {
+	                type: 'category',
+	                data: ['2015年','2016年','2017年','2018年','2019年'],
+	                axisPointer: {
+	                    type: 'shadow'
+	                }
+	            }
+	        ],
+	        yAxis: [
+	            {
+	                type: 'value',
+	                name: '家',
+	                min: 0,
+	                max: 100,
+	                interval: 10,
+	                axisLabel: {
+	                    formatter: '{value} '
+	                }
+	            },
+	            {
+	                type: 'value',
+	                name: '（万）元',
+	                min: 0,
+	                max: 100,
+	                interval: 10,
+	                axisLabel: {
+	                    formatter: '{value} '
+	                }
+	            }
+	        ],
+	        series: [
+	            {
+	                name:'规模以上工业企业数量',
+	                type:'bar',
+	                data:[10,32,30,46,52]
+	            },
+	            {
+	                name:'累计完成增加值',
+	                type:'line',
+	                yAxisIndex: 1,
+	                data:[10,32,30,46,52]
+	            }
+	        ]
+	    };
+		if (option2 && typeof option2 === "object") {
+		    myChart2.setOption(option2, true);
+		}
+		
+//		经济指标分析
+		var dom3 = document.getElementById("chart3");
+		var myChart3 = echarts.init(dom3);
+		var option3 = null;
+		option3 ={
+		    tooltip: {
+		        trigger: 'axis',
+		        axisPointer: {
+		            type: 'cross',
+		            crossStyle: {
+		                color: '#999'
+		            }
+		        }
+		    },
+		    toolbox: {
+		        feature: {
+		            dataView: {show: true, readOnly: false},
+		            magicType: {show: true, type: ['line', 'bar']},
+		            restore: {show: true},
+//		            saveAsImage: {show: true}
+		        }
+		    },
+		    legend: {
+		        data:['完成额','同期数额','同比增长率'],     	    
+			    textStyle:{
+			    	color:"#fff",
+			    },
+		    },		         	    
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    xAxis: [
+		        {
+		            type: 'category',
+		            data: ['2015年','2016年','2017年','2018年','2019年'],
+		            axisPointer: {
+		                type: 'shadow'
+		            }
+		            
+		        }
+		    ],
+		    yAxis: [
+		        {
+		            type: 'value',
+		            name: '数额',
+		            axisLabel: {
+		                formatter: '{value} 万元'
+		            }
+		        },
+		        {
+		            type: 'value',
+		            name: '同比增长率',
+		            min: -20,
+		            max: 20,
+		            interval: 10,
+		            axisLabel: {
+		                formatter: '{value} %'
+		            }
+		        }
+		    ],
+		    series: [
+		        {
+		            name:'完成额',
+		            type:'bar',
+		            data:[11256,15175,17284,19841,22418]
+		        },
+		        {
+		            name:'同期数额',
+		            type:'bar',
+		            data:[11356,14175,15284,18841,23418]
+		        },
+		        {
+		           
+		            name:'同比增长率',
+		            type:'line',
+		            yAxisIndex: 1,
+		            data:[-0.8, 7.1, 13.1,5.3 , 4.2]
+		        }
+		    ]
+		};
+		if (option3 && typeof option3 === "object") {
+		    myChart3.setOption(option3, true);
+		}
+		
+//		行业完成增加值分析
+		var dom4 = document.getElementById("chart4");
+		var myChart4 = echarts.init(dom4);
+		var option4 = null;
+		option4 ={
+		    title : {
+		        text: '',
+		        subtext: '',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		    	 type: 'scroll',
+		         orient: 'vertical',
+		         left: 10,
+		         top: 20,
+		         bottom: 20,
+		         data:['木材加工业','食品制造业','零售业','水力发电','其他制造业','其他'],	         	    
+			    textStyle:{
+			    	color:"#fff",
+			    },
+		    },         	    
+		    textStyle:{
+		    	color:"#fff",
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {
+		                show: true,
+		                type: ['pie', 'funnel']
+		            },
+		            restore : {show: true},
+//		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    series : [
+		        {
+		            name:'面积模式',
+		            type:'pie',
+		            radius : [30, 120],
+		            center : ['50%', '50%'],
+		            roseType : 'area',
+		            data:[
+		                {value:4800, name:'木材加工业'},
+		                {value:500, name:'食品制造业'},
+		                {value:1500, name:'零售业'},
+		                {value:2500, name:'水力发电'},
+		                {value:2000, name:'其他制造业'},
+		                {value:3500, name:'其他'}
+		            ]
+		        }
+		    ]
+		};
+		if (option4 && typeof option4 === "object") {
+		    myChart4.setOption(option4, true);
+		}
+		$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+	</script>
+</html>

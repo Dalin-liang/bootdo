@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.archive.dao.ArchiveTaskFeedbackDao">
+
+	<select id="get" resultType="com.bootdo.archive.domain.ArchiveTaskFeedbackDO">
+		select `id`,`from_table`,`feedback_date`,`address`,`source_type`,`person_type`,`deptperson_id`,`del_flag`,`remark`,`create_by`,`create_date`,`update_by`,`update_date`,`deptpeson_name` from archive_task_feedback where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.archive.domain.ArchiveTaskFeedbackDO">
+		select `id`,`from_table`,`feedback_date`,`address`,`source_type`,`person_type`,`deptperson_id`,`del_flag`,`remark`,`create_by`,`create_date`,`update_by`,`update_date`,`deptpeson_name` from archive_task_feedback
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fromTable != null and fromTable != ''"> and from_table = #{fromTable} </if>
+		  		  <if test="feedbackDate != null and feedbackDate != ''"> and feedback_date = #{feedbackDate} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="personType != null and personType != ''"> and person_type = #{personType} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="deptpesonName != null and deptpesonName != ''"> and deptpeson_name = #{deptpesonName} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from archive_task_feedback
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fromTable != null and fromTable != ''"> and from_table = #{fromTable} </if>
+		  		  <if test="feedbackDate != null and feedbackDate != ''"> and feedback_date = #{feedbackDate} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="personType != null and personType != ''"> and person_type = #{personType} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="deptpesonName != null and deptpesonName != ''"> and deptpeson_name = #{deptpesonName} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.archive.domain.ArchiveTaskFeedbackDO">
+		insert into archive_task_feedback
+		(
+			`id`, 
+			`from_table`, 
+			`feedback_date`, 
+			`address`, 
+			`source_type`, 
+			`person_type`, 
+			`deptperson_id`, 
+			`del_flag`, 
+			`remark`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`, 
+			`deptpeson_name`
+		)
+		values
+		(
+			#{id}, 
+			#{fromTable}, 
+			#{feedbackDate}, 
+			#{address}, 
+			#{sourceType}, 
+			#{personType}, 
+			#{deptpersonId}, 
+			#{delFlag}, 
+			#{remark}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{deptpesonName}
+		)
+	</insert>
+
+	 
+	 	 <insert id="saveFromDispatchByTask" >
+		INSERT INTO archive_task_feedback (SELECT *  from dispatch_task_feedback  
+		WHERE relation_id in (SELECT  id from dispatch_task t where t.actionprogram_id =#{value}))
+	 </insert>
+	 	 <insert id="saveFromDispatchByRespdept" >
+		INSERT INTO archive_task_feedback (SELECT *  from dispatch_task_feedback  
+		WHERE relation_id in (SELECT  id from dispatch_respdept t where t.actionprogram_id =#{value}))
+	 </insert>
+	<update id="update" parameterType="com.bootdo.archive.domain.ArchiveTaskFeedbackDO">
+		update archive_task_feedback 
+		<set>
+			<if test="fromTable != null">`from_table` = #{fromTable}, </if>
+			<if test="feedbackDate != null">`feedback_date` = #{feedbackDate}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="sourceType != null">`source_type` = #{sourceType}, </if>
+			<if test="personType != null">`person_type` = #{personType}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="deptpesonName != null">`deptpeson_name` = #{deptpesonName}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from archive_task_feedback where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from archive_task_feedback where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

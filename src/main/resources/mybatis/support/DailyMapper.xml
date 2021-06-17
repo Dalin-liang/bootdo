@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.DailyDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.DailyDO">
+		select `id`,`dept_id`,`deptperson_id`,`scheduling_date`,`is_exception`,`content`,`create_by`,`create_date`,`update_by`,`update_date` from safeguard_daily where id = #{value}
+	</select>
+	
+	    <!--查询-->
+    <select id="getUser" resultType="java.util.Map" >
+		SELECT t.id,t.deptperson_id,DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') date,p.name ,p.position,d.id AS deptId,d.name AS deptName,t.content,t.id AS daily_Id,t.`is_exception` AS isException,t.`is_personincharge` AS is_personincharge,t.create_date as createDate,t.update_date as updateDate,
+		(	CASE p.`user_id`
+				WHEN #{userId} THEN '1'
+				ELSE '0'
+			END
+		)AS isOwner
+		FROM safeguard_daily t
+		INNER JOIN safeguard_scheduling s ON s.`deptperson_id` = t.`deptperson_id` AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(s.scheduling_date,'%Y-%m-%d')
+		LEFT JOIN safeguard_deptperson p ON p.`id` = t.`deptperson_id`
+		LEFT JOIN safeguard_dept d ON d.`id` = t.`dept_id`
+        <where>
+			1=1
+			<if test="start_schedulingDate != null and start_schedulingDate != '' "> 
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			<if test="deptPersonName != null and deptPersonName != ''  ">
+				and p.name like concat('%',#{deptPersonName},'%')
+			</if>
+			<if test="deptName != null and deptName != ''  ">
+				and d.name like concat('%',#{deptName},'%')
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList !=null and deptIdsList.size()>0 ">
+				and ( p.`user_id` = #{userId} OR t.`dept_id` IN
+					<foreach item="deptId" collection="deptIdsList" open="(" separator="," close=")">
+						#{deptId}
+					</foreach>
+				)
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList ==null ">
+				and p.`user_id` = #{userId}
+			</if>
+        </where>
+        order by t.scheduling_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+    </select>
+
+	<select id="getUserCount" resultType="int" >
+		SELECT COUNT(*)
+		FROM safeguard_daily t
+		INNER JOIN safeguard_scheduling s ON s.`deptperson_id` = t.`deptperson_id` AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(s.scheduling_date,'%Y-%m-%d')
+		LEFT JOIN safeguard_deptperson p ON p.`id` = t.`deptperson_id`
+		LEFT JOIN safeguard_dept d ON d.`id` = t.`dept_id`
+		<where>
+			1=1
+			<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			<if test="deptPersonName != null and deptPersonName != ''  ">
+				and p.name like concat('%',#{deptPersonName},'%')
+			</if>
+			<if test="deptName != null and deptName != ''  ">
+				and d.name like concat('%',#{deptName},'%')
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList !=null and deptIdsList.size()>0 ">
+				and ( p.`user_id` = #{userId} OR t.`dept_id` IN
+				<foreach item="deptId" collection="deptIdsList" open="(" separator="," close=")">
+					#{deptId}
+				</foreach>
+				)
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList ==null ">
+				and p.`user_id` = #{userId}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="list" resultType="com.bootdo.support.dto.DailyDO">
+		select `id`,`deptperson_id`,`scheduling_date`,`is_exception`,`content`,`create_by`,`create_date`,`update_by`,`update_date`,'is_personincharge' from safeguard_daily
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="schedulingDate != null and schedulingDate != ''"> and scheduling_date = #{schedulingDate} </if>
+		  		  <if test="isException != null and isException != ''"> and is_exception = #{isException} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_daily
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="schedulingDate != null and schedulingDate != ''"> and scheduling_date = #{schedulingDate} </if>
+		  		  <if test="isException != null and isException != ''"> and is_exception = #{isException} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.DailyDO" useGeneratedKeys="true" keyProperty="id">
+		insert into safeguard_daily
+		(
+			`id`, 
+			`dept_id`,
+			`deptperson_id`,
+			`scheduling_date`,
+			`is_exception`, 
+			`content`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`,
+			`is_personincharge`
+		)
+		values
+		(
+			#{id}, 
+			#{deptId},
+			#{deptpersonId},
+			#{schedulingDate},
+			#{isException}, 
+			#{content}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate},
+			#{isPersonInCharge}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.DailyDO">
+		update safeguard_daily 
+		<set>
+			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="schedulingDate != null">`scheduling_date` = #{schedulingDate}, </if>
+			<if test="isException != null">`is_exception` = #{isException}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate},</if>
+			<if test="isPersonInCharge != null">`is_personincharge` = #{isPersonInCharge}</if>
+			
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_daily where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_daily where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getWatchman" resultType="com.bootdo.dispatch.center.res.WatchmanRes">
+		select
+		a.deptperson_id as 'res_id',
+		a.scheduling_date as 'duty_date',
+		b.name,
+		b.mobile,
+		b.dept_id,
+		c.name as 'dept_name'
+		from
+		(select
+		sd.deptperson_id,max(sd.scheduling_date) as scheduling_date
+		from safeguard_daily sd
+		where sd.scheduling_date >= #{start,jdbcType=TIMESTAMP}  and sd.scheduling_date <![CDATA[ < ]]> #{end,jdbcType=TIMESTAMP}
+		group by sd.deptperson_id order by sd.create_date,sd.id) a
+		inner join safeguard_deptperson b on a.deptperson_id=b.id
+		inner join safeguard_dept c on b.dept_id = c.id
+	</select>
+
+</mapper>

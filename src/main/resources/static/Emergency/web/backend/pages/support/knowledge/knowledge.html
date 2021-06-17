@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header">
+	<link rel="stylesheet" href="../../../css/bootstrap.css" />
+	<link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.css" />
+	<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../../css/main.css" />
+	<link rel="stylesheet" href="../../../css/style.css" />
+	<script type="text/javascript" src="../../../js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="../../../layui/layui.all.js" ></script>
+	<script type="text/javascript" src="../../../js/common.js"></script>
+	<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../knowledge/js/knowledge.js?v=1.0"></script>
+
+
+</head>
+<style type="text/css">
+
+	/**字符串过长 转化为 。。。**/
+	table{
+
+		table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+	}
+	td{
+		width:100%;
+		word-break:keep-all;/* 不换行 */
+		white-space:nowrap;/* 不换行 */
+		overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+		text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+		-o-text-overflow:ellipsis;
+		-icab-text-overflow: ellipsis;
+		-khtml-text-overflow: ellipsis;
+		-moz-text-overflow: ellipsis;
+		-webkit-text-overflow: ellipsis;
+	}
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="layui-pad10">
+				<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+					<div class="layui-form-item layui-col-xs8 layui-mb0">
+						<label class="layui-form-label">关键字：</label>
+						<div class="layui-input-block ">
+							<input type="text" id="keywork" name="keywork" lay-verify="title" autocomplete="off" placeholder="请输入关键字" class="layui-input">
+						</div>
+					</div>
+					&emsp;<button type="button" class="layui-btn"  onclick="reLoad()">查 询</button>
+					<button type="button" class="layui-btn layui-btn-danger">高级查询</button>
+				</div>
+				<div class="layui-mt10" id="LAY-component-layer-special-demo">
+					<div class="layadmin-layer-demo">
+						<button type="button" data-method="add" data-type="auto" onclick="add()"  id="add" class="layui-btn layui-btn-normal">新增</button>
+					</div>
+				</div>
+				<div class="layui-mt10">
+					<table id="exampleTable"></table>
+				</div>
+
+
+			</div>
+
+
+
+		</div>
+	</div>
+</div>
+</div>
+<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+<div>
+	<script type="text/javascript">
+		var s_edit_h = 'hidden';
+		var s_remove_h = 'hidden';
+		var s_resetPwd_h = 'hidden';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:edit">
+	<script type="text/javascript">
+		s_edit_h = '';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:remove">
+	<script type="text/javascript">
+		var s_remove_h = '';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:resetPwd">
+	<script type="text/javascript">
+		var s_resetPwd_h = '';
+	</script>
+</div>
+</div>
+<div th:include="include :: footer"></div>
+
+
+
+
+</body>
+</html>

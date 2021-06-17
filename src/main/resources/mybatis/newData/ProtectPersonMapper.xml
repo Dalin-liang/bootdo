@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.newData.dao.ProtectPersonDao">
+
+	<select id="get" resultType="com.bootdo.newData.domain.ProtectPersonDO">
+		select `id`,`wname`,`ajob`,`aname`,`amobile`,`bjob`,`bname`,`bmobile`,`cjob`,`cname`,`cmobile`,`deleted`,`submitDate`,`remarks` from water_protect_person where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.newData.domain.ProtectPersonDO">
+		select `id`,`wname`,`ajob`,`aname`,`amobile`,`bjob`,`bname`,`bmobile`,`cjob`,`cname`,`cmobile`,`deleted`,`submitDate`,`remarks` from water_protect_person
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="wname != null and wname != ''"> and wname = #{wname} </if>
+		  		  <if test="ajob != null and ajob != ''"> and ajob = #{ajob} </if>
+		  		  <if test="aname != null and aname != ''"> and aname = #{aname} </if>
+		  		  <if test="amobile != null and amobile != ''"> and amobile = #{amobile} </if>
+		  		  <if test="bjob != null and bjob != ''"> and bjob = #{bjob} </if>
+		  		  <if test="bname != null and bname != ''"> and bname = #{bname} </if>
+		  		  <if test="bmobile != null and bmobile != ''"> and bmobile = #{bmobile} </if>
+		  		  <if test="cjob != null and cjob != ''"> and cjob = #{cjob} </if>
+		  		  <if test="cname != null and cname != ''"> and cname = #{cname} </if>
+		  		  <if test="cmobile != null and cmobile != ''"> and cmobile = #{cmobile} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from water_protect_person
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="wname != null and wname != ''"> and wname = #{wname} </if>
+		  		  <if test="ajob != null and ajob != ''"> and ajob = #{ajob} </if>
+		  		  <if test="aname != null and aname != ''"> and aname = #{aname} </if>
+		  		  <if test="amobile != null and amobile != ''"> and amobile = #{amobile} </if>
+		  		  <if test="bjob != null and bjob != ''"> and bjob = #{bjob} </if>
+		  		  <if test="bname != null and bname != ''"> and bname = #{bname} </if>
+		  		  <if test="bmobile != null and bmobile != ''"> and bmobile = #{bmobile} </if>
+		  		  <if test="cjob != null and cjob != ''"> and cjob = #{cjob} </if>
+		  		  <if test="cname != null and cname != ''"> and cname = #{cname} </if>
+		  		  <if test="cmobile != null and cmobile != ''"> and cmobile = #{cmobile} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.newData.domain.ProtectPersonDO" useGeneratedKeys="true" keyProperty="id">
+		insert into water_protect_person
+		(
+			`wname`, 
+			`ajob`, 
+			`aname`, 
+			`amobile`, 
+			`bjob`, 
+			`bname`, 
+			`bmobile`, 
+			`cjob`, 
+			`cname`, 
+			`cmobile`, 
+			`deleted`, 
+			`submitDate`, 
+			`remarks`
+		)
+		values
+		(
+			#{wname}, 
+			#{ajob}, 
+			#{aname}, 
+			#{amobile}, 
+			#{bjob}, 
+			#{bname}, 
+			#{bmobile}, 
+			#{cjob}, 
+			#{cname}, 
+			#{cmobile}, 
+			#{deleted}, 
+			#{submitdate}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.newData.domain.ProtectPersonDO">
+		update water_protect_person 
+		<set>
+			<if test="wname != null">`wname` = #{wname}, </if>
+			<if test="ajob != null">`ajob` = #{ajob}, </if>
+			<if test="aname != null">`aname` = #{aname}, </if>
+			<if test="amobile != null">`amobile` = #{amobile}, </if>
+			<if test="bjob != null">`bjob` = #{bjob}, </if>
+			<if test="bname != null">`bname` = #{bname}, </if>
+			<if test="bmobile != null">`bmobile` = #{bmobile}, </if>
+			<if test="cjob != null">`cjob` = #{cjob}, </if>
+			<if test="cname != null">`cname` = #{cname}, </if>
+			<if test="cmobile != null">`cmobile` = #{cmobile}, </if>
+			<if test="deleted != null">`deleted` = #{deleted}, </if>
+			<if test="submitdate != null">`submitDate` = #{submitdate}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from water_protect_person where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from water_protect_person where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

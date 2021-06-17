@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgeDangerDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgeDangerDO">
+		select `id`,`knowledge_info_Id`,`danger_type`,`danger_characteristic`,`health_harm`,`environmental_impact`,`create_date` from safeguard_knowledge_danger where id = #{value}
+	</select>
+	
+	<select id="getByKnowledgeInfoId" resultType="com.bootdo.support.dto.KnowledgeDangerDO">
+		select `id`,`knowledge_info_Id`,`danger_type`,`danger_characteristic`,`health_harm`,`environmental_impact`,`create_date` from safeguard_knowledge_danger where knowledge_info_Id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.KnowledgeDangerDO">
+		select `id`,`knowledge_info_Id`,`danger_type`,`danger_characteristic`,`health_harm`,`environmental_impact`,`create_date` from safeguard_knowledge_danger
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="dangerType != null and dangerType != ''"> and danger_type = #{dangerType} </if>
+		  		  <if test="dangerCharacteristic != null and dangerCharacteristic != ''"> and danger_characteristic = #{dangerCharacteristic} </if>
+		  		  <if test="healthHarm != null and healthHarm != ''"> and health_harm = #{healthHarm} </if>
+		  		  <if test="environmentalImpact != null and environmentalImpact != ''"> and environmental_impact = #{environmentalImpact} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_knowledge_danger
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="dangerType != null and dangerType != ''"> and danger_type = #{dangerType} </if>
+		  		  <if test="dangerCharacteristic != null and dangerCharacteristic != ''"> and danger_characteristic = #{dangerCharacteristic} </if>
+		  		  <if test="healthHarm != null and healthHarm != ''"> and health_harm = #{healthHarm} </if>
+		  		  <if test="environmentalImpact != null and environmentalImpact != ''"> and environmental_impact = #{environmentalImpact} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgeDangerDO">
+		insert into safeguard_knowledge_danger
+		(
+			`id`, 
+			`knowledge_info_Id`, 
+			`danger_type`, 
+			`danger_characteristic`, 
+			`health_harm`, 
+			`environmental_impact`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{knowledgeInfoId}, 
+			#{dangerType}, 
+			#{dangerCharacteristic}, 
+			#{healthHarm}, 
+			#{environmentalImpact}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgeDangerDO">
+		update safeguard_knowledge_danger 
+		<set>
+			<if test="knowledgeInfoId != null">`knowledge_info_Id` = #{knowledgeInfoId}, </if>
+			<if test="dangerType != null">`danger_type` = #{dangerType}, </if>
+			<if test="dangerCharacteristic != null">`danger_characteristic` = #{dangerCharacteristic}, </if>
+			<if test="healthHarm != null">`health_harm` = #{healthHarm}, </if>
+			<if test="environmentalImpact != null">`environmental_impact` = #{environmentalImpact}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge_danger where id = #{value}
+	</delete>
+	
+	<delete id="deleteByKnowledgeInfoId">
+		delete from safeguard_knowledge_danger where knowledge_info_Id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge_danger where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

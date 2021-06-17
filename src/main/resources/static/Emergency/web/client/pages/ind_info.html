@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+			.optiontxt{
+				display: inline-block;
+				border:#acc5ff thin solid;
+				padding: 1px 3px;
+				padding-right: 10px;
+				border-radius: 3px;
+				color: #acc5ff;
+				height: 22px;
+				margin-bottom: 5px;
+				margin-right: 8px;
+				position: relative;	
+				vertical-align: middle;
+			}
+			.optiontxt .fa-close{
+				position: absolute;
+				font-size:12px;
+				margin-top: -4px;
+				color: #aee4ff;
+				cursor: pointer;
+				right: 0;
+				top: 4px;
+				/*padding: 2px;*/
+			}
+			.input_cont{
+				display: inline-block;
+				/*border: red thin solid;*/
+				width: 100%;
+			}
+			/*.input_cont #inputtxt:focus,.input_cont #inputtxt:active{
+				border-color: #66afe9 thin solid;
+				outline: 0;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);				
+			}*/
+			.input_cont #inputtxt{
+				background: transparent;
+				border: none;
+				padding: 2px 5px;
+				width: 100%;
+				height: 100%;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border">
+				<!--对讲-->
+				<!--<div class="tab-pane fade comborder5" id="tab_interphone" style="width: 400px;">
+					<div class="tl">
+						对讲呼叫<span class="close">x</span>
+					</div>
+					<div class="pad20 ind_cont clearfix">
+						<div class="clearfix">
+							<div class="col-xs-3 pad5 text-center">
+								号码 :
+							</div>
+							<div class="col-xs-8 pad0">
+								<input class="form-control" type="" name="" id="" value="" />
+							</div>								
+						</div>
+						<div class="clearfix text-center mt20">
+							<button class="btn btn-success">呼 叫</button>
+							<button class="btn btn-danger">挂 断</button>
+						</div>
+					</div>
+				</div>-->
+				<!--电话呼叫-->
+				<!--<div class="tab-pane fade comborder5" id="tab_phone" style="width: 400px;">
+					<div class="tl">
+						电话呼叫<span class="close">x</span>
+					</div>
+					<div class="pad20 ind_cont clearfix">
+						<div class="clearfix">
+							<div class="col-xs-3 pad5 text-center">
+								号码 :
+							</div>
+							<div class="col-xs-7 pad0">
+								<input class="form-control" type="" name="" id="" value="" />
+							</div>
+						</div>
+						<div class="text-center mt20 clearfix">
+							<a class="btn btn-primary btn-lg">1</a>
+							<a class="btn btn-primary btn-lg">2</a>
+							<a class="btn btn-primary btn-lg">3</a>
+							<div class="clearfix mt10"></div>
+							<a class="btn btn-primary btn-lg">4</a>
+							<a class="btn btn-primary btn-lg">5</a>
+							<a class="btn btn-primary btn-lg">6</a>									
+							<div class="clearfix mt10"></div>
+							<a class="btn btn-primary btn-lg">7</a>
+							<a class="btn btn-primary btn-lg">8</a>
+							<a class="btn btn-primary btn-lg">9</a>
+							<div class="clearfix mt10"></div>
+							<a class="btn btn-primary btn-lg">0</a>
+						</div>
+						<div class="clearfix text-center mt20">
+							<button class="btn btn-success">呼 叫</button>
+							<button class="btn btn-danger">挂 断</button>
+							<button class="btn btn-info">会 议</button>
+							<button class="btn btn-default">清 除</button>
+						</div>
+					</div>
+				</div>-->
+				<!--短信-->
+				<div class="" id="tab_info" style="height: 300px;">
+					<div class="tl comtl">
+						发送短信
+					</div>
+					<div class="pad20 ind_cont clearfix">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 ">
+								收信人 :
+							</div>
+							<div class="col-xs-9 dropdown com_dropdown" style="padding: 0;">
+								<div class="form-control" style="height: auto;">
+									<div id="inputkey" class="srcollcom" style="max-height: 80px;">
+										
+									</div>
+									<span class="input_cont">
+										<input id="inputtxt" placeholder="请输入电话号码" autocomplete="off" />										
+									</span>
+								</div>
+								
+								<ul class="srcollcom dropdown-menu btn-block" id="searchul" style="max-height: 120px;">
+							        						       
+							   </ul>
+							</div>
+							<a class="font24" id="contact_btn">
+								<i class="fa fa-address-book-o colororange"></i>								
+							</a>
+						</div>
+						<div class="col-xs-12 mt10">
+							<textarea class="form-control srcollcom" style="resize: none;height: 60px;" id="infocont"></textarea>
+						</div>
+						<div class="clearfix"></div>
+						<div class="clearfix text-center mt10">
+							<button class="btn btn-success" onclick="sentInfo()">发 送</button>
+							<button class="btn btn-default" onclick="clearInfo()">清 除</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/layer_v3.1.1/layer.js" ></script>
+		<script>
+
+//				联系人弹出框
+				$("#contact_btn").on("click", function() {
+					parent.layer.open({
+				    	type: 2,
+				    	id:"contacts",
+						offset: ['170px', '1380px'],
+						shade: false,
+						closeBtn: 2,
+						fixed:false,
+						title:false,
+						area: ['340px', '500px'],
+						skin: '',
+						content: 'ind_contacts.html'
+					})
+				})
+
+				var allcontacts=[];
+				var contacttel=[];
+				function getContacts(){
+				    allcontacts=[];
+				    contacttel=[];
+					$.ajax({
+						url:'/supportDept/getDeptAndPersons',
+						dataType:'json',
+						type:'get',
+						success:function(result){
+							console.log(result)
+							$.each(result.nodes,function(index,item){
+								if(item.children){
+									$.each(item.children,function(idx,val){									
+										allcontacts.push({"name":val.name,"tel":val.mobile})
+										contacttel.push(val.mobile)
+									})
+								}
+							});
+						}
+					})
+				}
+				getContacts()
+				$("#inputtxt")[0].onkeypress = function(e){
+					// 获取事件
+					e = e || window.event;
+					// 获取按键编码
+					var key = e.whick || e.keyCode;
+					// 检测是否为回车键
+					if(key == 13){
+					    var tel=$("#inputtxt").val();
+						$("#inputkey").append('<span class="optiontxt" tel="'+tel+'">'+tel+
+											'<i class="fa fa-close"></i>'+
+										'</span>')
+						$("#inputtxt").val("");
+					}
+				}
+				$("#inputtxt").bind("input propertychange",function(event){
+				        console.log(event.whick);
+			    	var key=$(this).val().trim();
+			    	console.log(key);
+			    	if(key==""){
+			    		$("#searchul").slideUp()
+			    		return;
+			    	}
+			    	$("#searchul").empty();
+					
+			    	var arr = [];
+					$.each(contacttel, function(index,value){
+						if(value.indexOf(key) >= 0){
+							arr.push(index);
+						}
+						if(index==contacttel.length-1){
+							if(arr.length<1){
+								return;
+							}							
+							$("#searchul").slideDown()
+							$.each(arr, function(index,value){
+								$("#searchul").append('<li name="'+allcontacts[value].name+'" tel="'+allcontacts[value].tel+'" ><a>'+allcontacts[value].tel+'（'+allcontacts[value].name+'）</a></li>')
+								
+		                  	});
+							
+						}
+					});
+				});
+				function addcontact(name,tel){
+					var len=$("#inputkey .optiontxt").length;
+					if(len>0){
+						$("#inputkey .optiontxt").each(function(idx,val){
+							if($(this).attr("tel")==tel){
+								return false;
+							}else{
+								if(idx==(len-1)){
+									$("#inputkey").append('<span class="optiontxt" name="'+name+'" tel="'+tel+'">'+name+									
+											'<i class="fa fa-close"></i>'+
+										'</span>')
+								}
+								
+							}
+						})
+					}else{
+						$("#inputkey").append('<span class="optiontxt" name="'+name+'" tel="'+tel+'">'+name+
+										'<i class="fa fa-close"></i>'+
+									'</span>')
+					}
+				}
+				/*if(sessionStorage.getItem("mapSend")=="true"){
+				var mobileArr=sessionStorage.getItem("mobile").split(",");
+				console.log(mobileArr);
+				for(var i in mobileArr){
+				    $("#inputkey").append('<span class="optiontxt" tel="'+mobileArr[i]+'">'+mobileArr[i]+
+											'<i class="fa fa-close"></i>'+
+										'</span>')
+				}
+			}*/
+				$("#searchul").on("click","li",function(){
+					var name=$(this).attr("name");
+					var tel=$(this).attr("tel");
+					addcontact(name,tel);	
+				})
+				$("#inputkey").on("click",".fa-close",function(){
+					$(this).parent(".optiontxt").remove()				
+				})
+				
+				function sentInfo() {
+					var cont=$("#infocont").val().trim();
+					var contactlen=$("#inputkey .optiontxt").length;
+					
+					if(contactlen==0){
+						parent.layer.msg("请输入收信人");
+						return;
+					}
+					if(cont==""){
+						parent.layer.msg("请填写短信内容");
+						return;
+					}
+					var mobile="";
+					$("#inputkey .optiontxt").each(function(index){
+						if(index==(contactlen-1)){
+							mobile+=$(this).attr("tel");
+							return false;
+						}
+						mobile+=$(this).attr("tel")+",";
+					})
+                        $.ajax({
+                            url:'/dispatch/center/smsSend',
+                            dataType:'json',
+                            type:'post',
+                            data:{
+                                "mobiles":mobile,
+                                "content":cont,
+								"jsonStr":sessionStorage.getItem("jsonStr")?sessionStorage.getItem("jsonStr"):''
+                            },
+                            success:function(result){
+                                if(result.code==0){
+                                    parent.layer.msg('发送成功');
+                                	$("#infocont").val("");
+								}else{
+                                    parent.layer.msg('发送失败');
+								}
+                            }
+                        })
+
+				}
+				
+				function clearInfo(){
+					$("#inputkey").empty();
+					$("#inputtxt").val("")
+					$("#infocont").val("");
+				}
+				$(document).mouseup(function(e) { 
+				    var  pop = $('#searchul');  
+				    if(!pop.is(e.target) && pop.has(e.target).length === 0) { 
+				        $("#searchul").hide()
+				    }
+				}); 
+			</script>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgeDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgeDO">
+		select `id`,`warn_id`,`type`,`title`,`source`,`keywork`,`outline`,`content`,`remark`,`create_by`,`create_date` from safeguard_knowledge where id = #{value}
+	</select>
+	
+	<select id="getListByParams"  resultType="com.bootdo.support.dto.KnowledgeDO">
+		select `id`,`warn_id`,`type`,`title`,`source`,`keywork`,`outline`,`content`,`remark`,`create_by`,`create_date` 	
+		from safeguard_knowledge t
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="warnId != null and warnId != ''"> and warn_id = #{warnId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="title != null and title != ''"> and title like concat('%',#{title},'%') </if>
+		  		  <if test="source != null and source != ''"> and source like concat('%',#{source},'%') </if>
+		  		  <if test="keywork != null and keywork != ''"> and keywork like concat('%',#{keywork},'%') </if>
+		  		  <if test="outline != null and outline != ''"> and outline = #{outline} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	<select id="list" resultType="Map">
+		select `id`,`warn_id`,`type`,`title`,`source`,`keywork`,`outline`,`content`,`remark`,`create_by`,`create_date` ,
+		(select id from common_file t1 where t.id = t1.relation_id  ) fileId,
+		(select file_name from common_file t1 where t.id = t1.relation_id  ) fileName,
+		(select file_url from common_file t1 where t.id = t1.relation_id  ) fileUrl
+		from safeguard_knowledge t
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="warnId != null and warnId != ''"> and warn_id = #{warnId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="title != null and title != ''"> and title = #{title} </if>
+		  		  <if test="source != null and source != ''"> and source = #{source} </if>
+		  		  <if test="keywork != null and keywork != ''"> and keywork like concat('%',#{keywork},'%') </if>
+		  		  <if test="outline != null and outline != ''"> and outline = #{outline} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by create_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_knowledge
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="warnId != null and warnId != ''"> and warn_id = #{warnId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="title != null and title != ''"> and title = #{title} </if>
+		  		  <if test="source != null and source != ''"> and source = #{source} </if>
+		  		  <if test="keywork != null and keywork != ''"> and keywork like concat('%',#{keywork},'%') </if>
+		  		  <if test="outline != null and outline != ''"> and outline = #{outline} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgeDO">
+		insert into safeguard_knowledge
+		(
+			`id`, 
+			`warn_id`, 
+			`type`, 
+			`title`, 
+			`source`, 
+			`keywork`, 
+			`outline`, 
+			`content`, 
+			`remark`, 
+			`create_by`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{warnId}, 
+			#{type}, 
+			#{title}, 
+			#{source}, 
+			#{keywork}, 
+			#{outline}, 
+			#{content}, 
+			#{remark}, 
+			#{createBy}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgeDO">
+		update safeguard_knowledge 
+		<set>
+			<if test="warnId != null">`warn_id` = #{warnId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="source != null">`source` = #{source}, </if>
+			<if test="keywork != null">`keywork` = #{keywork}, </if>
+			<if test="outline != null">`outline` = #{outline}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

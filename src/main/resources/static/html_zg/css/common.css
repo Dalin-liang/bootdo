@@ -1,0 +1,211 @@
+@font-face {
+    font-family: "PangMen";
+    src: local("PangMen.ttf"), local("PangMen.ttf"), url(../plugin/font/PangMen.ttf);
+}
+.PangMen {
+    font-family: "PangMen" !important;
+}
+@font-face {
+    font-family: "Digital";
+    src: local("Digital.ttf"), local("Digital.ttf"), url(../plugin/font/Digital.ttf);
+}
+.Digital {
+    font-family: "Digital" !important;
+}
+
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+iframe,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+button,
+input,
+textarea,
+th,
+td,
+fieldset {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+html,
+body {
+    font-size: 16px;
+    color: #414d5f;
+}
+
+.flex {
+    display: inline-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-v {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.flex-1 {
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.flex-m {
+    align-items: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+
+.flex-l {
+    justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+}
+
+.flex-r {
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+}
+
+.flex-t {
+    align-items: flex-start;
+    -webkit-align-items: flex-start;
+}
+
+.flex-b {
+    align-items: flex-end;
+    -webkit-align-items: flex-end;
+}
+
+.flex-between {
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.flex-wrap {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.flex-box {
+    width: 100%;
+    height: 100%;
+}
+
+.flex-box>.flex-main {
+    overflow: auto;
+}
+
+.overflow-y {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: " ";
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+._trans {
+    -webkit-transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    -o-transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lines1 {
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.rfs-12 {
+    font-size: 12px;
+}
+
+.rfs-13 {
+    font-size: 13px;
+}
+
+.rfs-14 {
+    font-size: 14px;
+}
+
+.rfs-15 {
+    font-size: 15px;
+}
+
+.rfs-16 {
+    font-size: 16px;
+}
+
+.rfs-17 {
+    font-size: 17px;
+}
+
+.rfs-18 {
+    font-size: 18px;
+}
+
+.rfs-19 {
+    font-size: 19px;
+}
+
+.rfs-20 {
+    font-size: 20px;
+}
+
+.rfs-24 {
+    font-size: 24px;
+}
+
+.rfs-28 {
+    font-size: 28px;
+}
+
+.rfs-30 {
+    font-size: 30px;
+}
+
+.rfs-32 {
+    font-size: 32px;
+}
+
+.rfs-36 {
+    font-size: 36px;
+}
+
+.rfs-40 {
+    font-size: 40px;
+}
+.di{
+	display: inline-block;
+}

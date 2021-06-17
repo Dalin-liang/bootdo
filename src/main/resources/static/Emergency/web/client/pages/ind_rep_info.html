@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="../../backend/js/common.js"></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+			.other_c .form-control{
+				word-wrap: normal;
+				height: auto;
+				min-height: 34px;
+				white-space: normal;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="pad10 ind_cont clearfix other_c srcollcom" style="height: 600px;">
+					<p class="text-center">基本信息</p>
+					<div class="clearfix">
+						<div class="col-xs-6 mt10">
+							<div class="col-xs-4 pad5 text-right">
+								名称：
+							</div>
+							<div class="col-xs-8 pad0">
+								<p class="form-control" id="name"></p>
+							</div>
+						</div>
+						<div class="col-xs-6 mt10">
+							<div class="col-xs-4 pad5 text-right">
+								俗称：
+							</div>
+							<div class="col-xs-8 pad0">
+								<p class="form-control" id="otherName"></p>
+							</div>
+						</div>						
+					</div>
+					<div class="clearfix">
+						<div class="col-xs-6 mt10">
+							<div class="col-xs-4 pad5 text-right">
+								分子式：
+							</div>
+							<div class="col-xs-8 pad0">
+								<p class="form-control" id="molecularFormula"></p>
+							</div>
+						</div>
+						<div class="col-xs-6 mt10">
+							<div class="col-xs-4 pad5 text-right">
+								化学类别：
+							</div>
+							<div class="col-xs-8 pad0">
+								<p class="form-control" id="chemicalType"></p>
+							</div>
+						</div>						
+					</div>
+					
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								主要成分：
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="mainIngredient"></p>
+							</div>
+						</div>						
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								外观与性状:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="appearanceTraits">
+								</p>
+							</div>								
+						</div>
+					</div>			
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								侵入途径:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="intrusionWay"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								特别警示:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="specialWarning"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								储运要求:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="storageTransportationMethods"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								废弃处理:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="discardMethods"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								用途:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="use"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								包装方法:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="pack"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								禁忌物:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="incompatibility"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								燃烧产物:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="combustionProduct"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="clearfix"></div>
+					<p class="text-center mt10 ">应急行动</p>
+					
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								隔离与公共安全:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="isolationSafety"></p>
+							</div>								
+						</div>			
+					</div>
+					
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								泄漏处理:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="leakageResponse"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								火灾扑救:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="fireFighting"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								急救:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="emergencyRescue"></p>
+							</div>								
+						</div>			
+					</div>
+					
+					<div class="clearfix"></div>
+					<p class="text-center mt10 ">防护措施</p>
+					
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								呼吸系统防护:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="respiratory"></p>
+							</div>								
+						</div>			
+					</div>
+					
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								眼睛防护:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="eye"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								身体防护:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="body"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								手防护:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="hand"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								其它:
+							</div>
+							<div class="col-xs-10 pad0">
+								<p class="form-control" id="other"></p>
+							</div>								
+						</div>			
+					</div>
+					<div class="clearfix"></div>
+					<!--<div class="text-center mt20 clearfix">
+						<button class="btn btn-info" id="submit">下载</button>
+						
+						<button class="btn btn-default">关闭</button>
+					</div>-->
+				</div>
+			</div>
+		</div>
+		<script>
+			var infodata=[];
+			function getrepinfo(){
+				$("#name").text(infodata.detail.name)
+				$("#otherName").text(infodata.detail.otherName)
+				$("#molecularFormula").text(infodata.detail.molecularFormula)
+				$("#chemicalType").text(infodata.detail.chemicalType)
+				$("#mainIngredient").text(infodata.detail.mainIngredient)
+				$("#appearanceTraits").text(infodata.detail.appearanceTraits)
+				$("#intrusionWay").text(infodata.detail.intrusionWay)
+				$("#specialWarning").text(infodata.detail.specialWarning)
+				$("#storageTransportationMethods").text(infodata.detail.storageTransportationMethods)
+				$("#discardMethods").text(infodata.detail.discardMethods)
+				$("#use").text(infodata.detail.use)
+				$("#pack").text(infodata.detail.pack)
+				$("#incompatibility").text(infodata.detail.incompatibility)
+				$("#combustionProduct").text(infodata.detail.combustionProduct)
+				
+				$("#isolationSafety").text(infodata.emergency.isolationSafety)
+				$("#leakageResponse").text(infodata.emergency.leakageResponse)
+				$("#fireFighting").text(infodata.emergency.fireFighting)
+				$("#emergencyRescue").text(infodata.emergency.emergencyRescue)
+				
+				$("#respiratory").text(infodata.protect.respiratory)
+				$("#eye").text(infodata.protect.eye)
+				$("#body").text(infodata.protect.body)
+				$("#hand").text(infodata.protect.hand)
+				$("#other").text(infodata.protect.other)
+				
+			}
+		</script>
+	</body>
+</html>

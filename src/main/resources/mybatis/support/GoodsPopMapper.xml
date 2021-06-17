@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.GoodsPopMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportGoodsPop">
+        insert into safeguard_goodspop(
+            id,
+            goodsinfo_id,
+            goodsstorehouse_id,
+            inventorynum,
+            popnum,
+            popdate,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{goodsinfo_id,jdbcType=VARCHAR},
+            #{goodsstorehouse_id,jdbcType=VARCHAR},
+            #{inventorynum,jdbcType=INTEGER},
+            #{popnum,jdbcType=INTEGER},
+            #{popdate,jdbcType=TIMESTAMP},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportGoodsPushDTO">
+          select hc.*,(@rowNum:=@rowNum+1) RN,
+          (select g.goodsname from safeguard_goodsinfo g where hc.goodsinfo_id=g.id) goodsname,
+          (select gs.name from safeguard_goodsstorehouse gs where hc.goodsstorehouse_id=gs.id) storehousename
+          from safeguard_goodspop hc,(select (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="goodsinfo_id != null  and goodsinfo_id != '' ">
+	            AND HC.goodsinfo_id = #{goodsinfo_id}
+	        </if>
+			<if test="goodsstorehouse_id != null and goodsstorehouse_id != '' ">
+                AND HC.goodsstorehouse_id = #{goodsstorehouse_id}
+	        </if>
+			<if test="inventorynum != null and inventorynum != '' ">
+	            AND HC.inventorynum = #{inventorynum}
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+	             AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="popdate != null and popdate != '' ">
+	            AND  HC.popdate = #{popdate}
+	        </if>
+			<if test="popnum != null and popnum != '' ">
+	            AND  HC.popnum = #{popnum}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+			<if test="update_by != null and update_by != '' ">
+				AND HC.update_by like concat('%',#{create_by},'%')
+			</if>
+			<if test="update_date != null and update_date != '' ">
+				AND  HC.update_date = #{update_date}
+			</if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportGoodsPush">
+        update safeguard_goodspop set
+            goodsinfo_id=#{goodsinfo_id,jdbcType=VARCHAR},
+            goodsstorehouse_id=#{goodsstorehouse_id,jdbcType=VARCHAR},
+            inventorynum=#{inventorynum,jdbcType=INTEGER},
+            popnum=#{popnum,jdbcType=INTEGER},
+            popdate=#{popdate,jdbcType=TIMESTAMP},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=TIMESTAMP}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_goodspop where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_goodspop set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_goodspop where id=#{id}
+    </select>
+
+</mapper>

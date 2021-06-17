@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+		<script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    <form class="layui-form" style="margin-top: 10px;">
+        <div class="layui-col-xs10 ">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">成员姓名：</label>
+                <div class="layui-input-block">
+                    <select id="name">
+                        <option value="">暂无数据</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-mt10 layui-text-center layui-col-xs12">
+            <!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="save">保 存</button>
+            <!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+        </div>
+    </form>
+    <script>
+        $.ajax({
+            url:'/deptPerson/getAll',
+            type:'post',
+            dataType:'json',
+            async:false,
+            success:function(rs){
+                if(rs.length>0){
+                    $("#name").empty();
+                    for(var i in rs){
+                        $("#name").append("<option dataId='"+rs[i].id+"' data-name='"+rs[i].name+"' data-mobile='"+rs[i].mobile+"' data-dept='"+rs[i].dept+"' data-remark='"+(rs[i].remarks?rs[i].remarks:'-')+"'>"+rs[i].name+"</option>")
+                    }
+                }
+            }
+        })
+         layui.use(['form', 'layer','element','laydate'], function() {
+             var form = layui.form
+                 , layer = layui.layer
+                 , element = layui.element
+                 , laydate = layui.laydate
+
+             form.on('submit(save)',function(data){
+                 var id=$("#name option:selected").attr("dataId");
+                 var name=$("#name option:selected").attr("data-name");
+                 var mobile=$("#name option:selected").attr("data-mobile");
+                 var dept=$("#name option:selected").attr("data-dept");
+                 var remark=$("#name option:selected").attr("data-remark");
+                 var str="[{\"id\":\""+id+"\",\"name\":\""+name+"\",\"mobile\":\""+mobile+"\",\"dept\":\""+dept+"\",\"remark\":\""+remark.toString()+"\"}]";
+                 sessionStorage.setItem("users",str);
+                 closeFrame();
+             })
+         })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title></title>
+		<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!--<link rel="stylesheet" href="css/table.css" />-->
+		<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/echarts.js"></script>
+		<!--<script type="text/javascript" src="administration.js"></script>--><script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+		
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+		
+	</head>
+
+	<body>
+		<div class="map">
+			<div class="example-map" style="background-image: url(images/map.png)"></div>
+		</div>
+		<div class="header flex flex-m">
+			<div class="title PangMen">正果镇党内扶贫管理</div>
+		</div>
+
+		<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="cont pad10">
+			<div style="height: 60%;">
+				<div class="col-3 pull-left fullh">
+					<div class="comborder fullh">
+						<div class="title">
+							特困党员信息(党建)
+						</div>
+						<div class="border" style="padding-top: 30px;">
+							<div class="pad10" id="" style="height: 100%;width: 100%;">
+								<table class="table table_com tablelayout text-center table-bordered " style="margin-bottom: 0;">
+									<tr>
+										<td style="width:20%">姓名</td>
+										<td style="width:20%">性别</td>
+										<td style="width:20%">年龄</td>
+										<td style="width:40%">登记时间</td>
+										<!--<td style="width:25%">电话号码</td>-->
+									</tr>
+								</table>
+								<div id="dome">
+									<div id="dome1">
+										<table class="table table_com tablelayout text-center table-bordered" style="width:100%" id="party_info">
+											<!--<tr>
+												<td style="width:15%">张强</td>
+												<td style="width:12%">男</td>
+												<td style="width:20%">池田村</td>
+												<td style="width:28%">生病</td>
+												<td style="width:25%">13226089018</td>
+											</tr>
+											<tr>
+												<td>李荣国</td>
+												<td>男</td>
+												<td>池田村</td>
+												<td>残疾</td>
+												<td>13946089018</td>
+											</tr>
+											<tr>
+												<td>刘其凡</td>
+												<td>女</td>
+												<td>池田村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>张旺</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王胜</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>年龄大</td>
+												<td>13432089018</td>
+											</tr>
+											<tr>
+												<td>张怡</td>
+												<td>女</td>
+												<td>蒙花布村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王亚梅</td>
+												<td>女</td>
+												<td>麦村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>李荣国</td>
+												<td>男</td>
+												<td>池田村</td>
+												<td>残疾</td>
+												<td>13946089018</td>
+											</tr>
+											<tr>
+												<td>刘其凡</td>
+												<td>女</td>
+												<td>池田村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>张旺</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王胜</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>年龄大</td>
+												<td>13432089018</td>
+											</tr>
+											<tr>
+												<td>张怡</td>
+												<td>女</td>
+												<td>蒙花布村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王亚梅</td>
+												<td>女</td>
+												<td>麦村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>李荣国</td>
+												<td>男</td>
+												<td>池田村</td>
+												<td>残疾</td>
+												<td>13946089018</td>
+											</tr>
+											<tr>
+												<td>刘其凡</td>
+												<td>女</td>
+												<td>池田村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>张旺</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王胜</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>年龄大</td>
+												<td>13432089018</td>
+											</tr>
+											<tr>
+												<td>张怡</td>
+												<td>女</td>
+												<td>蒙花布村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王亚梅</td>
+												<td>女</td>
+												<td>麦村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>李荣国</td>
+												<td>男</td>
+												<td>池田村</td>
+												<td>残疾</td>
+												<td>13946089018</td>
+											</tr>
+											<tr>
+												<td>刘其凡</td>
+												<td>女</td>
+												<td>池田村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>张旺</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王胜</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>年龄大</td>
+												<td>13432089018</td>
+											</tr>
+											<tr>
+												<td>张怡</td>
+												<td>女</td>
+												<td>蒙花布村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王亚梅</td>
+												<td>女</td>
+												<td>麦村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>李荣国</td>
+												<td>男</td>
+												<td>池田村</td>
+												<td>残疾</td>
+												<td>13946089018</td>
+											</tr>
+											<tr>
+												<td>刘其凡</td>
+												<td>女</td>
+												<td>池田村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>
+											<tr>
+												<td>张旺</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王胜</td>
+												<td>男</td>
+												<td>白面石村</td>
+												<td>年龄大</td>
+												<td>13432089018</td>
+											</tr>
+											<tr>
+												<td>张怡</td>
+												<td>女</td>
+												<td>蒙花布村</td>
+												<td>无工作收入</td>
+												<td>13226874018</td>
+											</tr>
+											<tr>
+												<td>王亚梅</td>
+												<td>女</td>
+												<td>麦村</td>
+												<td>收入低，赡养多</td>
+												<td>13232189018</td>
+											</tr>-->
+										</table>
+									</div>
+									<div id="dome2"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-6 pull-left fullh">
+					<div class="comborder" style="height: 100%;">
+						<div class="border chart4" style="height: 100%;">
+							<div class="map_cont" id="map_main" style="height: 100%;width: 100%;">
+							
+							</div>
+							<div class="data text-center" style="z-index: 99;position: relative;">
+								<div class="inblock data_li lagal_li">
+									<p class="colornum"><span class="font40 Digital">328</span>人</p>
+									<p class="colorblue">参加帮扶总人数</p>
+								</div>
+								<div class="inblock data_li lagal_li">
+									<p class="colornum"><span class="font40 Digital">89.56</span>%</p>
+									<p class="colorblue">法人数量</p>
+								</div>
+								<div class="inblock data_li lagal_li">
+									<p class="colornum"><span class="font40 Digital">57.35</span>%</p>
+									<p class="colorblue">帮扶脱贫率</p>
+								</div>
+							</div>
+							<div class="pover_data">
+								<div class="col-6 pull-left">
+									<div class="ind_num pover_li">
+										贫困党员人数：<span class="Digital font24 colornum">1028</span> 人
+									</div>
+									<div class="ind_num pover_li mt10">
+										因病致病党员人数：<span class="Digital font24 colornum">28</span> 人
+									</div>
+								</div>
+								<div class="col-6 pull-left">
+									<div class="ind_num pover_li">
+										贫困党员人数：<span class="Digital font24 colornum">1028</span> 人
+									</div>
+									<div class="ind_num pover_li mt10">
+										因病致病党员人数：<span class="Digital font24 colornum">28</span> 人
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-3 pull-left fullh">
+					<div class="comborder" style="height: calc(50% - 15px);">
+						<div class="title">
+							贫困党员性别比例
+						</div>
+						<div class="border pad10" style="padding-top: 30px;">
+							<div class="" id="chart1" style="height: 100%;width: 100%;">
+
+							</div>
+						</div>
+					</div>
+					<div class="comborder" style="height: calc(50% - 15px);margin-top: 30px;">
+						<div class="title">
+							因病致贫疾病类型
+						</div>
+						<div class="border pad10" style="padding-top: 30px;">
+							<div class="" id="chart2" style="height: 100%;width: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mt15" style="height: calc(40% - 30px);margin-top: 30px;">
+				<div class="col-3 pull-left fullh">
+					<div class="comborder fullh">
+						<div class="title">
+							党员信息
+						</div>
+						<div class="border pad10" style="padding-top: 30px;">
+							<div class="pad10 srcollcom fullh text-center">
+								<div class="ind_num font18 chart3">
+									贫困党员人数：<span class="Digital font40 colornum">1028</span> 人
+								</div>
+								<div class="ind_num font18 chart3 mt10">
+									因病致病党员人数：<span class="Digital font40 colornum">28</span> 人
+								</div>
+								<div class="ind_num font18 chart3 mt10">
+									伤残党员人数： <span class="Digital font40 colornum">27</span> 人
+								</div>
+								<div class="ind_num font18 chart3 mt10">
+									老党员人数： <span class="Digital font40 colornum">128</span> 人
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-6 pull-left fullh">
+					<div class="comborder fullh">
+						<div class="title">
+							伤残党员等级
+						</div>
+						<div class="border pad10" style="padding-top: 30px;">
+							<div class="" id="chart3" style="height: 100%;width: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-3 pull-left fullh">
+					<div class="comborder fullh">
+						<div class="title">
+							低保党员身份
+						</div>
+						<div class="border pad10" style="padding-top: 30px;">
+							<div class="" id="chart4" style="height: 100%;width: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		var mapComp;
+		var map;
+		var MapComp = function(){
+			var domId="map_main";
+			var _center = [113.892436,23.416955];
+			var _map;
+			var _def_zoom=12;
+			var _curr_zoom = _def_zoom;
+			var _max_zoom=20;
+			var _min_zoom=8;
+			this.init = function(){
+		        _map = new AMap.Map(domId, {
+		        	mapStyle: "amap://styles/dark"	,
+		            zoom:_curr_zoom,//级别
+		            center: _center,//中心点坐标
+		            expandZoomRange:true,
+		            zooms:[_min_zoom,_max_zoom],
+		            layers:[
+		                new AMap.TileLayer.Satellite(),
+		                new AMap.TileLayer.RoadNet()
+		            ]
+		        });
+		        map=_map;
+			};
+		
+		}
+		mapComp = new MapComp();
+    	mapComp.init();
+    	
+//		特困党员信息(党建)
+		$.ajax({
+            url: '/api/nt/partyDestitute/getPartyDestituteData',
+            dataType: 'json',
+            type: 'get',
+            success: function (result) {
+            	$("#party_info").empty();
+            	$.each(result.data,function(index,item){
+            		$("#party_info").append("<tr><td width='20%'>"+(item.name||"")+"</td><td width='20%'>"+(item.sex||"")+"</td><td width='20%'>"+(item.age||"")+"</td><td width='40%'>"+(item.createDate||"")+"</td></tr>")
+            	})
+			}
+		})
+		//		贫困党员性别比例
+		var dom1 = document.getElementById("chart1");
+		var myChart1 = echarts.init(dom1);
+		var option1 = null;
+		option1 = {
+		    title : {
+		        text: '',
+		        subtext: '',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    color:['#0000ff','#d71345'],
+		    legend: {
+		        orient: 'horizontal',
+		        left: 'center',
+		        data: ['男','女'],		        
+				textStyle: {
+					color: "#fff",
+				},
+		    },		    
+			textStyle: {
+				color: "#fff",
+			},
+		    series : [
+		        {
+		            name: '贫困党员男女比例',
+		            type: 'pie',
+		            radius : '80%',
+		            center: ['50%', '60%'],
+		            data:[
+		                {value:335, name:'男'},
+		                {value:310, name:'女'}
+		            ],
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+		};
+		if(option1 && typeof option1 === "object") {
+			myChart1.setOption(option1, true);
+		}
+
+		//		因病致贫疾病类型
+		var dom2 = document.getElementById("chart2");
+		var myChart2 = echarts.init(dom2);
+		var option2 = null;
+		option2 = {
+		    tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+	
+		    color: ['#1AFFFD', '#FEE581', '#06B8F8', '#FF5C58', '#F5A7C1','#DF86F0'],
+		    legend: {
+		        orient: 'horizontal',
+		        x: 'center',
+		        data:['糖尿病','高血压','脑中风','恶性肿瘤','冠心病','其他'],		        
+				textStyle: {
+					color: "#fff",
+				},
+		    },		    		        
+			textStyle: {
+				color: "#fff",
+			},
+		    series: [
+		        {
+		            name:'致贫疾病类型',
+		            type:'pie',
+		            radius: ['50%', '70%'],
+		            avoidLabelOverlap: false,
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'center'
+		                },
+		                emphasis: {
+		                    show: true,
+		                    textStyle: {
+		                        fontSize: '30',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                normal: {
+		                    show: false
+		                }
+		            },
+		            data:[
+		                {value:135, name:'糖尿病'},
+		                {value:110, name:'高血压'},
+		                {value:24, name:'脑中风'},
+		                {value:15, name:'恶性肿瘤'},
+		                {value:14, name:'冠心病'},
+		                {value:30, name:'其他'}
+		            ]
+		        }
+		    ]
+		};
+		if(option2 && typeof option2 === "object") {
+			myChart2.setOption(option2, true);
+		}
+
+		//		伤残党员等级
+		var dom3 = document.getElementById("chart3");
+		var myChart3 = echarts.init(dom3);
+		var option3 = null;
+		option3 = {
+			tooltip: {
+	        },
+		    series: [{
+		        type: 'treemap',
+		        data: []
+		    }]
+		};
+		if(option3 && typeof option3 === "object") {
+			myChart3.setOption(option3, true);
+		}
+		myChart3.showLoading();
+				
+		$.ajax({
+            url: '/api/nt/partySelfcare/getPartySelfcareAbilityNum',
+            dataType: 'json',
+            type: 'get',
+            success: function (result) {
+            	myChart3.hideLoading();
+            	var chardata=[];
+            	console.log(result);
+            	var allvalue=0;
+            	$.each(result.data, function(index,item) {
+            		allvalue=allvalue+item.value;
+            	})
+            	$.each(result.data, function(index,item) {
+            		if(item.name!=""){
+	            		var test={
+				            name: item.name,
+				            value: item.value,
+				            label: {
+			                    show: true,
+			            		formatter: '{b}:{c}人',
+			                	fontSize:16
+			                },
+			                tooltip: {
+			                    formatter: '{b}:{c}('+((item.value/allvalue)*100).toFixed(1)+'%)',
+			                },
+				            
+				        }
+	            		chardata.push(test)
+            		
+            		}
+            	});
+            	myChart3.setOption({
+					series: [{
+                       data: chardata
+                    }]
+                });
+            }
+		})
+		
+		//		低保党员身份
+		var dom4 = document.getElementById("chart4");
+		var myChart4 = echarts.init(dom4);
+		var option4 = null;
+		var colors = ['#5793f3', '#d14a61', '#675bba'];
+		option4 = {
+		    title : {
+		        text: '',
+		        subtext: '',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'horizontal',
+		        x: 'center',
+		        data:['退(离)休','在校学生','贫农','失业','病残','亲人负担'],		        	    		        
+				textStyle: {
+					color: "#fff",
+				},
+		    },		    	    		        
+			textStyle: {
+				color: "#fff",
+			},
+		    toolbox: {
+		    	 show : true,
+		         feature : {
+		             magicType : {
+		                 show: true,
+		                 type: ['pie', 'funnel']
+		             }
+		         }
+		    },
+		    calculable : true,
+		    series : [
+		        
+		        {
+		            name:'低保党员身份',
+		            type:'pie',
+		            radius : [20, 110],
+		            center : ['50%', '67%'],
+		            roseType : 'area',
+		            label: {
+		                normal: {
+		                    show: true,
+		                    textStyle: {
+		                        fontSize: '16',
+		                        fontWeight: 'bold'
+		                    }
+		                },
+		                emphasis: {
+		                    show: true,
+		                    textStyle: {
+		                        fontSize: '20',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                    lineStyle:{
+		                        width:2
+		                    }
+		            },
+		            data:[
+		                {value:10, name:'退(离)休'},
+		                {value:5, name:'在校学生'},
+		                {value:15, name:'贫农'},
+		                {value:25, name:'失业'},
+		                {value:20, name:'病残'},
+		                {value:35, name:'亲人负担'}
+		            ]
+		        }
+		    ]
+		};
+		if(option4 && typeof option4 === "object") {
+			myChart4.setOption(option4, true);
+		}
+	</script>
+	<script type="text/javascript">
+		var dome = document.getElementById("dome");
+		var dome1 = document.getElementById("dome1");
+		var dome2 = document.getElementById("dome2");
+		var speed = 50; //设置向上轮动的速度 
+		dome2.innerHTML = dome1.innerHTML; //复制节点 
+		function moveTop() {
+			if(dome1.offsetHeight - dome.scrollTop <= 0) {
+				dome.scrollTop = 0;
+			} else {
+				dome.scrollTop++;
+			}
+		}
+		var myFunction = setInterval("moveTop()", speed);
+		dome.onmouseover = function() {
+			clearInterval(myFunction);
+		}
+		dome.onmouseout = function() {
+			myFunction = setInterval(moveTop, speed);
+		}
+	</script>
+	<script type="text/javascript">
+//		function altRows(id) {
+//			if(document.getElementsByTagName) {
+//
+//				var table = document.getElementById(id);
+//				var rows = table.getElementsByTagName("tr");
+//
+//				for(i = 0; i < rows.length; i++) {
+//					if(i % 2 == 0) {
+//						rows[i].className = "evenrowcolor";
+//					} else {
+//						rows[i].className = "oddrowcolor";
+//					}
+//				}
+//			}
+//		}
+//
+//		window.onload = function() {
+//			altRows('alternatecolor');
+//		}
+		$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+	</script>
+
+</html>

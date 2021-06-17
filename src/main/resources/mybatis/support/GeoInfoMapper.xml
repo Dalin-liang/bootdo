@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.GeoInfoMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportGeoInfo">
+        insert into safeguard_geoinfo(
+            id,
+            name,
+            attention_type,
+            geotype_id,
+            lat_lon,
+            addr,
+            enabled,
+            sort_no,
+            number,
+            contact_number,
+            contact,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{attention_type,jdbcType=VARCHAR},
+            #{geotype_id,jdbcType=VARCHAR},
+            #{lat_lon,jdbcType=VARCHAR},
+            #{addr,jdbcType=VARCHAR},
+            #{enabled,jdbcType=INTEGER},
+            #{sort_no,jdbcType=INTEGER},
+            #{number,jdbcType=INTEGER},
+            #{contact_number,jdbcType=VARCHAR},
+            #{contact,jdbcType=VARCHAR},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportGeoInfoDTO">
+        select hc.*,(@rowNum:=@rowNum+1) RN from safeguard_geoinfo hc,(select (@rowNum:=0)) b
+        <where>
+            1=1
+            <if test="id != null ">
+                AND HC.id = #{id}
+            </if>
+            <if test="name != null  and name != '' ">
+                AND HC.name like concat('%',#{name},'%')
+            </if>
+            <if test="geotype_id != null and geotype_id != '' ">
+                AND HC.geotype_id = #{geotype_id}
+            </if>
+            <if test="lat_lon != null and lat_lon != '' ">
+                AND HC.lat_lon = #{lat_lon}
+            </if>
+            <if test="addr != null and addr != '' ">
+                AND HC.addr = #{addr}
+            </if>
+            <if test="position != null and position != '' ">
+                AND HC.position = #{position}
+            </if>
+            <if test="enabled != null and enabled != '' ">
+                AND HC.enabled = #{enabled}
+            </if>
+            <if test="sort_no != null and sort_no != '' ">
+                AND HC.sort_no = #{sort_no}
+            </if>
+            <if test="number != null and number != '' ">
+                AND HC.number = #{number}
+            </if>
+            <if test="contact_number != null and contact_number != '' ">
+                AND HC.contact_number = #{contact_number}
+            </if>
+            <if test="contact != null and contact != '' ">
+                AND HC.contact  like concat('%',#{contact},'%')
+            </if>
+            <if test="remarks != null and remarks != '' ">
+                AND HC.remarks = #{remarks}
+            </if>
+            <if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+            </if>
+            <if test="create_date != null and create_date != '' ">
+                AND HC.create_date = #{create_date}
+            </if>
+            <if test="update_by != null and update_by != '' ">
+                AND HC.update_by like concat('%',#{update_by},'%')
+            </if>
+            <if test="update_date != null and update_date != '' ">
+                AND HC.update_date = #{update_date}
+            </if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportGeoInfo">
+        update safeguard_geoinfo set
+        <if test="name != null"> name=#{name,jdbcType=VARCHAR},</if>
+        <if test="attention_type != null">attention_type=#{attention_type,jdbcType=VARCHAR},</if>
+        <if test="geotype_id != null">geotype_id=#{geotype_id,jdbcType=VARCHAR},</if>
+        <if test="lat_lon != null">lat_lon=#{lat_lon,jdbcType=VARCHAR},</if>
+        <if test="addr != null"> addr=#{addr,jdbcType=VARCHAR},</if>
+        <if test="enabled != null">enabled=#{enabled,jdbcType=INTEGER},</if>
+        <if test="sort_no != null">sort_no=#{sort_no,jdbcType=INTEGER},</if>
+        <if test="number != null">number=#{number,jdbcType=INTEGER},</if>
+        <if test="contact_number != null">contact_number=#{contact_number,jdbcType=VARCHAR},</if>
+        <if test="contact != null">contact=#{contact,jdbcType=VARCHAR},</if>
+        <if test="remarks != null">remarks=#{remarks,jdbcType=VARCHAR},</if>
+        <if test="update_by != null">update_by=#{update_by,jdbcType=VARCHAR},</if>
+        <if test="update_date != null">update_date=#{update_date,jdbcType=TIMESTAMP}</if>
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_geoinfo where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_geoinfo set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_geoinfo where id=#{id}
+    </select>
+
+    <select id="getGeoTypeList" resultType="com.bootdo.support.entity.GeotypeDO">
+        select t.id,t.name,t.icon_type as iconType from safeguard_geotype t where t.name is not null AND t.enabled !='1'
+    </select>
+
+    <select id="getGeoInfo" resultType="java.util.HashMap">
+        select sg.*,sgt.name as typename,sgt.icon_type from safeguard_geoinfo sg left join safeguard_geotype sgt on sg.geotype_id=sgt.id
+        <where>
+            <if test="name != null  and name != '' ">
+                sg.name like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by sg.create_date desc
+    </select>
+
+    <select id="getArroundInfoData" resultType="java.util.Map">
+        select count(sgi.id) as typenumber,sum(sgi.number) as number,sgi.attention_type,sgt.name,sgi.geotype_id
+        from safeguard_geoinfo sgi left join safeguard_geotype sgt on sgi.geotype_id=sgt.id
+        group by sgi.geotype_id
+    </select>
+
+    <resultMap id="arroundInfos" type="com.bootdo.support.entity.SupportArroundInfo">
+        <id column="sumgeotype_id" property="geotype_id"/>
+        <result column="typenumber" property="typenumber"/>
+        <result column="sumnumber" property="number"/>
+        <result column="sumtype" property="attention_type"/>
+        <result column="type_name" property="name"/>
+        <collection property="geoInfos" ofType="com.bootdo.support.entity.SupportGeoInfo">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="attention_type" property="attention_type"/>
+            <result column="geotype_id" property="geotype_id"/>
+            <result column="lat_lon" property="lat_lon"/>
+            <result column="addr" property="addr"/>
+            <result column="enabled" property="enabled"/>
+            <result column="sort_no" property="sort_no"/>
+            <result column="number" property="number"/>
+            <result column="contact_number" property="contact_number"/>
+            <result column="contact" property="contact"/>
+            <result column="remarks" property="remarks"/>
+        </collection>
+    </resultMap>
+
+    <select id="getArroundGEOInfoData" resultMap="arroundInfos">
+        select t.geotype_id as 'sumgeotype_id',t.typenumber,t.number as 'sumnumber',t.attention_type as 'sumtype',t.name as 'type_name',t2.* from
+        (select count(sgi.id) as typenumber,sum(sgi.number) as number,sgi.attention_type,sgt.name,sgi.geotype_id
+            from safeguard_geoinfo sgi left join safeguard_geotype sgt on sgi.geotype_id=sgt.id
+            group by sgi.geotype_id) t left join safeguard_geoinfo t2 on t2.geotype_id=t.geotype_id
+    </select>
+
+    <select id="getGeoTypeInfo" resultType="java.util.Map">
+        SELECT t.id,f.lat_lon AS lon_lat,'1' AS STATUS,t.name AS TYPE
+        FROM safeguard_geotype t
+        INNER JOIN safeguard_geoinfo f ON f.`geotype_id` = t.id
+        WHERE t.enabled ='0'
+        GROUP BY t.`id`
+    </select>
+
+    <select id="getByGeotypeId" resultType="java.util.Map">
+        SELECT f.*
+        FROM safeguard_geotype t
+        INNER JOIN safeguard_geoinfo f ON f.`geotype_id` = t.id
+        WHERE t.id = #{geotypeId}
+    </select>
+
+    <select id="getTypeChart" resultType="java.util.Map">
+        SELECT t.`name` AS name , COUNT(i.id) AS value
+        FROM safeguard_geotype t
+        LEFT JOIN safeguard_geoinfo i ON t.id = i.geotype_id
+        GROUP BY i.geotype_id
+        order by value desc
+    </select>
+</mapper>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取地理位置地图</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="decorator" content="ani"/>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.11&key=f651aa8294209e6934caf028cd4cd576&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+
+    <style type="text/css">
+        #tip {
+            background-color: #ddf;
+            color: #333;
+            border: 1px solid silver;
+            box-shadow: 3px 4px 3px 0px silver;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            line-height: 20px;
+            z-index:9999;
+        }
+        #tip input[type="text"] {
+            height: 25px;
+            border: 0;
+            padding-left: 5px;
+            width: 280px;
+            border-radius: 3px;
+            outline: none;
+            z-index:9999;
+        }
+    </style>
+</head>
+<body>
+<div id="container" style="width: 700px;height: 500px">
+</div>
+<div id="tip">
+    <input type="text" id="keyword" name="keyword" value="请输入关键字：(选定后搜索)" onfocus='this.value=""'/>
+</div>
+<script type="text/javascript">
+    var windowsArr = [];
+    var marker = [];
+    var markers = [];
+    var longitude = "";
+    var latitude = "";
+    var address = "";
+    var lat_lon_param = GetQueryString('lat_lon');
+
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        center: [113.889348,23.415269],
+        zoom: 13,//设置地图级别范围
+        keyboardEnable: false
+    });
+    AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'], function(){
+        // 在图面添加比例尺控件，展示地图在当前层级和纬度下的比例尺
+        var autoOptions = {
+            city: "", //城市，默认全国
+            input: "keyword"//使用联想输入的input的id
+        };
+        autocomplete= new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            city:'',
+            map:map
+        });
+        AMap.event.addListener(autocomplete, "select", function(e){
+            //TODO 针对选中的poi实现自己的功能
+            //清空marker
+            map.clearMap();
+            //清除之前的地址和经纬度
+            longitude = "";
+            latitude = "";
+            address = "";
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);
+        });
+        AMap.event.addListener(placeSearch, 'markerClick', function (e) {
+          //  railCenter = [e.data.location.lng, e.data.location.lat];
+            longitude = e.data.location.lng;
+            latitude = e.data.location.lat;
+            address = e.data.pname+e.data.cityname+e.data.adname+e.data.address;
+
+        });
+    });
+
+    var clickEventListener=AMap.event.addListener(map,'click',function(e){
+        map.clearMap();
+        longitude = "";
+        latitude = "";
+        address = "";
+       // if(markers.length) map.remove(markers);
+        var marker = new AMap.Marker({
+            map: map,
+            //draggable:true,
+            position: new AMap.LngLat(e.lnglat.getLng(),e.lnglat.getLat())
+        });
+        markers.push(marker);
+        var position = marker.getPosition();
+        longitude=e.lnglat.getLng();
+        latitude=e.lnglat.getLat();
+        AMap.service('AMap.Geocoder',function(){//回调函数
+            //实例化Geocoder
+            geocoder = new AMap.Geocoder({
+                city: ""//城市，默认：“全国”
+            });
+            var lnglatXY=[e.lnglat.getLng(), e.lnglat.getLat()];//地图上所标点的坐标
+            geocoder.getAddress(lnglatXY, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    //获得了有效的地址信息:
+                    address = result.regeocode.formattedAddress;
+                }else{
+                    address = '获取失败';
+                    //获取地址失败
+                }
+            });
+        })
+    });
+    var callbackdata = function () {
+        var latitude_longitude = "";
+        if(!!latitude && !!longitude){
+            latitude_longitude = latitude+","+longitude;
+        }
+        var data = {
+            latitude_longitude: latitude_longitude,
+            address : address
+        };
+        return data;
+    }
+
+    if(lat_lon_param){
+        map.clearMap();
+        var lat=lat_lon_param.split(',')[0];
+        var lon=lat_lon_param.split(',')[1];
+
+        var marker = new AMap.Marker({
+
+            //draggable:true,
+            center: [lon, lat],
+            position: new AMap.LngLat(lon,lat)
+        });
+        marker.setMap(map);
+        map.setCenter([lon, lat])
+    }
+
+    function GetQueryString(name) {
+        let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+        let r = window.location.search.substr(1).match(reg)
+        // search,查询？后面的参数，并匹配正则
+        if (r != null) {
+            return unescape(r[2])
+        }
+        return null
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.GoodsInfoMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportGoodsInfo" >
+        insert into safeguard_goodsinfo(
+            id,
+            goodsname,
+            unit,
+            oneleveltype_id,
+            twoleveltype_id,
+            specifications,
+            enabled,
+            sortno,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{goodsname,jdbcType=VARCHAR},
+            #{unit,jdbcType=VARCHAR},
+            #{oneleveltype_id,jdbcType=VARCHAR},
+            #{twoleveltype_id,jdbcType=VARCHAR},
+            #{specifications,jdbcType=VARCHAR},
+            #{enabled,jdbcType=INTEGER},
+            #{sortno,jdbcType=INTEGER},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportGoodsInfoDTO">
+          SELECT hc.*,o.name AS oneleveltypeName,t.name AS twoleveltypeName 
+			FROM safeguard_goodsinfo hc
+			LEFT JOIN safeguard_oneleveltype o ON o.id = hc.oneleveltype_id
+			LEFT JOIN safeguard_twoleveltype t ON t.id = hc.twoleveltype_id
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="goodsname != null  and goodsname != '' ">
+	            AND HC.goodsname like concat('%',#{goodsname},'%')
+	        </if>
+			<if test="unit != null and unit != '' ">
+                AND HC.unit like concat('%',#{unit},'%')
+	        </if>
+			<if test="oneleveltype_id != null and oneleveltype_id != '' ">
+	            AND HC.oneleveltype_id like concat('%',#{oneleveltype_id},'%')
+	        </if>
+			<if test="twoleveltype_id != null and twoleveltype_id != '' ">
+	            AND HC.twoleveltype_id like concat('%',#{twoleveltype_id},'%')
+	        </if>
+			<if test="specifications != null and specifications != '' ">
+	             AND HC.specifications like concat('%',#{specifications},'%')
+	        </if>
+			<if test="enabled != null and enabled != '' ">
+	            AND  HC.enabled = #{enabled}
+	        </if>
+			<if test="sortno != null and sortno != '' ">
+	            AND  HC.sortno = #{sortno}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+	            AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+			<if test="update_by != null and update_by != '' ">
+				AND HC.update_by like concat('%',#{update_by},'%')
+			</if>
+			<if test="update_date != null and update_date != '' ">
+				AND  HC.update_date = #{update_date}
+			</if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportGoodsInfo">
+        update safeguard_goodsinfo set
+            goodsname=#{goodsname,jdbcType=VARCHAR},
+            unit=#{unit,jdbcType=VARCHAR},
+            oneleveltype_id=#{oneleveltype_id,jdbcType=VARCHAR},
+            twoleveltype_id=#{twoleveltype_id,jdbcType=VARCHAR},
+            specifications=#{specifications,jdbcType=VARCHAR},
+            enabled=#{enabled,jdbcType=INTEGER},
+            sortno=#{sortno,jdbcType=INTEGER},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=TIMESTAMP}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_goodsinfo where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_goodsinfo set enabled='0' where id=#{id}
+    </update>
+    
+    <select id="getUniqueById" resultType="java.util.Map">
+        SELECT hc.*,o.name AS oneleveltypeName,t.name AS twoleveltypeName 
+		FROM safeguard_goodsinfo hc
+		LEFT JOIN safeguard_oneleveltype o ON o.id = hc.oneleveltype_id
+		LEFT JOIN safeguard_twoleveltype t ON t.id = hc.twoleveltype_id
+		where hc.id=#{id}
+    </select>
+    <select id="getAllGoods" resultType="com.bootdo.dispatch.center.vo.GoodInfoVO">
+        select gi.id as 'good_id',
+        gi.goodsname as 'good_name',
+        gi.unit,
+        level1.id as 'level1_id',
+        level1.name as 'level1_name',
+        level2.id as 'level2_id',
+        level2.name as 'level2_name'
+        from safeguard_goodsinfo gi
+        inner join safeguard_oneleveltype level1 on gi.oneleveltype_id = level1.id
+        inner join safeguard_twoleveltype level2 on gi.twoleveltype_id = level2.id
+        where gi.enabled=1 and level1.enabled=1  and level2.enabled=1
+        order by level1.sort_no,level2.sort_no,gi.sortno
+    </select>
+
+    <select id="getAllResByGoodIds" resultType="com.bootdo.dispatch.center.res.GoodDistributionRes">
+      select
+        ssg.goodsinfo_id as 'good_id',
+        ssg.inventorynum as 'good_num',
+        sgh.id as 'house_id',
+        sgh.name as 'house_name',
+        sgh.code as 'house_code',
+        sgh.lat_lon,
+        sgh.addr as 'address',
+        sgh.contact,
+        sgh.mobile
+        from safeguard_storehouse_goods ssg
+        inner join safeguard_goodsstorehouse  sgh on ssg.goodsstorehouse_id=sgh.id
+        where sgh.enabled = 1  and ssg.goodsinfo_id  in
+        <foreach collection="goodIds" separator="," open="(" close=")" item="goodId">
+          #{goodId}
+        </foreach>
+        order by ssg.goodsinfo_id
+    </select>
+
+
+
+</mapper>

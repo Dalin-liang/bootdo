@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../css/main.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../../client/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="../../bootstrap-table/bootstrap-table.min.css" />
+<script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="../../../client/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="../../bootstrap-table/bootstrap-table.min.js"></script>
+<script type="text/javascript"
+	src="../../bootstrap-table/bootstrap-table-zh-CN.js"></script>
+	<style type="text/css">
+		body {
+			background-color: #f2f2f2 !important;
+		}
+		.fixed-table-toolbar {
+			display: none;
+		}
+		/**字符串过长 转化为 。。。**/
+		table{
+		   width:100px;
+		   table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+		   background-color:#FFFFFF!important;
+		}
+		td{
+		   width:100%;
+		   word-break:keep-all;/* 不换行 */
+		   white-space:nowrap;/* 不换行 */
+		   overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+		   text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+		   -o-text-overflow:ellipsis;
+		   -icab-text-overflow: ellipsis;
+		   -khtml-text-overflow: ellipsis;
+		   -moz-text-overflow: ellipsis;
+		   -webkit-text-overflow: ellipsis;
+		}
+	</style>
+</head>
+
+<body>
+	<div class=" layui-pad10">
+		<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+				<form class="layui-form"  lay-filter="searchForm" action="">
+				<div class="layui-form-item">
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">结案编码：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<input type="text" id="code" name="code" lay-verify="title"
+								autocomplete="off" placeholder="请输入预案编码" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">归档状态：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="isArchive" name="isArchive">
+								<option value=""></option>
+								<option value="0">未归档</option>
+								<option value="1">已归档</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label" >事故类型：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="accidentTypeId"  name="accidentTypeId" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？" lay-filter="accidentTypeChange">
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">预警类型：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="earlywarnTypeId"  name="earlywarnTypeId" lay-verify="required" lay-reqtext="预警类型是必填项，岂能为空？" lay-filter="earlywarnTypeChange">
+							</select>
+						</div>
+					</div><div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">预警级别：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="earlywarnLevelId"  name="earlywarnLevelId" lay-verify="required" lay-reqtext="预警级别是必填项，岂能为空？">
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">预案名称：</label>
+						<div class="layui-input-inline" style="margin-right: 0px;">
+							<input type="text" id="name" name="name" lay-verify="title" autocomplete="off" placeholder="请输入预案名称" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">结案时间起：</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input" id="closecaseDateBegin" placeholder="结案时间起">
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<label class="layui-form-label">结案时间止：</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input" id="closecaseDateEnd" placeholder="结案时间止">
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+						<button type="button" class="layui-btn" style="margin-left: 50px;"
+						onclick="reloadTable()">查 询</button>
+						<button type="reset" class="layui-btn" style="margin-left: 20px;">重 置</button>
+					</div>
+				</div>
+				</form>
+		</div>
+		<div class="layui-form layui-mt10">
+			<table id="archiveTable" data-mobile-responsive="true"></table>
+		</div>
+	</div>
+	<script type="text/javascript" src="../../layui/layui.js"></script>
+	<script type="text/javascript" src="js/archive.js"></script>
+	<script>
+		layui.config({
+			base : '../../pages/' //静态资源所在路径
+		}).extend({
+			index : '../js/index' //主入口模块
+		})
+		layui.use([ 'index' ,'form'],function() {
+			var $ = layui.$
+			, admin = layui.admin
+			, element = layui.element
+			, router = layui.router();
+			form = layui.form;
+			element.render();
+
+			var active = {
+				offset : function(othis) {
+					var type = othis.data('type'), text = othis.text();
+
+					layer.open({
+						type : 1,
+						offset : type,
+						id : 'layerDemo' + type,
+						content : '<div style="padding: 20px 100px;">'
+								+ text + '</div>',
+						btn : '关闭',
+						btnAlign : 'c',
+						shade : 0,
+						yes : function() {
+							layer.closeAll();
+						}
+					});
+				},
+				edittable : function() {
+					layer.open({
+						type : 2,
+						title : '编辑方案信息',
+						shadeClose : true,
+						shade : 0.4,
+						area : [ '95%', '93%' ],
+						content : 'archiveForm.html'
+					});
+				},
+
+			};
+
+			$('#testbtn').on('click',function() {
+				var othis = $(this), method = othis.data('method');
+				active[method] ? active[method].call(this, othis) : '';
+
+			});
+		});
+	</script>
+</body>
+
+</html>

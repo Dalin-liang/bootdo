@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+            <form class="layui-form" lay-filter="component-form-group">
+                <input type="hidden" name="id">
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">物资名称：</label>
+                        <div class="layui-input-block">
+                            <select name="goodsinfo_id" id="goodsinfo_id" lay-filter="goodsinfo_id" lay-verify="required" lay-reqtext="物资名称是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">储备库：</label>
+                        <div class="layui-input-block">
+                            <select name="goodsstorehouse_id" id="goodsstorehouse_id" lay-filter="goodsstorehouse_id" lay-verify="required" lay-reqtext="储备库是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">最小储备量：</label>
+				    <div class="layui-input-block">
+                        <input type="text" name="min_storage" id="min_storage" lay-verify="required" lay-reqtext="最小储备量是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">计划储备量：</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="plan_storage" id="plan_storage" lay-verify="required" lay-reqtext="计划储备量是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+			 	</div>
+			</form>
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				$.ajax({
+                    url:'/storagePlan/getStoreHouse',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.length>0){
+                            $("#goodsstorehouse_id").empty();
+                            for(var i in rs){
+                                $("#goodsstorehouse_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                            }
+						}
+                    }
+                })
+				$.ajax({
+                    url:'/storagePlan/getGoods',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.length>0){
+                            $("#goodsinfo_id").empty();
+                            for(var i in rs){
+                                $("#goodsinfo_id").append("<option value='"+rs[i].id+"'>"+rs[i].goodsname+"</option>")
+                            }
+						}
+                    }
+                })
+				if(sessionStorage.getItem("edit")=="true"){
+				    var temp=sessionStorage.getItem("row");
+				    var edit=sessionStorage.getItem("edit");
+				    sessionStorage.removeItem("edit");
+				    sessionStorage.removeItem("row");
+				    rowData=$.parseJSON(temp);
+					for(var key in rowData){
+					    $("*[name="+key+"]").val(rowData[key]);
+					}
+				}
+			  layui.use(['form', 'layer','element'], function(){
+				  var form = layui.form
+					  ,layer = layui.layer
+					  ,element=layui.element
+				  form.render();
+				  form.on('submit(submit)',function(data){
+				      if((parseInt($("#min_storage").val())&&parseInt($("#min_storage").val())<0)||(parseInt($("#plan_storage").val())&&parseInt($("#plan_storage").val())<0)){
+						  swal("不能为负数","最小储备量和计划储备量不能为负数","warning");
+						  return false;
+					  }else{
+				          if(edit=="true"){
+							  console.log(111);
+							  $.ajax({
+								  url:'/storagePlan/update',
+								  type:'post',
+								  dataType:'json',
+								  data:data.field,
+								  success:function(rs){
+									 if(rs==1){
+										swal("编辑成功","编辑成功","success");
+										closeFrame()
+										parent.t.Init("/storagePlan/query");
+									 }
+								  }
+							  })
+						  }else{
+							  $.ajax({
+								  url:'/storagePlan/insert',
+								  type:'post',
+								  dataType:'json',
+								  data:data.field,
+								  success:function(rs){
+									 if(rs==1){
+										swal("新增成功","新增成功","success");
+										closeFrame();
+										parent.t.Init("/storagePlan/query");
+									 }
+								  }
+							  })
+						  }
+					  }
+
+				  })
+			  })
+
+		</script>
+	</body>
+</html>

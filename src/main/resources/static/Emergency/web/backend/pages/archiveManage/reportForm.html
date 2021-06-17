@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../css/main.css" />
+	<link rel="stylesheet" href="../../css/style.css" />
+	<style type="text/css">
+		.layui-disabled, .layui-disabled:hover {
+			color: #3e3c3c!important;
+			cursor: not-allowed!important;
+		}
+	</style>
+	<script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../layui/layui.js" ></script>
+	<script type="text/javascript" src="js/reportForm.js"></script>
+
+</head>
+<body>
+<div class=" layui-pad10">
+	<form class="layui-form" id="signupForm" lay-filter="dailyForm" >
+
+		<input type="hidden" name="id" id="id">
+		<input type="hidden" name="archiveActionprogramMainId" id="archiveActionprogramMainId">
+
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">报告编码：</label>
+				<div class="layui-input-block">
+					<input type="text"  id="reportCode" name="reportCode" lay-verify="required" lay-reqtext="报告编码是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+
+				</div>
+			</div>
+		</div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上报人：</label>
+                <div class="layui-input-block">
+                    <input type="text"  id="repname" name="repname"  placeholder="请输入" autocomplete="off" class="layui-input" disabled="disabled" style="background-color: #D2D2D2;">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上报日期：</label>
+                <div class="layui-input-block">
+                    <input type="text"  id="repdate" name="repdate" placeholder="请输入" autocomplete="off" class="layui-input" disabled="disabled" style="background-color: #D2D2D2;">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">事故类型：</label>
+                <div class="layui-input-block">
+                    <input type="text"  id="accidentTypeName" name="accidentTypeName" placeholder="请输入" autocomplete="off" class="layui-input" disabled="disabled" style="background-color: #D2D2D2;">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">预警类型：</label>
+                <div class="layui-input-block">
+                    <input type="text"  id="earlywarnTypeName" name="earlywarnTypeName" placeholder="请输入" autocomplete="off" class="layui-input" disabled="disabled" style="background-color: #D2D2D2;">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">预警级别：</label>
+                <div class="layui-input-block">
+                    <input type="text"  id="eventlevelName" name="eventlevelName" placeholder="请输入" autocomplete="off" class="layui-input" disabled="disabled" style="background-color: #D2D2D2;">
+
+                </div>
+            </div>
+        </div>
+		<div class="layui-col-xs12">
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">事件内容：</label>
+				<div class="layui-input-block">
+					<textarea placeholder="请输入内容" name="earlywarnContent" id="earlywarnContent" class="layui-textarea" disabled="disabled" style="background-color: #D2D2D2;"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">上报对象类型：</label>
+				<div class="layui-input-block">
+					<select id="reportObjecttype"  name="reportObjecttype" lay-verify="required" lay-reqtext="上报对象类型是必填项，岂能为空？">
+						<option value=""></option>
+						<option value="1">单位</option>
+						<option value="2">个人</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">上传人：</label>
+				<div class="layui-input-block">
+					<input type="text"  id="reportPerson" name="reportPerson" lay-verify="required" lay-reqtext="上传人是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-xs12">
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">备注：</label>
+				<div class="layui-input-block">
+					<textarea placeholder="请输入内容" name="remarks" id="remarks" class="layui-textarea"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs12">
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">附件：</label>
+				<div class="layui-input-block">
+					<div class="layui-upload">
+						<button type="button" class="layui-btn layui-btn-normal ifView" id="testList">选择多文件</button>
+						<button type="button" class="layui-btn ifView" id="testListAction">开始上传</button>
+						<div class="layui-upload-list">
+							<table class="layui-table">
+								<thead>
+								<tr><th>文件名</th>
+									<th>大小</th>
+									<th>状态</th>
+									<th>操作</th>
+								</tr></thead>
+								<tbody id="demoList"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs12">
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">已提交附件：</label>
+				<div class="layui-input-block">
+					<table class="layui-table">
+						<thead>
+						<tr><th>文件名</th>
+							<th>图片</th>
+							<th>视频</th>
+							<th>操作</th>
+						</tr></thead>
+						<tbody id="fileList"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="layui-mt10 layui-text-center layui-col-xs12">
+			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-radius submitbtn" lay-submit lay-filter="formSubmit">提 交</button>
+			<button type="button" class="layui-btn layui-btn-primary layui-btn-radius"   onclick="closeWindow()" >关 闭</button>
+		</div>
+	</form>
+</div>
+</body>
+</html>

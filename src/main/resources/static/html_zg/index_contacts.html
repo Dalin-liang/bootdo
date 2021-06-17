@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+<meta name="renderer" content="webkit">
+<meta name="google" value="notranslate">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+
+<link rel="stylesheet"
+	href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/iconfont.css" />
+<link rel="stylesheet" href="css/common.css" />
+<link rel="stylesheet" href="css/style.css" />
+<!--<link rel="stylesheet" href="css/table.css" />-->
+<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="plugin/echarts.js"></script>
+<!--<script type="text/javascript" src="administration.js"></script>-->
+<style>
+
+/*通讯录样式*/
+.cd-accordion-menu ul {
+	display: none;
+}
+
+.cd-accordion-menu label, .cd-accordion-menu a {
+	position: relative;
+	display: block;
+	padding: 10px 65px;
+	background-color: #113a61;
+	font-size: 15px;
+	margin-bottom: 1px;
+}
+
+.cd-accordion-menu label::before, .cd-accordion-menu label::after,
+	.cd-accordion-menu a::after {
+	content: '';
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+.cd-accordion-menu label {
+	cursor: pointer;
+}
+
+.cd-accordion-menu .no-children label::before {
+	display: none;
+}
+
+.cd-accordion-menu .no-children label::after {
+	content: "\f07b" !important;
+}
+
+.cd-accordion-menu label::before {
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f107";
+	left: 18px;
+	background-position: 0 0;
+	-webkit-transform: translateY(-50%) rotate(-90deg);
+	-moz-transform: translateY(-50%) rotate(-90deg);
+	-ms-transform: translateY(-50%) rotate(-90deg);
+	-o-transform: translateY(-50%) rotate(-90deg);
+	transform: translateY(-50%) rotate(-90deg);
+}
+
+.cd-accordion-menu label::after {
+	left: 41px;
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f07b";
+}
+
+.cd-accordion-menu label.active::before {
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+.cd-accordion-menu label.active::after {
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f07c";
+}
+
+.cd-accordion-menu ul label, .cd-accordion-menu ul a {
+	background: #0e4a83;
+	box-shadow: inset 0 -1px #41444a;
+	padding-left: 60px;
+}
+
+.no-touch .cd-accordion-menu ul label:hover, .no-touch .cd-accordion-menu ul a:hover
+	{
+	background: #3c3f45;
+}
+
+.cd-accordion-menu>li:last-of-type>label, .cd-accordion-menu>li:last-of-type>a,
+	.cd-accordion-menu>li>ul>li:last-of-type label, .cd-accordion-menu>li>ul>li:last-of-type a
+	{
+	box-shadow: none;
+}
+
+.layui-form-checkbox i {
+	border: 0 !important;
+}
+
+.layui-form-checked span, .layui-form-checked:hover span {
+	background-color: rgb(58, 145, 230);
+}
+
+.layui-form-checked i, .layui-form-checked:hover i {
+	color: rgb(58, 145, 230);
+}
+
+.amap-marker-label {
+	color: black;
+}
+
+.operat_one .ind_sed_btn {
+	top: 50px;
+	margin-left: -20px;
+	border: #398de1 thin solid;
+}
+
+.operat_one .ind_sed_btn:before {
+	border-top: dashed 10px transparent;
+	border-bottom: dashed 10px #3990e6;
+	margin-left: -65px;
+	top: -20px;
+}
+
+.operatpos {
+	left: 1330px;
+	top: 20px;
+}
+
+.mapTitle {
+	padding: 0 20px;
+	line-height: 42px;
+	background: #f1f1f1;
+	font-size: 16px;
+	min-width: 200px;
+}
+
+.amap-info-close {
+	font-size: 18px;
+	top: 12px;
+}
+
+.amap-info-content table th {
+	text-align: center;
+	font-weight: 500;
+}
+
+.amap-info-content table tr {
+	height: 40px;
+}
+
+.amap-info-content table td {
+	line-height: 40px;
+}
+
+.amap-info-content table .warn {
+	background-color: red;
+}
+
+#planList {
+	position: relative;
+}
+
+.pop_box {
+	width: 300px;
+	padding: 5px 10px;
+}
+
+.pop_tl {
+	line-height: 35px;
+	background: #1d90c5;
+	padding: 0 10px;
+}
+
+.pop_box table {
+	width: 100%;
+}
+
+.pop_box table tbody tr td {
+	vertical-align: top;
+}
+
+.amap-info-content {
+	border: #03A9F4 thin solid;
+	background: rgba(37, 88, 139, 0.8);
+	padding: 0;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+.bottom-center .amap-info-sharp {
+	border-top-color: #03A9F4;
+}
+
+.amap-info-content table.table-bordered tr {
+	height: auto !important;
+}
+</style>
+
+<link rel="stylesheet" href="plugin/select2.css" />
+<script type="text/javascript" src="plugin/select2.js"></script>
+<style>
+.optiontxt {
+	display: inline-block;
+	border: #004dff thin solid;
+	padding: 4px 9px;
+	padding-right: 10px;
+	border-radius: 3px;
+	color: #0036b2;
+	height: 30px;
+	margin-bottom: 5px;
+	margin-right: 8px;
+	position: relative;
+	vertical-align: middle;
+}
+
+.optiontxt .fa-close {
+	position: absolute;
+	font-size: 12px;
+	margin-top: -4px;
+	color: #b36565;
+	cursor: pointer;
+	right: 0;
+	top: 4px;
+	/*padding: 2px;*/
+}
+
+.input_cont {
+	display: inline-block;
+	/*border: red thin solid;*/
+	width: 100%;
+}
+
+.input_cont #inputtxt {
+	background: transparent;
+	border: none;
+	padding: 2px 5px;
+	width: 100%;
+	height: 100%;
+	color: #fff;
+}
+</style>
+</head>
+
+<body>
+	<div class="map">
+		<div class="example-map" style="background-image: url(images/map.png)"></div>
+	</div>
+	<div class="header flex flex-m">
+		<div class="title PangMen">通讯录</div>
+		<a class="exit_bt" href="index.html" style="color: #7ffeff;cursor: pointer;">
+			<img src="img/terrace.png"/>综合态势
+		</a>
+	</div>
+
+	<div class="pad10" style="position: absolute;top: 120px;bottom: 0;width: 100%;">
+		<div class="cont_l col-3">
+			<div class="comborder1" style="height: 100%;">
+				<div class="title" id="title">通讯录</div>
+				<div class="border">
+					<div class="pad10 srcollcom" style="height: 100%; width: 100%;">
+						<ul class="cd-accordion-menu animated" id="treemenu">
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cont_c col-9">
+			<div class="comborder" style="height: 100%;">
+				<div class="border pad10" style="height: 100%;">
+					<!--<div class="col-12 input-group modal_input mt10">
+							<span class="lable">收件人</span>
+							
+							<select class="form-control" id="contact_s"  multiple="multiple">
+							</select>
+						</div>-->
+					<div class="clearfix modal_input">
+						<div class="col-1 pad5 pull-left">收信人 :</div>
+						<div class="col-11 pull-left dropdown com_dropdown"
+							style="padding: 0;">
+							<div class="form-control" style="height: auto;">
+								<div id="inputkey" class="srcollcom"></div>
+								<span class="input_cont"> <input id="inputtxt"
+									placeholder="请输入姓名" autocomplete="off" />
+								</span>
+							</div>
+
+							<ul class="srcollcom dropdown-menu btn-block" id="searchul"
+								style="max-height: 120px;">
+
+							</ul>
+						</div>
+					</div>
+					<div class="modal_input">
+						<div class="col-1 pad5 mt10 pull-left">短信 :</div>
+						<div class="col-11 pull-left mt10" style="padding: 0;">
+							<textarea class="form-control srcollcom"
+								style="resize: none; height: 60px;" id="infocont"></textarea>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+					<div class="clearfix text-center mt10">
+						<button class="btn btn-success" onclick="sentInfo()">发 送</button>
+						<button class="btn btn-default" onclick="clearInfo()">清 除</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+		$(document).ready(function() {
+			var contArray;
+			var contacttel=[];
+			var allcontacts=[];
+			function getContacts() {				
+				$.ajax({
+					url:'/supportDept/getDeptAndPersons',
+					dataType:'json',
+					type:'get',
+					success:function(result){
+						$("#treemenu").empty();
+						console.log(result)
+						$.each(result.nodes,function(index,item){
+								if(!item.children){
+									$("#treemenu").append('<li class="no-children"><label>'+item.name+'</label></li>')
+								}
+								else{
+									var lihtml="";
+	//								contArray = new Array();
+	//              				contArray.push({id:"",text:""});
+	
+									$.each(item.children,function(idx,val){
+										if(item.name==null){
+											console.log("luo:",val.name);
+										}
+										allcontacts.push(val)
+										lihtml+='<li id="'+val.id+'" class="contli" tel="'+val.mobile+'" name="'+val.name+'"><a><span>'+val.name+'（联系电话：'+val.mobile+'）</span><br/><span>职位：'+val.position+'</span></a></li>'
+										
+	//									var obj = new Object();
+	//				                    obj.id = val.id;
+	//				                    obj.text = val.name;
+	//				                    contArray.push(obj);
+					                    
+										if(idx>=item.children.length-1){
+											$("#treemenu").append('<li class="has-children">'+
+	//											'<input type="checkbox" name ="group-'+index+'" id="group-'+index+'" />'+
+												'<label>'+item.name+'</label>'+
+												'<ul>'+lihtml+'</ul>'+
+											'</li>')
+	//										$("#contact_s").select2({
+	//						                    data:contArray
+	//						                });
+											contacttel.push(val.name);
+										}
+									})
+								}
+							
+						});
+					}
+				})
+			}
+			getContacts()
+
+
+			$("#treemenu").on('click', 'li label', function() {
+				$(this).toggleClass("active")
+				$(this).siblings('ul').slideToggle(300);
+				
+				
+			});
+
+//			var addname = [];
+//			$("#treemenu").on('click', '.contli',function(){
+//				var infoname=$(this).attr("id");
+//			    if($(this).hasClass("active")){
+//			        $(this).removeClass("active");
+//			        $(this).children("a").children(" i.fa.fa-check").remove();
+//					$.each(addname,function(index,item){
+//						if(infoname==item){
+//							addname.splice(index, 1)
+//							console.log("delete"+addname);
+//							console.log(addname)
+//							$('#contact_s').val(addname).trigger('change');
+//						}
+//					})
+//					
+//				}else{
+//				    $(this).addClass("active");
+//				    $(this).children("a").prepend("<i class='fa fa-check'>");
+//					addname.push($(this).attr("id"));
+//					console.log(addname);
+//					$('#contact_s').val(addname).trigger('change');					
+//				}
+//			})
+//			$("#contact_s").on("change",function(e){
+//				addname=$(this).val();
+//				console.log($(this).val());	
+//				
+//				$("#"+$(this).val()[$(this).val().length-1]).removeClass("active");
+//				$("#"+$(this).val()[$(this).val().length-1]).children("a").children(" i.fa.fa-check").remove();
+//				
+//			});
+
+			$("#treemenu").on('click', '.contli',function(){
+				var infoname=$(this).attr("id");
+			    if($(this).hasClass("active")){
+			        $(this).removeClass("active");
+//			        $(this).children("a").children(" i.fa.fa-check").remove();
+			        
+				}else{
+				    $(this).addClass("active");
+//				    $(this).children("a").prepend("<i class='fa fa-check'>");
+				    var name=$(this).attr("name");
+					var tel=$(this).attr("tel");
+					var id=$(this).attr("id");
+		        	addcontact(name,id,tel)				
+				}
+			})
+			function addcontact(name,id,tel){
+				var len=$("#inputkey .optiontxt").length;
+				if(len>0){
+					$("#inputkey .optiontxt").each(function(idx,val){
+						if($(this).attr("id")==id){
+							return false;
+						}else{
+							if(idx==(len-1)){
+								$("#inputkey").append('<span class="optiontxt" name="'+name+'" id="'+id+'" tel="'+tel+'">'+name+									
+										'<i class="fa fa-close"></i>'+
+									'</span>')
+							}
+							
+						}
+					})
+				}else{
+					$("#inputkey").append('<span class="optiontxt" name="'+name+'" id="'+id+'" tel="'+tel+'">'+name+
+									'<i class="fa fa-close"></i>'+
+								'</span>')
+				}
+			}
+			
+			$("#searchul").on("click","li",function(){
+				var name=$(this).attr("name");
+				var tel=$(this).attr("tel");
+				var id=$(this).attr("id");
+				addcontact(name,id);	
+			})
+			$("#inputkey").on("click",".fa-close",function(){
+				$(this).parent(".optiontxt").remove()				
+			})
+			
+			$("#inputtxt").bind("input propertychange",function(event){
+//			        console.log(event.whick);
+			    	var key=$(this).val().trim();
+			    	console.log(key);
+			    	if(key==""){
+			    		$("#searchul").slideUp()
+			    		return;
+			    	}
+			    	$("#searchul").empty();
+					
+			    	var arr = [];
+			    	$("#searchul").slideDown()
+					$.each(allcontacts, function(index,value){
+//						if(value.indexOf(key) >= 0){
+//							arr.push(index);
+//						}
+//						if(index==contacttel.length-1){
+//							if(arr.length<1){
+//								return;
+//							}							
+//							$("#searchul").slideDown()
+//							$.each(arr, function(index,value){
+//								$("#searchul").append('<li id="'+allcontacts[index].id+'" name="'+allcontacts[index].name+'" tel="'+allcontacts[index].tel+'" ><a>'+allcontacts[index].tel+'（'+allcontacts[index].name+'）</a></li>')
+//								
+//		                  	});
+//							
+//						}
+						var resname=value.name;
+						if(resname.indexOf(key)>=0){
+							$("#searchul").append('<li id="'+value.id+'" name="'+value.name+'" tel="'+value.mobile+'" ><a>'+value.mobile+'（'+value.name+'）</a></li>')
+						}
+					});
+				});
+			
+			
+				$(document).mouseup(function(e) { 
+				    var  pop = $('#searchul');  
+				    if(!pop.is(e.target) && pop.has(e.target).length === 0) { 
+				        $("#searchul").hide()
+				    }
+				}); 
+		})
+		
+			function sentInfo() {
+					var cont=$("#infocont").val().trim();
+					var contactlen=$("#inputkey .optiontxt").length;
+					
+					if(contactlen==0){
+						alert("请输入收信人");
+						return;
+					}
+					if(cont==""){
+						alert("请填写短信内容");
+						return;
+					}
+					var mobile="";
+					$("#inputkey .optiontxt").each(function(index){
+						if(index==(contactlen-1)){
+							mobile+=$(this).attr("tel");
+							return false;
+						}
+						mobile+=$(this).attr("tel")+",";
+					})
+                        $.ajax({
+                            url:'/dispatch/center/smsSend',
+                            dataType:'json',
+                            type:'post',
+                            data:{
+                                "mobiles":mobile,
+                                "content":cont,
+//								"jsonStr":sessionStorage.getItem("jsonStr")?sessionStorage.getItem("jsonStr"):''
+                            },
+                            success:function(result){
+                                if(result.code==0){
+                                    alert('发送成功');
+                                	$("#infocont").val("");
+								}else{
+                                    alert('发送失败');
+								}
+                            }
+                        })
+
+				}
+				
+				function clearInfo(){
+					$("#inputkey").empty();
+					$("#inputtxt").val("")
+					$("#infocont").val("");
+				}
+	</script>
+</html>

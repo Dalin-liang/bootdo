@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果旅游大数据分析</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/swiper.min.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+	<script type="text/javascript" src="plugin/swiper.min.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=0899be88b02ec76a1a499252d285c5f4"></script>
+    <style>
+        .swiper-container {
+          width: 100%;
+          height: 100%;
+            color:white;
+        }
+        .swiper-slide {
+          text-align: center;
+          font-size: 18px;
+          /* Center slide text vertically */
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-box-pack: center;
+          -ms-flex-pack: center;
+          -webkit-justify-content: center;
+          justify-content: center;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          align-items: center;
+        }
+        .top{
+        clear:both;
+        width: 100%;
+        height: 50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+                    /*为了效果明显，可以将如下边框打开，看一下效果*/
+                    /* border:1px solid black; */
+        }
+
+        .top img{
+            width:100%;
+            height:auto;
+        }
+        .bottom{
+            clear:both;
+            width: 100%;
+            height: 50%;
+        }
+		/*.content-left,.content-right{
+			height: calc(100% - 150px);
+		}*/
+		.mapCover{
+			width: 720px;
+			height: 480px;
+			position: absolute;
+			margin: 0 auto;
+			top:calc(50% - 240px);
+			left:calc(50% - 360px) ;
+			background-color:rgba(0, 41, 133, 0.7);
+			color:white;
+			z-index: 999;
+		}
+		.content{
+			top: 80px;
+			bottom: 0;
+		}
+		#map{
+			width: calc(100% - 920px);
+			height: calc(100% - 390px);
+			left: 460px;
+			top: 80px;
+			bottom: 310px;
+		}
+		.topTitle,.header{
+			z-index: 99;
+		}
+    </style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+
+    <div class="header flex flex-m">
+		<div class="title PangMen">正果旅游大数据分析</div>
+	</div>
+
+    <div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+
+			</div>
+		</div>
+
+    <div class="topTitle">
+		<div class="math-box flex flex-m">
+			<li class="flex-1">
+				<div class="math Digital rfc-info shadow">43万</div>
+				<div class="msg"><span>接待旅游总人数</span></div>
+			</li>
+			<li class="flex-1">
+				<div class="math Digital rfc-warning shadow">1860万</div>
+				<div class="msg"><span>旅游总收入</span></div>
+			</li>
+		</div>
+	</div>
+    <div class="content content-left flex flex-v" style="width: 450px">
+        <div class="item" style="margin-top: 10px;">
+			<div class="hd"><span>推荐热门旅游站点列表</span></div>
+			<div class="bd" style="height:350px;width: 100%;color:white;font-size: 13px;text-align: center;margin-top: 20px;" id="table">
+                <table style="width: 100%;height: 100%;">
+                    <thead>
+                    <tr>
+                        <th>旅游站点</th>
+                        <th>推荐农家乐名称</th>
+                        <th>服务范围</th>
+                        <th>地址</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>正果寺</td>
+                        <td>九峰山农庄</td>
+                        <td>餐饮</td>
+                        <td>正果寺前走</td>
+                    </tr>
+                    <tr>
+                        <td>湖心岛风景区</td>
+                        <td>湖心岛农家乐</td>
+                        <td>餐饮</td>
+                        <td>正果镇汀塘村</td>
+                    </tr>
+                    <tr>
+                        <td>蒙花布公园</td>
+                        <td>高庄农家乐</td>
+                        <td>餐饮</td>
+                        <td>正果镇汀塘村</td>
+                    </tr>
+                    <tr>
+                        <td>蒙花布公园</td>
+                        <td>蒙花岛度假村</td>
+                        <td>住宿</td>
+                        <td>正果镇汀塘村</td>
+                    </tr>
+                    <tr>
+                        <td>畲族风情村</td>
+                        <td>畲族农家乐</td>
+                        <td>餐饮、住宿</td>
+                        <td>正果镇畲族村</td>
+                    </tr>
+                    <tr>
+                        <td>畲族风情村</td>
+                        <td>畲族枇杷园农家乐</td>
+                        <td>餐饮、住宿</td>
+                        <td>正果镇畲族村</td>
+                    </tr>
+                    </tbody>
+                </table>
+			</div>
+		</div>
+        <div class="item">
+			<div class="hd"><span>各类型景点分析</span></div>
+			<div class="bd flex flex-m" style="height:450px;width: 100%;color:white;margin-top: 20px;" id="chart">
+
+			</div>
+		</div>
+    </div>
+
+	<div class="map" id="map"></div>
+    <div class="content content-right flex flex-v" style="width: 450px;">
+        <div class="item" style="margin-top: 10px;">
+			<div class="hd"><span>农家乐评级分析</span></div>
+			<div class="bd flex flex-m" style="height:400px;width: 100%;color:white;margin-top: 20px;" id="chart1">
+
+			</div>
+		</div>
+        <div class="item">
+			<div class="hd"><span>农家乐年收入排名top6</span></div>
+			<div class="bd flex flex-m" style="height:300px;width: 100%;color:white;text-align: center;margin-top: 20px;" id="table2">
+                <table style="width: 100%;height: 100%;">
+                    <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>名称</th>
+                        <th>年收入</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>聚龙庄度假村</td>
+                        <td>300万</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>畲族枇杷园</td>
+                        <td>30万</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>和平亲子农场</td>
+                        <td>20万</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>兰溪美食</td>
+                        <td>15万</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>东汾大驿站</td>
+                        <td>15万</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>畲寨农家饭庄</td>
+                        <td>12万</td>
+                    </tr>
+                    </tbody>
+                </table>
+			</div>
+		</div>
+    </div>
+	<div class="mapCover" style="display: none;">
+		<span style="position:absolute;right:10px;cursor: pointer;"><i class="fa fa-close"></i></span>
+		<div id="InfoContent" style="width: 100%;height: 100%;"></div>
+	</div>
+    <!--<div class="content flex flex-v" style="left: calc(50% - 350px);width: 700px;top:calc(50% - 200px);height: calc(50% + 180px)">
+        <div class="item">
+            <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+              <div style="clear:both"></div>
+                <div>
+                    <a class="top"> <img src="images/1.jpg"/></a>
+                    <h2 class="bottom" >简介</h2>
+                    <p >蒙花布村位于正果镇中部增江河畔，离镇区约2公里，是一个四面环水、风景如画的“小岛”，面积约1.5平方公里，拥有保存完好的天然沙滩、榄树林、竹林等生态旅游资源。该村迄今已有近300年历史，由于开居时长满一片蒙草，开满一片片白茫茫的草花，像是一块百花巨布，故取名为蒙花布，现辖4个经济合作社。</p>
+                </div>
+              </div>
+
+              <div class="swiper-slide" >
+                <div style="clear:both"></div>
+                <div>
+                    <a class="top"> <img src="images/2.jpg"/></a>
+                    <h2 class="bottom" >简介</h2>
+                    <p >杜涓湾畔驿站是一家投资金额超过350万，拥有12间套房的休闲、旅游驿站，驿站座落在广州市增城正果镇九峰路，北靠九峰山，西靠增江，邻近正果寺，广河高速横亘其侧，交通极其便利。酒店按古朴风格设计装修，环境贴近大自然。</p>
+                </div>
+              </div>
+
+              <div class="swiper-slide" >
+                <div style="clear:both"></div>
+                <div>
+                    <a class="top"> <img src="images/3.jpg"/></a>
+                    <h2 class="bottom" >简介</h2>
+                    <p >汀塘榄园竹海以近百亩生长时间超过数百年的乌榄树林、林内的翠竹和周边的田园风光为重点，榄园地势平坦，乌榄树生长时间超过百年，树壮枝高，形态各异，自成景观，十分罕见。榄数间隙里布满翠竹，紧挨着河边，空气清新，一片青绿，让人感到无比舒适。榄林和翠竹在美丽的增江河畔构成了一个天然的悠闲公园。游人可约上爱侣或三五知己，漫步于石头小径，倾听鸟语水声，感受清风榄香，休闲娱乐。也可亲自驾自行车，穿越榄树林，倚着翠竹，欣赏增江画廊美景。</p>
+                </div>
+              </div>
+
+              <div class="swiper-slide" >
+                <div style="clear:both"></div>
+                <div>
+                    <a class="top"> <img src="images/4.jpg"/></a>
+                    <h2 class="bottom" >简介</h2>
+                    <p >正果寺始建于南宋庆元三年（1197年），明成化年间重修，清嘉庆二十二年（1817年）和光绪六年（1880年）多次重修，是我市著名古寺如百花寺、法恩寺（即今万寿寺）、正恩寺、长庆禅院等寺庙中，至今保存得较完好的寺庙。正果寺历经宋、元、明、清、民国，连绵至今，史逾八百年。如今，由光喜大师接替年迈的新成大和尚担任主持，在广州天河区支持下，正果寺庙前修建了文化广场。</p>
+                </div>
+              </div>
+
+            </div>
+            &lt;!&ndash; Add Pagination &ndash;&gt;
+            <div class="swiper-pagination"></div>
+            &lt;!&ndash; Add Arrows &ndash;&gt;
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+		</div>
+    </div>-->
+	<div class="content-b flex flex-v" style="left: 460px;bottom: 0;width: calc(100% - 920px);height: 300px;background-color: rgba(0, 41, 133, 0.7)">
+		<div class="item">
+			<div class="hd"><span>2014-2018旅游情况统计</span></div>
+			<div class="bd flex flex-m" style="height:280px;width: 100%;color:white;margin-top: 10px;" id="chart2">
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<script>
+	var tourList=[
+	    {'id':'1','name':'湖心岛旅游风景区','lon':'113.911996','lat':'23.448169','img':'images/t_01.jpg','d':'以增江河上游、湖心岛以及两岸青山翠竹为核心景观，船游经过两个旅游区可上岸游览，途中实地讲解湿地文化，增城、正果历史文化、民俗风情。'},
+	    {'id':'2','name':'正果寺','lon':'113.895658','lat':'23.418648','img':'images/t_02.jpg','d':'正果寺始建于南宋庆元三年（1197年），明成化年间重修，清嘉庆二十二年（1817年）和光绪六年（1880年）多次重修，是我市著名古寺如百花寺、法恩寺（即今万寿寺）、正恩寺、长庆禅院等寺庙中，至今保存得较完好的寺庙。正果寺历经宋、元、明、清、民国，连绵至今，史逾八百年。如今，由光喜大师接替年迈的新成大和尚担任主持，在广州天河区支持下，正果寺庙前修建了文化广场。'},
+	    /*{'id':'3','name':'正果文化广场','lon':'113.893219','lat':'23.417707','img':'','d':'正果广场是由广州天河区帮扶建设的重点项目之一，广场建设内容包括铺设广场砖，安装广场灯及给排水设施，园林绿化，配套舞台，厕所等设施，为当地居民提供休闲娱乐场所，并结合正果寺旅游开发形成宗教文化休闲景区，从而进一步完善正果镇生态旅游配套设施，提升正果适宜居住的生态型旅游城镇综合品味，丰富正果镇居民的业余文化生活。'},*/
+	    {'id':'4','name':'畲族民俗馆','lon':'113.989953','lat':'23.33784','img':'images/t_04.jpg','d':'畲族民俗馆是由广州市民宗局捐建的，它立足挖掘畲族文化，以陈列、展出、宣传、服务等为主要形式，通过图文、实物、情景设置、多媒体互动等各种手段和方式，重点展示畲族生产工具、生活用品、宗教用品、民族服饰、传统习俗、文献史料及传统工艺等物质文化和精神文化产品，大力弘扬和宣传畲族的历史人文、民俗艺术、生产生活等多方面的民俗特色，并利用畲族民俗馆这个平台对外展示畲族文化的独特韵味和魅力。'},
+	    {'id':'5','name':'杜鹃湾畔驿站','lon':'113.898699','lat':'23.424224','img':'images/t_05.jpg','d':'杜涓湾畔驿站是一家投资金额超过350万，拥有12间套房的休闲、旅游驿站，驿站座落在广州市增城正果镇九峰路，北靠九峰山，西靠增江，邻近正果寺，广河高速横亘其侧，交通极其便利。酒店按古朴风格设计装修，环境贴近大自然。'},
+	    {'id':'6','name':'番丰村月亮湾乡村公园','lon':'113.88545','lat':'23.418567','img':'images/t_06.jpg','d':'月亮湾乡村公园位于正果番丰村，公园主要有荔枝树和乌榄树，这片果园有1000多亩，但枝繁叶茂的荔枝树和乌榄树遮蔽了阳光，林中清凉无比。这里的荔枝都是经过上百年的才长成这样，乌榄树则更高寿，每株都有200—300年的历史了，分属村民所有。孩子们在这树荫中欢乐嬉戏，充满欢声笑语，让人久久舍不得离开。'},
+	    {'id':'7','name':'何屋聚龙庄乡村旅游度假胜地','lon':'113.937124','lat':'23.476316','img':'images/t_07.jpg','d':'聚龙庄乡村休闲度假村毗邻“水的世界、花的海洋、鸟的天堂”-湖心岛风景度假区。以古岭南四合院花园式为主题，以“精”致本的经营理念精心要求，打造一个集餐饮、住宿、娱乐、休闲为一体的多元化农家乐，使其成为享受田园风光，品尝农家美食，感受纯朴民俗、休闲度假观光的理想之地。'},
+	    {'id':'8','name':'黄屋美丽乡村公园','lon':'113.934709','lat':'23.471085','img':'images/t_08.jpg','d':'以黄屋村“小湖心岛”公园建设和何屋村码头广场建设为旅游景观为核心，黄屋祠堂、民国大戏院与的何屋仙姑祠、务本堂古建筑和古村落等古建筑为依托，以村周边的绿化美化为亮点，结合社会主义新农村建设，把这两个沿河村的建成南国最美的乡村公园。'},
+	    {'id':'9','name':'蒙花布乡村公园','lon':'113.90103','lat':'23.43505','img':'images/t_09.jpg','d':'一个宁静浪漫的乡村公园，村内拥有宁静优美的自然生态环境和长达2公里的天然沙滩。穿过庄稼旁的泥砖屋和老祠堂，踏着清郁的花香和零碎的鸡犬声，畅谈在茂榕下，垂钓于荷塘中，漫步在沙滩上，靠倚于古榄前，让你尽情享受简单、谧静、自然的农家生活。'},
+	];
+	var map;
+	var markList=[];
+	map= new AMap.Map('map',{
+		resizeEnable: true,
+		showLabel: false,
+		rotateEnable:true,
+		pitchEnable:true,
+		/*mapStyle: "amap://styles/blue",*/
+		zoom: 17,
+		pitch:0, //80
+		rotation:0,//-15
+		viewMode:'3D',//开启3D视图,默认为关闭
+		buildingAnimation:true,//楼块出现是否带动画
+		expandZoomRange:true,
+		zooms:[3,20],
+		center:[113.894383,23.415929],
+		layers:[
+			new AMap.TileLayer.Satellite(),
+			new AMap.TileLayer.RoadNet()
+		]
+	});
+
+	for(var i in tourList){
+	    var marker=new AMap.Marker({
+			position:new AMap.LngLat(tourList[i].lon,tourList[i].lat),
+			title:tourList[i].name,
+			icon:'images/mark_bs.png',
+			data:tourList[i]
+		})
+		markList.push(marker);
+	}
+	map.add(markList);
+	for(var i in markList){
+	    markList[i].on('click',showInfo);
+	}
+
+	function showInfo(e){
+	    $(".mapCover").show();
+        $("#InfoContent").empty();
+        console.log(e.target.get("data"));
+		$("#InfoContent").append("<img src='"+e.target.get('data')['img']+"' width='480' height='360' style='margin-left: 120px;'/><p style='width: 100%;height: 200;margin-top: 20px;text-indent: 28px;'>"+e.target.get('data')['d']+"</p>");
+	}
+	$(".mapCover").on("click",'.fa-close',function(){
+	    $(".mapCover").hide();
+    })
+
+    var dom = document.getElementById("chart");
+    var myChart = echarts.init(dom);
+    option = null;
+    option = {
+		 title : {
+		        text: '各类景点数量',
+		        subtext: '',
+		        x:'center',
+		        show:false
+		    },
+            grid:{
+		        bottom:0
+            },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        left: 'center',
+		        data: ['岭南古建筑','美丽乡村旅游区','品牌旅游景点区','生态农业观光','自然风景'],
+                textStyle:{
+		            color:'white'
+                }
+		    },
+		    series : [
+		        {
+		            name: '访问来源',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['50%', '50%'],
+		            data:[
+		                {value:7, name:'岭南古建筑'},
+		                {value:4, name:'美丽乡村旅游区'},
+		                {value:7, name:'品牌旅游景点区'},
+		                {value:11, name:'生态农业观光'},
+		                {value:7, name:'自然风景'}
+		            ],
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+};
+
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+
+var dom1 = document.getElementById("chart1");
+var myChart1 = echarts.init(dom1);
+option1 = null;
+option1 = {
+	    title : {
+	        text: '某站点用户访问来源',
+	        subtext: '纯属虚构',
+	        x:'center',
+	        show:false
+	    },
+	    tooltip : {
+	        trigger: 'item',
+	        formatter: "{b} : {c}家 ({d}%)"
+	    },
+	    legend: {
+	        left: 'center',
+	        data: ['一星级','二星级','三星级'],
+            textStyle:{
+	            color:'white'
+            }
+	    },
+	    series : [
+	        {
+	            name: '',
+	            type: 'pie',
+	            radius : '75%',
+	            center: ['50%', '50%'],
+	            data:[
+	                {value:15, name:'一星级'},
+	                {value:5, name:'二星级'},
+	                {value:2, name:'三星级'}
+	            ],
+	            itemStyle: {
+	                emphasis: {
+	                    shadowBlur: 10,
+	                    shadowOffsetX: 0,
+	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+	                }
+	            }
+	        }
+	    ]
+	};
+if (option1 && typeof option1 === "object") {
+    myChart1.setOption(option1, true);
+}
+
+var dom2 = document.getElementById("chart2");
+var myChart2 = echarts.init(dom2);
+option2 = null;
+option2 = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#white'
+            }
+        }
+    },
+    legend: {
+        data:['旅游收入','人次'],
+		textStyle:{
+	            color:'white'
+            }
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['2014','2015','2016','2017','2018'],
+            axisPointer: {
+                type: 'shadow'
+            },
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				}
+        	}
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '旅游收入',
+			interval: 400,
+            axisLabel: {
+                formatter: '{value}万元',
+				textStyle: {
+                	color: 'white'
+            	}
+            },
+        	nameTextStyle:{
+                color:'white'
+        	}
+        },
+        {
+            type: 'value',
+            name: '人次',
+            axisLabel: {
+                formatter: '{value}万',
+				textStyle: {
+                	color: 'white'
+            	}
+            },
+			nameTextStyle:{
+                color:'white'
+        	}
+        }
+    ],
+    series: [
+        {
+            name:'旅游收入',
+            type:'bar',
+			barWidth : 70,
+            data:[200, 255, 415, 1380, 1860]
+        },
+        {
+            name:'人次',
+            type:'line',
+            yAxisIndex: 1,
+            data:[15, 18, 23, 35, 43]
+        }
+    ]
+};
+
+myChart2.setOption(option2);
+
+
+var swiper = new Swiper('.swiper-container', {
+    pagination: {
+        el: '.swiper-pagination',
+        type: 'progressbar',
+    },
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    }
+});
+
+$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+
+</script>
+</html>

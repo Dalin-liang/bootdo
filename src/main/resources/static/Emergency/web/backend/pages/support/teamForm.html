@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+		<script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+            <form class="layui-form" lay-filter="component-form-group">
+                <input type="hidden" name="id">
+				<input type="hidden" name="lat" id="lat">
+				<input type="hidden" name="lon" id="lon">
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">队伍名称：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="name" name="name" lay-verify="required" lay-reqtext="队伍名称是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">队伍类型：</label>
+                        <div class="layui-input-block">
+                            <select name="teamtype_id" id="teamtype_id" lay-filter="teamtype_id" lay-verify="required" lay-reqtext="队伍类型是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">主管单位：</label>
+                        <div class="layui-input-block">
+                            <select name="dept_id" id="dept_id" lay-filter="dept_id" lay-verify="required" lay-reqtext="队伍类型是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="layui-col-xs8">
+					<div class="layui-form-item">
+						<label class="layui-form-label">地理经纬度：</label>
+						<div class="layui-input-block">
+							<input type="text" id="lat_lon" name="lat_lon" lay-verify="required" lay-reqtext="地理经纬度是必填项，岂能为空？"
+								   placeholder="请输入"
+								   autocomplete="off" class="layui-input" readonly="true">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-xs4">
+					<button id="selectPos" type="button" class="layui-btn layui-btn-normal">选择地址</button>
+				</div>
+				<div class="layui-col-xs10">
+					<div class="layui-form-item">
+						<label class="layui-form-label">地理地址：</label>
+						<div class="layui-input-block">
+							<input type="text" id="address" name="address" lay-verify="required" lay-reqtext="地理地址是必填项，岂能为空？"
+								   placeholder="请输入"
+								   autocomplete="off" class="layui-input" readonly="true">
+						</div>
+					</div>
+				</div>
+
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">队伍人数：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="numofteam" id="numofteam" lay-verify="required" lay-reqtext="队伍人数是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs12"><div id="add" class="layui-btn" style="position: relative;">添加队员</div></div>
+				<table id="ArbetTable" style="width: 100%;max-height: 300px;position: relative;top:10px;text-align: center;" class="table table-bordered table-hover">
+					<thead>
+					<tr style="height: 50px;line-height: 50px;">
+						<th>姓名</th>
+						<th>电话</th>
+						<th>单位</th>
+						<th>备注</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+			 	</div>
+			</form>
+
+
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				var team='';
+				$.ajax({
+                    url:'/team/getDept',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.length>0){
+                            $("#dept_id").empty();
+                            for(var i in rs){
+                                $("#dept_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                            }
+						}
+                    }
+                })
+				$.ajax({
+                    url:'/teamType/query',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.rows.length>0){
+                            $("#teamtype_id").empty();
+                            for(var i in rs.rows){
+                                $("#teamtype_id").append("<option value='"+rs.rows[i].id+"'>"+rs.rows[i].name+"</option>")
+                            }
+						}
+                    }
+                })
+				if(sessionStorage.getItem("edit")=="true"){
+				    var temp=sessionStorage.getItem("row");
+                    var edit=sessionStorage.getItem("edit");
+                    sessionStorage.removeItem("edit");
+                    sessionStorage.removeItem("row");
+                    rowData=$.parseJSON(temp);
+                    $.ajax({
+                        url:'/team/getTeamMate',
+                        data:{
+                            id:rowData["id"]
+                        },
+						dataType:'json',
+						type:'post',
+						success:function(rs){
+                        	console.log(rs)
+                            for(var i in rs){
+                                $("#ArbetTable").append("<tr style='line-height: 50px;height: 50px;'><td>"+rs[i].NAME+"</td><td>"+rs[i].mobile+"</td><td>"+rs[i].dept+"</td><td>"+(rs[i].remark?rs[i].remark:'-')+"</td><td><div class='layui-btn' dataId='"+rs[i].id+"' onclick='remove(this)'>移除</div></td></tr>")
+                            }
+						}
+                    })
+                    for(var key in rowData){
+					    $("*[name="+key+"]").val(rowData[key]);
+					}
+					$("#lat_lon").val(rowData['lat']+","+rowData['lon']);
+				}
+			  layui.use(['form', 'layer','element','laydate'], function(){
+				  var form = layui.form
+					  ,layer = layui.layer
+					  ,element=layui.element
+					  ,laydate=layui.laydate
+				  form.render();
+				  form.on('submit(submit)',function(data){
+				      if(parseInt($("#numofteam").val())<0){
+						  swal("不能为负数","队伍人数不能为负数","warning");
+						  return false;
+					  }
+				      if(edit=="true"){
+                          console.log(111);
+                          for(var i=0;i<$("#ArbetTable .layui-btn").length;i++){
+						      team+=$("#ArbetTable .layui-btn").eq(i).attr("dataId")+",";
+						  }
+						  var field=data.field;
+						  field.team=team.substring(0,team.length-1);
+                          $.ajax({
+                              url:'/team/update',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/team/query");
+								 }
+                              }
+                          })
+					  }else{
+						  for(var i=0;i<$("#ArbetTable .layui-btn").length;i++){
+						      team+=$("#ArbetTable .layui-btn").eq(i).attr("dataId")+",";
+						  }
+						  var field=data.field;
+						  field.team=team.substring(0,team.length-1);
+                          $.ajax({
+                              url:'/team/addTeam',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                 if(rs.code==0){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/team/query");
+								 }else if(rs.code==504){
+									 swal("新增失败","新增失败："+rs.msg,"error");
+								 }else{
+									 swal("新增失败","新增失败: 请联系管理员","error");
+								 }
+                              }
+                          })
+					  }
+				  })
+			  })
+			$("#add").on("click",function(){
+			    layer.open({
+        			type: 2,
+        			title:'添加成员',
+        			area:['450px', 'auto'],
+        			content: 'personForm.html',
+                    end:function(){
+        			    var json=$.parseJSON(sessionStorage.getItem("users"));
+        			    sessionStorage.removeItem("users");
+        			    $("#ArbetTable").append("<tr style='line-height: 50px;height: 50px;'><td>"+json[0].name+"</td><td>"+json[0].mobile+"</td><td>"+json[0].dept+"</td><td>"+json[0].remark+"</td><td><div class='layui-btn' dataId='"+json[0].id+"' onclick='remove(this)'>移除</div></td></tr>")
+                    }
+    			});
+			})
+
+			function remove(_this){
+				    var index=$(_this).parent().parent().index();
+				  $("tbody tr").eq(index).remove();
+			}
+
+//------------------地图--------------------
+				layui.use(['layer', 'form'], function () {
+					var leyer = layui.layer
+							, form = layui.form;
+					form.render();
+					$("#selectPos").on('click', function () {
+						var lat_lon = $("#lat_lon").val();
+						layer.open({
+							title: "定位",
+							type: 2,
+							content: '../expertpairing/emergencyGeoPosition.html?lat_lon=' + lat_lon,
+							area: ['700px', '400px'],
+							btn: ['确定', '取消'],
+							yes: function (index, layero) {
+								var res = window["layui-layer-iframe" + index].callbackdata();
+								$("#lat_lon").val(res.latitude_longitude);
+								var latitude_longitude=res.latitude_longitude.split(",");
+								$("#lat").val(latitude_longitude[0]);
+								$("#lon").val(latitude_longitude[1]);
+								$("#address").val(res.address);
+								layer.closeAll();
+							},
+							btn2: function () {
+								layer.closeAll();
+							},
+							cancel: function (index, layero) {
+								layer.close(index);
+							}
+						});
+					});
+
+
+
+				});
+
+
+
+		</script>
+	</body>
+</html>

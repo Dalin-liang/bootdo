@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+    <link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="../../js/popper.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    <div class="layui-pad10">
+        <div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+            <form class="layui-form"  lay-filter="searchForm" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">接报途径：</label>
+                    <div class="layui-input-inline ">
+                        <select id="source_type"  name="source_type" ></select>
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">上报人：</label>
+                    <div class="layui-input-inline ">
+                        <input type="text" name="title" lay-verify="title" id="repname" autocomplete="off" placeholder="请输入上报人" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">上报时间起：</label>
+                    <div class="layui-input-inline ">
+                        <input type="text" class="layui-input" id="repdateBegin" placeholder="上报时间起">
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">上报时间止：</label>
+                    <div class="layui-input-inline ">
+                        <input type="text" class="layui-input" id="repdateEnd" placeholder="上报时间止">
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label" >事故类型：</label>
+                    <div class="layui-input-inline" style="margin-right: 0px;">
+                        <select id="accidentTypeId"  name="accidentTypeId" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？" lay-filter="accidentTypeChange">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">预警类型：</label>
+                    <div class="layui-input-inline" style="margin-right: 0px;">
+                        <select id="earlywarnTypeId"  name="earlywarnTypeId" lay-verify="required" lay-reqtext="预警类型是必填项，岂能为空？" lay-filter="earlywarnTypeChange">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <label class="layui-form-label">预警级别：</label>
+                    <div class="layui-input-inline" style="margin-right: 0px;">
+                        <select id="earlywarnLevelId"  name="earlywarnLevelId" lay-verify="required" lay-reqtext="预警级别是必填项，岂能为空？">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-right: 0px;">
+                    <button type="button" class="layui-btn" style="margin-left: 50px;"
+                            id="search">查 询</button>
+                    <button type="reset" class="layui-btn" style="margin-left: 20px;">重 置</button>
+                </div>
+            </div>
+            &emsp;<!--<button type="button" class="layui-btn" id="search">查 询</button>-->
+            <!--<button type="button" class="layui-btn layui-btn-danger">高级查询</button>-->
+            </form>
+		</div>
+        <!--<div class="layui-mt10" id="LAY-component-layer-special-demo">-->
+			<!--<div class="layadmin-layer-demo">-->
+                <!--<button type="button" data-method="add" data-type="auto"  id="add" class="layui-btn layui-btn-normal">新增</button>-->
+			<!--</div>-->
+		<!--</div>-->
+        <div class="layui-mt10">
+            <table id="ArbetTable"></table>
+        </div>
+
+
+    </div>
+
+    <script>
+        var Table=function(){
+            var oTable=new Object();
+            oTable.Init=function(url){
+                $("#ArbetTable").bootstrapTable("destroy");
+                $("#ArbetTable").bootstrapTable({
+                    url:url,
+                    method:'get',
+                    iconSize : 'outline',
+                    toolbar : '#exampleToolbar',
+                    striped : true, // 设置为true会有隔行变色效果
+                    dataType : "json", // 服务器返回的数据类型
+                    pagination : true, // 设置为true会在底部显示分页条
+                    // queryParamsType : "limit",
+                    // //设置为limit则会发送符合RESTFull格式的参数
+                    singleSelect : false, // 设置为true将禁止多选
+                    // contentType : "application/x-www-form-urlencoded",
+                    // //发送到服务器的数据编码类型
+                    pageSize : 10, // 如果设置了分页，每页数据条数
+                    pageNumber : 1, // 如果设置了分布，首页页码
+                    pageList: [10, 25, 50, 100],
+                    //search : true, // 是否显示搜索框
+                    showColumns : false, // 是否显示内容下拉框（选择显示的列）
+                    sidePagination : "server", // 设置在哪里进行分页，可选值为"client" 或者 "server"
+                    uniqueId: "dispatch_planmain_id",
+                    queryParams : function(params) {
+                        return {
+                            //说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+                            limit: params.limit,
+                            offset:params.offset,
+                            source_type:$("#source_type").val(),
+                            repname:$("#repname").val(),
+                            accident_name : $("#accidentTypeId").find("option:selected").text(),
+                            warntype : $("#earlywarnTypeId").find("option:selected").text(),
+                            warnlevel : $("#earlywarnLevelId").find("option:selected").text(),
+                            repdateBegin:$("#repdateBegin").val(),
+                            repdateEnd:$("#repdateEnd").val()
+                        };
+                    },
+                    columns:[
+                        // {
+                        //     field:'action_program_id',
+                        //     title:'编号',
+                        //     align:'center'
+                        // },
+                        {
+                            field:'event_id',
+                            title:'ID',
+                            align:'center'
+                        }, {
+                            field:'event_type',
+                            title:'事件类别',
+                            align:'center'
+                        },{
+                            field:'warn_type',
+                            title:'预警类型',
+                            align:'center'
+                        },
+                        {
+                            field:'warn_level',
+                            title:'预警级别',
+                            align:'center'
+                        },{
+                            field:'address',
+                            title:'地址',
+                            align:'center'
+                        },{
+                            field:'event_desc',
+                            title:'事件描述',
+                            align:'center'
+                        },{
+                            field:'rep_dept',
+                            title:'报告单位',
+                            align:'center'
+                        }, {
+                            field:'rep_time',
+                            title:'上报时间',
+                            align:'center'
+                        }, {
+                            field:'option',
+                            title:'操作',
+                            align:'center',
+                            width: '200',
+                            formatter:rowOption
+                        }
+                    ],
+                    rowStyle:function(row,index){
+                        var classesArr = ['success', 'info'];
+                        var strclass = "";
+                        if (index % 2 === 0) {//偶数行
+                            strclass = classesArr[0];
+                        } else {//奇数行
+                            strclass = classesArr[1];
+                        }
+                        return { classes: strclass };
+                    }
+                })
+            }
+            return oTable;
+        };
+
+        function rowOption(value, row, index){
+            if(row.action_program_id == null || row.action_program_id == ""){//对象tempsave_flag属性值是暂存并且未上报则显示上报按钮 //row.tempsave_flag==1
+                return [
+                    '<button class="layui-btn layui-btn-danger layui-btn-sm" class="delete" >预案启动中</button>'
+                ]
+            }else{
+                return [
+                    '<button class="layui-btn layui-btn-primary layui-btn-sm" class="edit" onclick="addtask(\''+row.dispatch_planmain_id+'\')">指令下达</button>' +
+                    '<button class="layui-btn layui-btn-danger layui-btn-sm" class="delete" onclick="taskDetails(\''+row.action_program_id+'\')">指令详情</button>'
+                ]
+            }
+
+        }
+
+        var t=new Table();
+        t.Init("/receiveInfo/taskList");
+        var form;
+        layui.use(['layer','laydate','form','element'],function(){
+            var leyer=layui.layer
+                , element = layui.element
+                , router = layui.router();
+            form = layui.form;
+            element.render();;
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#repdateBegin'
+                ,type: 'datetime'
+            });
+            laydate.render({
+                elem: '#repdateEnd'
+                ,type: 'datetime'
+            });
+            // getSelectData();
+            // selectChange();
+            //
+            // getSourceType();
+
+        });
+
+        function addtask(dispatch_planmain_id){
+            var rowData = $('#ArbetTable').bootstrapTable('getRowByUniqueId', dispatch_planmain_id);
+            sessionStorage.setItem("actionId",rowData.action_program_id);
+            sessionStorage.setItem("dispatchPlanmainId",rowData.dispatch_planmain_id);
+            sessionStorage.setItem("taskTable","true");
+            var layerIndex=parent.layer.open({
+                type: 2,
+                id:"taskedit",
+                closeBtn: 2,
+                fixed:false,
+                title:false,
+                move:'.border',
+                area: ['680px', '500px'],
+                content: '/Emergency/web/client/pages/ind_taskedit.html'
+            });
+        }
+        // function editTask(id) {
+        //     if(id !=null && id !=""){
+        //         var data = $('#ArbetTable').bootstrapTable('getRowByUniqueId', dispatch_planmain_id);//行的数据
+        //         editTaskData = data;//传值到子页面
+        //     }
+        //     layer.open({
+        //         type : 2,
+        //         title : '编辑响应任务信息',
+        //         shadeClose : true,
+        //         shade : 0.4,
+        //         area : [ '800px', '430px' ],
+        //         content : '/Emergency/web/backend/pages/actionprogramManage/dispatchTaskForm.html'
+        //     });
+        // }/Emergency/web
+
+
+        function taskDetails(action_program_id){
+            sessionStorage.setItem("actionId",action_program_id);
+           var layerIndex=parent.layer.open({
+                type: 2,
+                id:"taskedit",
+                closeBtn: 2,
+                fixed:false,
+                title:false,
+                move:'.border',
+                area : [ '95%', '93%' ],
+                content: '/Emergency/web/backend/pages/support/actionprogramTaskTable.html'
+            });
+        }
+
+
+
+
+
+
+
+        function getSourceType(){
+            $.ajax({
+                url:'/system/source/getSourceALL',
+                type:'get',
+                dataType:'json',
+                data:{},
+                success:function(rs){
+                    if(rs !=null){
+                        if(rs.sourceList !=null && rs.sourceList !=""){
+                            var sourceList = rs.sourceList;
+                            var html = '<option value=""></option>';
+                            for(var i=0;i<sourceList.length;i++){
+                                html += '<option value="'+sourceList[i].id+'">'+sourceList[i].name+'</option>';
+                            }
+                            $("#source_type").html(html);
+                            form.render('select', 'searchForm');
+                        }
+                    }
+
+                }
+            })
+        }
+
+        function getSelectData(){
+            $.ajax({
+                url: '/planManage/planMain/getSelectData',
+                method:'post',
+                data:{
+                },
+                async: false,
+                success:function(data){
+                    if(data.msg =='true'){
+                        if(data.accidentTypeList !=null && data.accidentTypeList !=""){
+                            accidentType = data.accidentTypeList;
+                            var html = '<option value=""></option>';
+                            for(var i=0;i<accidentType.length;i++){
+                                html += '<option value="'+accidentType[i].id+'">'+accidentType[i].name+'</option>';
+                            }
+                            $("#accidentTypeId").html(html);
+                        }
+                        if(data.earlywarnTypeList !=null && data.earlywarnTypeList !=""){
+                            earlywarnType = data.earlywarnTypeList;
+                            var html = '<option value=""></option>';
+                            for(var i=0;i<earlywarnType.length;i++){
+                                html += '<option value="'+earlywarnType[i].id+'">'+earlywarnType[i].name+'</option>';
+                            }
+                            $("#earlywarnTypeId").html(html);
+                            $("#earlywarnTypeId").attr('disabled', 'disabled');
+                        }
+                        if(data.earlywarnLevelList !=null && data.earlywarnLevelList !=""){
+                            earlywarnLevel = data.earlywarnLevelList;
+                            var html = '<option value=""></option>';
+                            for(var i=0;i<earlywarnLevel.length;i++){
+                                html += '<option value="'+earlywarnLevel[i].id+'">'+earlywarnLevel[i].name+'</option>';
+                            }
+                            $("#earlywarnLevelId").html(html);
+                            $("#earlywarnLevelId").attr('disabled', 'disabled');
+                        }
+                        if(data.dpetList !=null && data.dpetList !=""){
+                            var dpetList = data.dpetList;
+                            var html = '<option value=""></option>';
+                            for(var i=0;i<dpetList.length;i++){
+                                html += '<option value="'+dpetList[i].id+'">'+dpetList[i].name+'</option>';
+                            }
+                            $("#reprotDeptId").html(html);
+                            $("#startDeptId").html(html);
+                        }
+                        form.render('select', 'searchForm');
+                    } else {
+                        layer.msg("获取下拉框信息失败");
+                    }
+                },
+                error:function (data) {
+                    layer.msg("获取下拉框信息失败");
+                }
+            }) ;
+        }
+
+
+        function selectChange(){
+            form.on('select(accidentTypeChange)', function(data){
+                $("#earlywarnTypeId").empty();
+                $("#earlywarnTypeId").attr('disabled','disabled');
+                $("#earlywarnLevelId").empty();
+                $("#earlywarnLevelId").attr('disabled','disabled');
+                //责任部门
+                $("#dutyDeptId").val("");
+                $("#dutyDeptName").val("");
+                for(var i=0;i<accidentType.length;i++){
+                    if(data.value == accidentType[i].id){
+                        $("#dutyDeptId").val(accidentType[i].deptId);
+                        $("#dutyDeptName").val(accidentType[i].deptName);
+                    }
+                }
+
+                //预警下拉
+                var html = '<option value=""></option>';
+                var change = false;
+                for(var i=0;i<earlywarnType.length;i++){
+                    if(data.value == earlywarnType[i].accidentTypeId){
+                        html += '<option value="'+earlywarnType[i].id+'">'+earlywarnType[i].name+'</option>';
+                        change = true;
+                    }
+                }
+                if(change){
+                    $("#earlywarnTypeId").removeAttr('disabled');
+                    $("#earlywarnTypeId").html(html);
+                }
+                form.render('select', 'searchForm');
+            });
+
+            form.on('select(earlywarnTypeChange)', function(data){
+                $("#earlywarnLevelId").empty();
+                $("#earlywarnLevelId").attr('disabled','disabled');
+                var change = false;
+                var html = '<option value=""></option>';
+                for(var i=0;i<earlywarnLevel.length;i++){
+                    if(data.value == earlywarnLevel[i].earlywarnTypeId){
+                        change = true;
+                        html += '<option value="'+earlywarnLevel[i].id+'">'+earlywarnLevel[i].name+'</option>';
+                    }
+                }
+                if(change){
+                    $("#earlywarnLevelId").html(html);
+                    $("#earlywarnLevelId").removeAttr('disabled');
+                }
+                form.render('select', 'searchForm');
+            });
+        }
+
+        function edit(_this){
+            var row=$("#ArbetTable").bootstrapTable("getRowByUniqueId",_this);
+            sessionStorage.setItem("edit","true");
+            sessionStorage.setItem("row",JSON.stringify(row));
+            layer.open({
+                type: 2,
+                title: '编辑',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['1000px', '600px'],
+                content: 'receiveInfoForm.html'
+            });
+        }
+
+        function removeItem(_this){
+            swal({
+                title:'删除',
+                text:'您确定要删除该数据吗？',
+                type:'warning',
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: false,
+                customClass: "custom_swal"
+            },function (isConfirm) {
+                if(isConfirm){
+                    $.ajax({
+                        url:'/receiveInfo/delete',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            'id':_this
+                        },
+                        success:function(rs){
+                            console.log(rs);
+                            if(rs==1){
+                                refreshArbetTable();
+                                swal("删除成功","删除成功","success");
+                            }else if(rs<1){
+                                swal("删除失败","删除失败","error");
+                            }
+                        }
+                    })
+                }else{
+                    swal.close();
+                }
+            })
+        }
+
+        $("#search").on("click",refreshArbetTable);
+
+        function refreshArbetTable(){
+            $("#ArbetTable").bootstrapTable("destroy");
+            t.Init("/receiveInfo/list");
+        }
+
+    </script>
+</body>
+</html>

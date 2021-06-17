@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../css/main.css" />
+	<link rel="stylesheet" href="../../css/style.css" />
+	<link rel="stylesheet" href="../../../client/css/bootstrap.min.css" />
+	<link rel="stylesheet"
+		href="../../bootstrap-table/bootstrap-table.min.css" />
+	<script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="../../../client/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="../../bootstrap-table/bootstrap-table.min.js"></script>
+	<script type="text/javascript"
+		src="../../bootstrap-table/bootstrap-table-zh-CN.js"></script>
+	<style type="text/css">
+		.layui-input-block input {
+			color: black !important;
+		}
+		body {
+			background-color: #f2f2f2;
+		}
+		.fixed-table-toolbar{
+			display:none;
+		}
+		/**字符串过长 转化为 。。。**/
+		table{
+		   width:100px;
+		   table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+		   background-color:#FFFFFF!important;
+		}
+		td{
+		   width:100%;
+		   word-break:keep-all;/* 不换行 */
+		   white-space:nowrap;/* 不换行 */
+		   overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+		   text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+		   -o-text-overflow:ellipsis;
+		   -icab-text-overflow: ellipsis;
+		   -khtml-text-overflow: ellipsis;
+		   -moz-text-overflow: ellipsis;
+		   -webkit-text-overflow: ellipsis;
+		}
+	</style>
+</head>
+<body>
+	<div class=" layui-pad10">
+		<div class="layui-col-md12">
+			<div class="layui-card" style="margin-bottom: 15px;">
+				<div class="layui-card-header">方案信息</div>
+				<div class="layui-card-body" style="height: 120px;">
+					<form class="layui-form" lay-filter="actionprogramForm" action="">
+						<input type="text" name="id" style="display:none;">
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">方案编码：</label>
+								<div class="layui-input-block ">
+									<input type="text" id="code" name="code" lay-verify="required|number|codeLong" placeholder="请输入" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">方案状态：</label>
+								<div class="layui-input-block">
+									<select id="status" name="status" lay-verify="required">
+										<option value=""></option>
+										<option value="1">执行中</option>
+										<option value="2">已结案</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">执行时间：</label>
+								<div class="layui-input-block">
+									<input type="text" id="actionDate" name="actionDate"
+										placeholder="请输入" autocomplete="off" class="layui-input dateTimeSelect" lay-verify="required">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">结案时间：</label>
+								<div class="layui-input-block">
+									<input type="text" id="closecaseDate" name="closecaseDate" placeholder="请输入" autocomplete="off" class="layui-input dateTimeSelect">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">归档日期：</label>
+								<div class="layui-input-block">
+									<input type="text" id="archiveDate" name="archiveDate" placeholder="请输入" autocomplete="off" class="layui-input  dateTimeSelect">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">归档状态：</label>
+								<div class="layui-input-block">
+									<select id="isArchive" name="isArchive" lay-verify="required">
+										<option value=""></option>
+										<option value="0">未归档</option>
+										<option value="1">已归档</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">事件编码：</label>
+								<div class="layui-input-block ">
+									<input type="text" id="eventCode" name="eventCode" readonly="readonly" placeholder="请输入" autocomplete="off" class="layui-input" style="background-color: #d2d2d2;">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-md12"
+							style="left: 0; position: fixed; bottom: 0; margin-bottom: 10px; z-index: 999;">
+							<div class="layui-card">
+								<div class="layui-card-body">
+									<div class="layui-form-item layui-text-center"
+										style="margin-top: 0px; margin-bottom: 0px;">
+										<button class="layui-btn layui-btn-radius ifView" lay-submit lay-filter="formSubmit">保 存</button>
+										<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" onclick="closeForm()">关 闭</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">预案归档信息</div>
+				<div class="layui-card-body" style="height: 470px;">
+					<form class="layui-form" lay-filter="planMainForm" id="planMainForm" action="">
+						<input type="text" name="id" style="display:none;">
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">事故类型：</label>
+								<div class="layui-input-block ">
+									<select id="accidentTypeName" name="accidentTypeName" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？" lay-filter="accidentTypeChange">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">预警类型：</label>
+								<div class="layui-input-block">
+									<select id="earlywarnTypeName" name="earlywarnTypeName" lay-verify="required" lay-reqtext="预警类型是必填项，岂能为空？" lay-filter="earlywarnTypeChange">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">预警级别：</label>
+								<div class="layui-input-block">
+									<select id="earlywarnLevelName" name="earlywarnLevelName" lay-verify="required" lay-reqtext="预警级别是必填项，岂能为空？">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">责任部门：</label>
+								<div class="layui-input-block">
+									<input type="text" id="dutyDeptName" name="dutyDeptName" lay-verify="required" lay-reqtext="责任部门是必填项，岂能为空？" placeholder="请输入"
+										autocomplete="off" class="layui-input" readonly="readonly" style="background-color: #d2d2d2;">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs6">
+							<div class="layui-form-item">
+								<label class="layui-form-label">预案名称：</label>
+								<div class="layui-input-block">
+									<input type="text" id="planMainName" name="name" lay-verify="required|nameLong" placeholder="请输入" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">预案编码：</label>
+								<div class="layui-input-block">
+									<input type="text" id="planMainCode" name="code" readonly="readonly" lay-verify="required|number|codeLong" placeholder="请输入" autocomplete="off" class="layui-input" style="background-color: #d2d2d2;">
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">启用条件：</label>
+							<div class="layui-input-block">
+								<textarea id="startCondition" name="startCondition" lay-verify="required|startConditionLong" placeholder="请输入内容" class="layui-textarea"></textarea>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">报告单位：</label>
+								<div class="layui-input-block">
+									<select id="reprotDeptName" name="reprotDeptName" lay-verify="required" lay-reqtext="报告单位是必填项，岂能为空？">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">启动部门：</label>
+								<div class="layui-input-block">
+									<select id="startDeptName" name="startDeptName" lay-verify="required" lay-reqtext="启动部门是必填项，岂能为空？">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">备注：</label>
+							<div class="layui-input-block">
+								<textarea id="remarks" name="remarks" lay-verify="remarksLong" placeholder="请输入内容" class="layui-textarea"></textarea>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">是否启用：</label>
+								<div class="layui-input-block">
+									<input type="checkbox" id="enabled" name="enabled" checked="checked" name="status" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">使用次数：</label>
+								<div class="layui-input-block">
+									<input type="text" id="useTime" name="useTime" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-md12" style="margin-top: 15px;">
+			<div class="layui-card">
+				<div class="layui-card-header">方案响应部门归档信息</div>
+				<div class="layui-card-body">
+					<div class="layui-mt10" id="LAY-component-layer-special-demo">
+						<div class="layadmin-layer-demo">
+							<button type="button" class="layui-btn layui-btn-normal" onclick="editRespDept('')">添加响应部门</button>
+						</div>
+					</div>
+					<div class="layui-form layui-mt10">
+						<table id="respDeptTable" data-mobile-responsive="true"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-md12"
+			style="margin-top: 15px; margin-bottom: 80px;">
+			<div class="layui-card">
+				<div class="layui-card-header">方案任务归档信息</div>
+				<div class="layui-card-body">
+					<div class="layui-mt10" id="LAY-component-layer-special-demo">
+						<div class="layadmin-layer-demo">
+							<button type="button" class="layui-btn layui-btn-normal" onclick="editTask('')">添加任务</button>
+						</div>
+					</div>
+					<div class="layui-form layui-mt10">
+						<table id="taskTable" data-mobile-responsive="true"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="../../layui/layui.js"></script>
+	<script>
+		var prefix = "/actionprogramManage/dispatchActionprogramMain";
+		var parentData;
+		var editRespDeptData;
+		var editTaskData;
+		var planMainData;
+		var form ;
+		layui.use([ 'form' ,'laydate'], function() {
+			form = layui.form;
+			var laydate = layui.laydate;
+			
+			laydate.render({ 
+				  elem: '#actionDate',
+				  type: 'datetime'
+			});
+			laydate.render({ 
+				  elem: '#closecaseDate',
+				  type: 'datetime'
+			});
+			laydate.render({ 
+				  elem: '#archiveDate',
+				  type: 'datetime'
+			});
+			getSelectData();
+			loadRespDeptTable();
+			loadTaskTable();
+			selectChange();
+			//回显
+			if(parent.editDate !=null && parent.editDate !=""){
+				parentData = parent.editDate;
+				parent.editDate = null;
+				form.val('actionprogramForm', {
+					"id": parentData.id
+					,"code": parentData.code
+					,"status": parentData.status
+					,"actionDate": parentData.actionDate
+					,"closecaseDate": parentData.closecaseDate
+					,"archiveDate": parentData.archiveDate
+					,"isArchive": parentData.isArchive
+					,"eventCode": parentData.eventCode
+              	});
+				getProgramDetails(parentData.id);
+			}
+			
+			//表单校验
+			form.verify({
+				codeLong: function(value){ 
+					if(value.length > 32){
+		                 return '编码长度大于32！请重新输入';
+		             }
+				}
+			});
+			function checkPlanmain(){
+				var name = $("#planMainName").val();
+				if(name.length > 120){
+					 layer.alert('预案名称长度大于120！请重新输入');
+	                 return false;
+	            }
+				var code = $("#planMainCode").val();
+				if(code.length > 32){
+					 layer.alert('预案编码长度大于32！请重新输入');
+	                 return false;
+	            }else if(isNaN(code)){
+	            	 layer.alert('预案编码不能含非数字！请重新输入');
+	                 return false;
+	            }
+				var startCondition = $("#startCondition").val();
+				if(startCondition.length > 250){
+					 layer.alert('预案启用条件大于250！请重新输入');
+	                 return false;
+	            }
+				var remarks = $("#remarks").val();
+				if(remarks.length > 500){
+					 layer.alert('预案备注长度大于500！请重新输入');
+	                 return false;
+	            }
+				return true;
+			}
+			
+			
+			
+			form.on('submit(formSubmit)', function(data){ 
+				if(!checkPlanmain()){
+					return false;
+				}
+				//预案
+				var planMainValue = {};
+				var planMainForm = $('#planMainForm [name]').serializeArray();
+				for(var index = 0; index < planMainForm.length; ++index){
+					planMainValue[planMainForm[index].name] = planMainForm[index].value;
+				} 
+				if(planMainValue.enabled =="on"){
+					planMainValue.enabled = "1";
+				}else{
+					planMainValue.enabled = "2";
+				}
+				
+	  		 	var respDept = $('#respDeptTable').bootstrapTable('getData');
+	  			var task = $('#taskTable').bootstrapTable('getData');
+	  			console.log("====task===="+JSON.stringify(task));
+	  		  	$.ajax({   
+	                  url: prefix + '/update',       
+	                  method:'post',       
+	                  data:{
+	 					"actionprogramMain": JSON.stringify(data.field),
+	 					"planMain": JSON.stringify(planMainValue),
+	 					"respdept": JSON.stringify(respDept),
+	 					"task": JSON.stringify(task)
+		   		  	  },
+	  				  async: false,       
+	                  success:function(data){      
+	                       if(data.code =='0'){       
+	  							var index = parent.layer.getFrameIndex(window.name);
+	  							parent.reloadTable();//重载父页表格
+	  							parent.layer.msg("保存成功");
+	  							parent.layer.close(index);
+	                       } else {
+	                            var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.msg("保存失败");
+								parent.layer.close(index); 
+	  					   }           
+	                  },              
+	                  error:function (data) {
+	                  		parent.layer.msg("保存失败");
+	  				  }           
+	           }) ;         
+		  
+			  var index = parent.layer.getFrameIndex(window.name);
+			  parent.layer.close(index);
+	        });   
+		});
+		
+		function getSelectData(){
+			$.ajax({   
+	    		url: '/planManage/planMain/getSelectData',       
+	        	method:'post',       
+	        	data:{
+	  			},
+	  			async: false,       
+	        	success:function(data){      
+		  			if(data.msg =='true'){       
+		  				if(data.accidentTypeList !=null && data.accidentTypeList !=""){
+		  					accidentType = data.accidentTypeList;
+		  					var html = '<option value=""></option>';
+		  					for(var i=0;i<accidentType.length;i++){
+		  						html += '<option value="'+accidentType[i].name+'">'+accidentType[i].name+'</option>';
+		  					}
+	  						$("#accidentTypeName").html(html);
+	  					}
+		  				if(data.earlywarnTypeList !=null && data.earlywarnTypeList !=""){
+		  					earlywarnType = data.earlywarnTypeList;
+		  					var html = '<option value=""></option>';
+		  					for(var i=0;i<earlywarnType.length;i++){
+		  						html += '<option value="'+earlywarnType[i].name+'">'+earlywarnType[i].name+'</option>';
+		  					}
+		  					$("#earlywarnTypeName").html(html);
+		  					$("#earlywarnTypeName").attr('disabled', 'disabled');
+	  					}
+		  				if(data.earlywarnLevelList !=null && data.earlywarnLevelList !=""){
+		  					earlywarnLevel = data.earlywarnLevelList;
+		  					var html = '<option value=""></option>';
+		  					for(var i=0;i<earlywarnLevel.length;i++){
+		  						html += '<option value="'+earlywarnLevel[i].name+'">'+earlywarnLevel[i].name+'</option>';
+		  					}
+		  					$("#earlywarnLevelName").html(html);
+		  					$("#earlywarnLevelName").attr('disabled', 'disabled');
+	  					}
+		  				if(data.dpetList !=null && data.dpetList !=""){
+							var dpetList = data.dpetList;
+		  					var html = '<option value=""></option>';
+		  					for(var i=0;i<dpetList.length;i++){
+		  						html += '<option value="'+dpetList[i].name+'">'+dpetList[i].name+'</option>';
+		  					}
+	  						$("#reprotDeptName").html(html);
+	  						$("#startDeptName").html(html);
+						}
+		  				form.render('select', 'planMainForm');
+	  				} else {
+						layer.msg("获取下拉框信息失败");
+	  				}           
+	       	 	},              
+	       		error:function (data) {
+		  			layer.msg("获取下拉框信息失败");
+	  			}           
+	      }) ; 
+		}
+		
+		function selectChange(){
+			form.on('select(accidentTypeChange)', function(data){   
+				  $("#earlywarnTypeName").empty();
+				  $("#earlywarnTypeName").attr('disabled','disabled');
+				  $("#earlywarnLevelName").empty();
+				  $("#earlywarnLevelName").attr('disabled','disabled');
+				  //责任部门
+				  $("#dutyDeptName").val("");
+				  for(var i=0;i<accidentType.length;i++){
+						if(data.value == accidentType[i].name){
+							$("#dutyDeptName").val(accidentType[i].deptName);
+						}
+				  }
+				  
+				  //预警下拉
+				  var html = '<option value=""></option>';
+				  var change = false;
+				  for(var i=0;i<earlywarnType.length;i++){
+						if(data.value == earlywarnType[i].accidentTypeName){
+							html += '<option value="'+earlywarnType[i].name+'">'+earlywarnType[i].name+'</option>';
+		  					change = true;
+						}
+				  }
+				  if(change){
+					  $("#earlywarnTypeName").removeAttr('disabled');
+					  $("#earlywarnTypeName").html(html);
+				  }
+				  form.render('select', 'planMainForm');
+			  });  
+			  
+			  
+			  form.on('select(earlywarnTypeChange)', function(data){   
+				  $("#earlywarnLevelName").empty();
+				  $("#earlywarnLevelName").attr('disabled','disabled');
+				  var change = false;
+				  var html = '<option value=""></option>';
+				  for(var i=0;i<earlywarnLevel.length;i++){
+					  if(data.value == earlywarnLevel[i].earlywarnTypeName){
+		  					change = true;
+						  	html += '<option value="'+earlywarnLevel[i].name+'">'+earlywarnLevel[i].name+'</option>';
+						}
+				  }
+				  if(change){
+					  $("#earlywarnLevelName").html(html);
+					  $("#earlywarnLevelName").removeAttr('disabled');
+				  }
+				  form.render('select', 'planMainForm');
+			  });  
+		}
+		
+		function getProgramDetails(ProgramId){
+			 $.ajax({
+					url : prefix + '/getProgramDetails',
+					method : 'post',
+					data : {
+						"actionprogramId" : ProgramId
+					},
+					async : false,
+					success : function(data) {
+						if (data.msg == 'true') {
+							if(data.dispatchPlanMain !=null && data.dispatchPlanMain !=""){
+								planMainData = data.dispatchPlanMain;
+								form.val('planMainForm', {
+									"id": planMainData.id,
+									"accidentTypeName": planMainData.accidentTypeName,
+									"earlywarnTypeName": planMainData.earlywarnTypeName,
+									"earlywarnLevelName": planMainData.earlywarnLevelName,
+									"dutyDeptName": planMainData.dutyDeptName,
+									"name": planMainData.name,
+									"code": planMainData.code,
+									"startCondition": planMainData.startCondition,
+									"reprotDeptName": planMainData.reprotDeptName,
+									"startDeptName": planMainData.startDeptName,
+									"enabled": planMainData.enabled==1?true:false,
+									"useTime": planMainData.useTime,
+									"remarks": planMainData.remarks
+				              	});
+							}
+							if(data.dispatchRespDept !=null && data.dispatchRespDept !=""){
+								var respDeptData = data.dispatchRespDept;
+								$('#respDeptTable').bootstrapTable('load', respDeptData);
+							}	
+							if(data.dispatchTask !=null && data.dispatchTask !=""){
+								var taskData = data.dispatchTask;
+								console.log("===222=taskData==="+JSON.stringify(taskData));
+								$('#taskTable').bootstrapTable('load', taskData);
+							}
+						} else {
+							layer.msg("获取方案详情信息失败");
+						}
+					},
+					error : function(data) {
+						layer.msg("获取方案详情信息失败");
+					}
+			  });        
+		}
+		
+		function editRespDept(id) {
+			if(id !=null && id !=""){
+				var data = $('#respDeptTable').bootstrapTable('getRowByUniqueId',id);//行的数据
+				editRespDeptData = data;//传值到子页面
+			}
+			layer.open({
+				type : 2,
+				title : '编辑响应部门信息',
+				shadeClose : true,
+				shade : 0.4,
+				area : [ '800px', '340px' ],
+				content : 'dispatchRespDeptForm.html'
+			});
+		}
+
+		function editTask(id) {
+			if(id !=null && id !=""){
+				var data = $('#taskTable').bootstrapTable('getRowByUniqueId', id);//行的数据
+				editTaskData = data;//传值到子页面
+			}
+			layer.open({
+				type : 2,
+				title : '编辑响应任务信息',
+				shadeClose : true,
+				shade : 0.4,
+				area : [ '800px', '430px' ],
+				content : 'dispatchTaskForm.html'
+			});
+		}
+
+		function closeForm() {
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+		
+		//表格数据样式
+		function paramsMatter(value, row, index) {
+			if(value !=null && value!=""){
+		    	var values = value;//获取当前字段的值
+		        //替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
+		        //&nbsp;代替
+		        values = values.replace(/\s+/g,'&nbsp;');
+		        return "<span title="+values+">"+value+"</span>";
+		    }
+		}
+		
+		function loadRespDeptTable() {
+			$('#respDeptTable').bootstrapTable({
+				method : 'get', // 服务器数据的请求方式 get or post
+				//	url : prefix + "/list", // 服务器数据的加载地址
+				//	showRefresh : true,
+				//	showToggle : true,
+				//	showColumns : true,
+				iconSize : 'outline',
+				toolbar : '#exampleToolbar',
+				striped : true, // 设置为true会有隔行变色效果
+				dataType : "json", // 服务器返回的数据类型
+				pagination : true, // 设置为true会在底部显示分页条
+				// queryParamsType : "limit",
+				// //设置为limit则会发送符合RESTFull格式的参数
+				singleSelect : false, // 设置为true将禁止多选
+				// contentType : "application/x-www-form-urlencoded",
+				// //发送到服务器的数据编码类型
+				pageSize : 10, // 如果设置了分页，每页数据条数
+				pageNumber : 1, // 如果设置了分布，首页页码
+				pageList: [10, 25, 50, 100],
+				//search : true, // 是否显示搜索框
+				showColumns : false, // 是否显示内容下拉框（选择显示的列）
+				sidePagination : "client", // 设置在哪里进行分页，可选值为"client" 或者 "server"
+				uniqueId : "id",
+				sortName : "sortNo",
+				sortOrder : "asc",
+				queryParams : function(params) {
+					return {
+						//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+						limit : params.limit,
+						offset : params.offset,
+						code : $('#code').val(),
+						status : $('#status').val(),
+						closecaseDate : $('#closecaseDate')
+								.val(),
+						isArchive : $('#isArchive').val()
+					};
+				},
+				// //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+				// queryParamsType = 'limit' ,返回参数必须包含
+				// limit, offset, search, sort, order 否则, 需要包含:
+				// pageSize, pageNumber, searchText, sortName,
+				// sortOrder.
+				// 返回false将会终止请求
+				columns : [
+						{
+							field : 'id',
+							title : 'ID',
+							visible : false
+						},
+						{
+							field : 'sortNo',
+							title : '序号',
+							width : 40,
+							align : "center",
+							sortable:true,
+						},
+						{
+							field : 'deptName',
+							title : '部门名称',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'content',
+							title : '响应工作内容',
+							width : 150,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'liabilityMan',
+							title : '负责人姓名',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'mobile',
+							title : '联系电话',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							title : '操作',
+							field : 'id',
+							align : 'center',
+							width : 60,
+							formatter : function(value, row, index) {
+								var html = "";
+								html += '<a class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="editRespDept(\'' + row.id + '\')">修改</a>';
+								return html;
+							}
+						} ]
+			});
+		}
+
+		function loadTaskTable() {
+			$('#taskTable').bootstrapTable({
+				method : 'get', // 服务器数据的请求方式 get or post
+				//	url : prefix + "/list", // 服务器数据的加载地址
+				//	showRefresh : true,
+				//	showToggle : true,
+				//	showColumns : true,
+				iconSize : 'outline',
+				toolbar : '#exampleToolbar',
+				striped : true, // 设置为true会有隔行变色效果
+				dataType : "json", // 服务器返回的数据类型
+				pagination : true, // 设置为true会在底部显示分页条
+				// queryParamsType : "limit",
+				// //设置为limit则会发送符合RESTFull格式的参数
+				singleSelect : false, // 设置为true将禁止多选
+				// contentType : "application/x-www-form-urlencoded",
+				// //发送到服务器的数据编码类型
+				pageSize : 10, // 如果设置了分页，每页数据条数
+				pageNumber : 1, // 如果设置了分布，首页页码
+				pageList: [10, 25, 50, 100],
+				//search : true, // 是否显示搜索框
+				showColumns : false, // 是否显示内容下拉框（选择显示的列）
+				sidePagination : "client", // 设置在哪里进行分页，可选值为"client" 或者 "server"
+				uniqueId : "id",
+				sortName : "sortNo",
+				sortOrder : "asc",
+				queryParams : function(params) {
+					return {
+						//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+						limit : params.limit,
+						offset : params.offset,
+					};
+				},
+				// //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+				// queryParamsType = 'limit' ,返回参数必须包含
+				// limit, offset, search, sort, order 否则, 需要包含:
+				// pageSize, pageNumber, searchText, sortName,
+				// sortOrder.
+				// 返回false将会终止请求
+				columns : [
+						{
+							field : 'id',
+							title : 'ID',
+							visible : false
+						},
+						{
+							field : 'sortNo',
+							title : '序号',
+							width : 40,
+							align : "center",
+							sortable:true,
+						},
+						{
+							field : 'name',
+							title : '任务名称',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'content',
+							title : '任务内容',
+							width : 150,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'type',
+							title : '接收对象类型',
+							width : 100,
+							align : "center",
+							formatter : function(value, row,index) {
+								if(value =="1"){
+									return "个人";
+								}else if(value =="2"){
+									return "应急队伍";
+								}else if(value =="3"){
+									return "部门";
+								}else if(value =="4"){
+									return "专家";
+								}else{
+									return "";
+								}
+							}
+						},{
+							field : 'liabilityObject',
+							title : '责任对象',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						} ,
+						{
+							field : 'mobile',
+							title : '联系电话',
+							width : 100,
+							align : "center",
+							formatter:paramsMatter,
+						},
+						{
+							field : 'isArrange',
+							title : '任务是否安排',
+							width : 100,
+							align : "center",
+							formatter : function(value, row,index) {
+								if(value =="0"){
+									return "未安排";
+								}else if(value =="1"){
+									return "已安排";
+								}else{
+									return "";
+								}
+							}
+						},
+						{
+							field : 'action_status',
+							title : '现场的任务状态',
+							width : 100,
+							align : "center",
+							formatter : function(value, row,index) {
+								if(value =="1"){
+									return "<span title='已接收到任务'>已接收到任务</span>";
+								}else if(value =="2"){
+									return "<span title='开始执行中'>开始执行中</span>";
+								}else if(value =="3"){
+									return "<span title='执行遇到困难'>执行遇到困难</span>";
+								}else if(value =="4"){
+									return "<span title='执行完成'>执行完成</span>";
+								}else{
+									return "";
+								}
+							}
+						},
+						{
+							title : '操作',
+							field : 'id',
+							align : 'center',
+							width : 80,
+							formatter : function(value, row,index) {
+								var html = "";
+								html += '<a class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="editTask(\'' + row.id + '\')">修改</a>';
+								return html;
+							}
+						} ]
+			});
+		}
+	</script>
+</body>
+</html>

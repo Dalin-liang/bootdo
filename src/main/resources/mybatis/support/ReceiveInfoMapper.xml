@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.ReceiveInfoMapper">
+
+	<select id="getUniqueById" resultType="java.util.Map">
+		select rs.* from watch_receiveinfo rs where id = #{value}
+	</select>
+
+	<select id="get" parameterType="com.bootdo.support.dto.ReceiveInfoDTO" resultType="java.util.Map">
+		select rs.*,
+		(select ws.name from watch_source ws where ws.enabled='1' and rs.source_type=ws.id) source_name,
+		(select sd.name from safeguard_dept sd where sd.enabled='1' and rs.dept_id=sd.id) dept,
+		(select a.name from plan_accident_type a where rs.accident_type_id=a.id) accident_name,
+		(select d.name from safeguard_deptperson d where rs.accident_type_id=d.id) deptperson,
+		(select e.name from plan_earlywarn_type e where rs.earlywarn_id=e.id) warntype,
+		(select pel.name from plan_earlywarn_level pel where rs.eventlevel=pel.id) warnlevel,
+		(@rowNum:=@rowNum+1) RN
+		from watch_receiveinfo rs,(select (@rowNum:=0)) b
+        <where>  
+		  		  <if test="id != null and id != ''"> and rs.id = #{id} </if>
+		  		  <if test="repname != null and repname != ''">
+		  		   AND rs.repname like concat('%',#{repname},'%')
+				  </if>
+		  		  <if test="repphone != null and repphone != ''"> and rs.repphone = #{repphone} </if>
+		  		  <if test="sex != null and sex != ''"> and rs.sex = #{sex} </if>
+		  		  <if test="eventaddr != null and eventaddr != ''"> and rs.eventaddr like concat('%',#{eventaddr},'%') </if>
+		  		  <if test="lat_lon != null and lat_lon != ''"> and rs.lat_lon = #{lat_lon} </if>
+		  		  <if test="eventdesc != null and eventdesc != ''"> and rs.eventdesc like concat('%',#{eventdesc},'%') </if>
+		  		  <if test="repdate != null and repdate != ''"> and rs.repdate = #{repdate} </if>
+		  		  <if test="source_type != null and source_type != ''"> and rs.source_type = #{source_type} </if>
+		  		  <if test="dept_id != null and dept_id != ''"> and rs.dept_id = #{dept_id} </if>
+		  		  <if test="accident_type_id != null and accident_type_id != ''"> and rs.accident_type_id = #{accident_type_id} </if>
+		  		  <if test="eventlevel != null and eventlevel != ''"> and rs.eventlevel = #{eventlevel} </if>
+		  		  <if test="tempsaveFlag != null and tempsaveFlag != ''"> and rs.tempsave_flag = #{tempsaveFlag} </if>
+		  		  <if test="remarks != null and remarks != ''"> and rs.remarks = #{remarks} </if>
+		  		  <if test="ispush != null and ispush != ''"> and rs.ispush = #{ispush} </if>
+		  		  <if test="deptperson_id != null and deptperson_id != ''"> and rs.deptperson_id = #{deptperson_id} </if>
+		  		  <if test="earlywarn_id != null and earlywarn_id != ''"> and rs.earlywarn_id = #{earlywarn_id} </if>
+			      <if test="is_acceptance != null and is_acceptance != ''"> and rs.is_acceptance = #{is_acceptance} </if>
+			      <if test="acceptance_type != null and acceptance_type != ''"> and rs.acceptance_type = #{acceptance_type} </if>
+			      <if test="examine_type != null and examine_type != ''"> and rs.examine_type = #{examine_type} </if>
+			      <if test="examine_opinion != null and examine_opinion != ''"> and rs.examine_opinion = #{examine_opinion} </if>
+			      <if test="examiner_type != null and examiner_type != ''"> and rs.examiner_type = #{examiner_type} </if>
+		  		  <if test="createBy != null and createBy != ''"> and rs.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and rs.create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and rs.update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and rs.update_date = #{updateDate} </if>
+			      <if test="repdateBegin != null">
+						<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{repdateBegin}, '%Y-%m-%d %H:%i:%S')
+						]]>
+				  </if>
+			      <if test="repdateEnd != null">
+						<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{repdateEnd}, '%Y-%m-%d %H:%i:%S')
+						]]>
+				  </if>
+		 </where>
+        order by rs.create_date desc
+	</select>
+
+	<select id="list" resultType="java.util.HashMap">
+		select rs.*,ws.name as source_name,sd.name as dept,a.name as accident_name,d.name as deptperson,e.name as warntype,pel.name as warnlevel
+		,sd.name deptName,sd.contact deptContact, sd.mobile deptMobile,
+		d.name personName,d.mobile personMobile,dsd.personDeptName personDeptName
+		from watch_receiveinfo rs
+		LEFT JOIN watch_source ws ON rs.source_type=ws.id and ws.enabled='1'
+		LEFT JOIN safeguard_dept sd ON sd.enabled='1' and rs.dept_id=sd.id
+		LEFT JOIN plan_accident_type a ON rs.accident_type_id=a.id
+		LEFT JOIN safeguard_deptperson d ON rs.accident_type_id=d.id
+		LEFT JOIN plan_earlywarn_type e ON rs.earlywarn_id=e.id
+		LEFT JOIN plan_earlywarn_level pel ON rs.eventlevel=pel.id
+		LEFT JOIN (select t1.*,t2.name personDeptName from safeguard_deptperson t1,safeguard_dept t2 where t1.dept_id = t2.id ) dsd on rs.deptperson_id=dsd.id
+		<where>
+			<if test="id != null and id != ''"> and rs.id = #{id} </if>
+			<if test="repname != null and repname != ''">
+				AND rs.repname like concat('%',#{repname},'%')
+			</if>
+			<if test="repphone != null and repphone != ''"> and rs.repphone = #{repphone} </if>
+			<if test="sex != null and sex != ''"> and rs.sex = #{sex} </if>
+			<if test="eventaddr != null and eventaddr != ''"> and rs.eventaddr like concat('%',#{eventaddr},'%') </if>
+			<if test="lat_lon != null and lat_lon != ''"> and rs.lat_lon = #{lat_lon} </if>
+			<if test="eventdesc != null and eventdesc != ''"> and rs.eventdesc like concat('%',#{eventdesc},'%') </if>
+			<if test="repdate != null and repdate != ''"> and rs.repdate = #{repdate} </if>
+			<if test="source_type != null and source_type != ''"> and rs.source_type = #{source_type} </if>
+			<if test="dept_id != null and dept_id != ''"> and rs.dept_id = #{dept_id} </if>
+			<if test="accident_type_id != null and accident_type_id != ''"> and rs.accident_type_id = #{accident_type_id} </if>
+			<if test="eventlevel != null and eventlevel != ''"> and rs.eventlevel = #{eventlevel} </if>
+			<if test="tempsaveFlag != null and tempsaveFlag != ''"> and rs.tempsave_flag = #{tempsaveFlag} </if>
+			<if test="remarks != null and remarks != ''"> and rs.remarks = #{remarks} </if>
+			<if test="ispush != null and ispush != ''"> and rs.ispush = #{ispush} </if>
+			<if test="deptperson_id != null and deptperson_id != ''"> and rs.deptperson_id = #{deptperson_id} </if>
+			<if test="earlywarn_id != null and earlywarn_id != ''"> and rs.earlywarn_id = #{earlywarn_id} </if>
+			<if test="is_acceptance != null and is_acceptance != ''"> and rs.is_acceptance = #{is_acceptance} </if>
+			<if test="acceptance_type != null and acceptance_type != ''"> and rs.acceptance_type = #{acceptance_type} </if>
+			<if test="examine_type != null and examine_type != ''"> and rs.examine_type = #{examine_type} </if>
+			<if test="examine_opinion != null and examine_opinion != ''"> and rs.examine_opinion = #{examine_opinion} </if>
+			<if test="examiner_type != null and examiner_type != ''"> and rs.examiner_type = #{examiner_type} </if>
+			<if test="createBy != null and createBy != ''"> and rs.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and rs.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and rs.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and rs.update_date = #{updateDate} </if>
+			<if test="repdateBegin != null and repdateBegin != ''">
+				<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{repdateBegin}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+			<if test="repdateEnd != null and repdateEnd != ''">
+				<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{repdateEnd}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+			<if test="accident_name != null and accident_name != ''">
+				AND a.name like concat('%',#{accident_name},'%')
+			</if>
+			<if test="warntype != null and warntype != ''">
+				AND e.name like concat('%',#{warntype},'%')
+			</if>
+			<if test="warnlevel != null and warnlevel != ''">
+				AND pel.name like concat('%',#{warnlevel},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order},rs.create_date DESC
+			</when>
+			<otherwise>
+				ORDER BY rs.create_date DESC
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*)
+		from watch_receiveinfo rs
+		LEFT JOIN watch_source ws ON rs.source_type=ws.id and ws.enabled='1'
+		LEFT JOIN safeguard_dept sd ON sd.enabled='1' and rs.dept_id=sd.id
+		LEFT JOIN plan_accident_type a ON rs.accident_type_id=a.id
+		LEFT JOIN safeguard_deptperson d ON rs.accident_type_id=d.id
+		LEFT JOIN plan_earlywarn_type e ON rs.earlywarn_id=e.id
+		LEFT JOIN plan_earlywarn_level pel ON rs.eventlevel=pel.id
+		<where>
+			<if test="id != null and id != ''"> and rs.id = #{id} </if>
+			<if test="repname != null and repname != ''">
+				AND rs.repname like concat('%',#{repname},'%')
+			</if>
+			<if test="repphone != null and repphone != ''"> and rs.repphone = #{repphone} </if>
+			<if test="sex != null and sex != ''"> and rs.sex = #{sex} </if>
+			<if test="eventaddr != null and eventaddr != ''"> and rs.eventaddr like concat('%',#{eventaddr},'%') </if>
+			<if test="lat_lon != null and lat_lon != ''"> and rs.lat_lon = #{lat_lon} </if>
+			<if test="eventdesc != null and eventdesc != ''"> and rs.eventdesc like concat('%',#{eventdesc},'%') </if>
+			<if test="repdate != null and repdate != ''"> and rs.repdate = #{repdate} </if>
+			<if test="source_type != null and source_type != ''"> and rs.source_type = #{source_type} </if>
+			<if test="dept_id != null and dept_id != ''"> and rs.dept_id = #{dept_id} </if>
+			<if test="accident_type_id != null and accident_type_id != ''"> and rs.accident_type_id = #{accident_type_id} </if>
+			<if test="eventlevel != null and eventlevel != ''"> and rs.eventlevel = #{eventlevel} </if>
+			<if test="tempsaveFlag != null and tempsaveFlag != ''"> and rs.tempsave_flag = #{tempsaveFlag} </if>
+			<if test="remarks != null and remarks != ''"> and rs.remarks = #{remarks} </if>
+			<if test="ispush != null and ispush != ''"> and rs.ispush = #{ispush} </if>
+			<if test="deptperson_id != null and deptperson_id != ''"> and rs.deptperson_id = #{deptperson_id} </if>
+			<if test="earlywarn_id != null and earlywarn_id != ''"> and rs.earlywarn_id = #{earlywarn_id} </if>
+			<if test="is_acceptance != null and is_acceptance != ''"> and rs.is_acceptance = #{is_acceptance} </if>
+			<if test="acceptance_type != null and acceptance_type != ''"> and rs.acceptance_type = #{acceptance_type} </if>
+			<if test="examine_type != null and examine_type != ''"> and rs.examine_type = #{examine_type} </if>
+			<if test="examine_opinion != null and examine_opinion != ''"> and rs.examine_opinion = #{examine_opinion} </if>
+			<if test="examiner_type != null and examiner_type != ''"> and rs.examiner_type = #{examiner_type} </if>
+			<if test="createBy != null and createBy != ''"> and rs.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and rs.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and rs.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and rs.update_date = #{updateDate} </if>
+			<if test="repdateBegin != null and repdateBegin != ''">
+				<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{repdateBegin}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+			<if test="repdateEnd != null and repdateEnd != ''">
+				<![CDATA[
+							  and DATE_FORMAT(rs.repdate, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{repdateEnd}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+			<if test="accident_name != null and accident_name != ''">
+				AND a.name like concat('%',#{accident_name},'%')
+			</if>
+			<if test="warntype != null and warntype != ''">
+				AND e.name like concat('%',#{warntype},'%')
+			</if>
+			<if test="warnlevel != null and warnlevel != ''">
+				AND pel.name like concat('%',#{warnlevel},'%')
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="insert" parameterType="com.bootdo.support.entity.ReceiveInfo">
+		insert into watch_receiveinfo
+		(
+			id, 
+			repname, 
+			repphone, 
+			sex, 
+			eventaddr, 
+			lat_lon, 
+			eventdesc, 
+			repdate, 
+			source_type,
+			dept_id, 
+			accident_type_id, 
+			eventlevel,
+			tempsave_flag, 
+			remarks, 
+			ispush,
+			deptperson_id,
+			earlywarn_id,
+			is_acceptance,
+	        acceptance_type,
+	        examine_type,
+	        examine_opinion,
+	        examiner_type,
+			acceptance_time,
+	        examine_time,
+			create_by, 
+			create_date,
+			ispush_time,
+			push_handle_time
+		)
+		values
+		(
+			#{id,jdbcType=VARCHAR}, 
+			#{repname,jdbcType=VARCHAR}, 
+			#{repphone,jdbcType=VARCHAR}, 
+			#{sex,jdbcType=INTEGER}, 
+			#{eventaddr,jdbcType=VARCHAR}, 
+			#{lat_lon,jdbcType=VARCHAR}, 
+			#{eventdesc,jdbcType=VARCHAR}, 
+			#{repdate,jdbcType=TIMESTAMP}, 
+			#{source_type,jdbcType=VARCHAR},
+			#{dept_id,jdbcType=VARCHAR},
+			#{accident_type_id,jdbcType=VARCHAR},
+			#{eventlevel,jdbcType=VARCHAR},
+			#{tempsaveFlag,jdbcType=VARCHAR},
+			#{remarks,jdbcType=VARCHAR}, 
+			#{ispush,jdbcType=VARCHAR},
+			#{deptperson_id,jdbcType=VARCHAR},
+			#{earlywarn_id,jdbcType=VARCHAR},
+			#{is_acceptance,jdbcType=INTEGER},
+	        #{acceptance_type,jdbcType=VARCHAR},
+	        #{examine_type,jdbcType=VARCHAR},
+	        #{examine_opinion,jdbcType=VARCHAR},
+	        #{examiner_type,jdbcType=VARCHAR},
+	        #{acceptance_time,jdbcType=TIMESTAMP},
+	        #{examine_time,jdbcType=TIMESTAMP},
+			#{createBy,jdbcType=VARCHAR}, 
+			#{createDate,jdbcType=TIMESTAMP},
+			#{ispush_time,jdbcType=TIMESTAMP},
+			#{push_handle_time,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.ReceiveInfo">
+		update watch_receiveinfo
+		<set>
+			<if test="repname != null">repname = #{repname}, </if>
+			<if test="repphone != null">repphone = #{repphone}, </if>
+			<if test="sex != null">sex = #{sex}, </if>
+			<if test="eventaddr != null">eventaddr = #{eventaddr}, </if>
+			<if test="lat_lon != null and lat_lon !='' ">lat_lon = #{lat_lon}, </if>
+			<if test="eventdesc != null">eventdesc = #{eventdesc}, </if>
+			<if test="repdate != null">repdate = #{repdate,jdbcType=TIMESTAMP}, </if>
+			<if test="source_type != null">source_type = #{source_type}, </if>
+			<if test="dept_id != null">dept_id = #{dept_id}, </if>
+			<if test="accident_type_id != null">accident_type_id = #{accident_type_id}, </if>
+			<if test="eventlevel != null">eventlevel = #{eventlevel}, </if>
+			<if test="tempsaveFlag != null">tempsave_flag = #{tempsaveFlag,jdbcType=VARCHAR}, </if>
+			<if test="remarks != null">remarks = #{remarks}, </if>
+			<if test="ispush != null">ispush = #{ispush,jdbcType=VARCHAR}, </if>
+			<if test="deptperson_id != null">deptperson_id = #{deptperson_id}, </if>
+			<if test="earlywarn_id != null">earlywarn_id = #{earlywarn_id}, </if>
+			<if test="is_acceptance != null">is_acceptance = #{is_acceptance,jdbcType=VARCHAR}, </if>
+			<if test="acceptance_type != null">acceptance_type = #{acceptance_type,jdbcType=VARCHAR}, </if>
+			<if test="examine_type != null">examine_type = #{examine_type,jdbcType=VARCHAR}, </if>
+			<if test="examine_opinion != null">examine_opinion = #{examine_opinion}, </if>
+			<if test="examiner_type != null">examiner_type = #{examiner_type,jdbcType=VARCHAR}, </if>
+			<if test="acceptance_time != null">acceptance_time = #{acceptance_time,jdbcType=TIMESTAMP}, </if>
+			<if test="examine_time != null">examine_time = #{examine_time,jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">update_by = #{updateBy}, </if>
+			<if test="updateDate != null">update_date = #{updateDate,jdbcType=TIMESTAMP},</if>
+			<if test="ispush_time != null">ispush_time = #{ispush_time,jdbcType=TIMESTAMP},</if>
+			<if test="push_handle_time != null">push_handle_time = #{push_handle_time,jdbcType=TIMESTAMP}</if>
+	
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from watch_receiveinfo where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from watch_receiveinfo where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getSource" resultType="java.util.Map">
+		select ws.id,ws.name from watch_source ws where ws.enabled !=0 order by ws.name desc
+	</select>
+
+	<select id="getAccidentType" resultType="java.util.Map">
+		select pa.id,pa.name from plan_accident_type pa left join safeguard_dept sd on sd.id=pa.dept_id where pa.status!=3  AND pa.status!=0
+		and sd.id=#{id}
+	</select>
+
+
+	<select id="getProcessingEvent" resultType="com.bootdo.dispatch.center.vo.BaseEventVO">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		dpm.id as 'dispatch_planmain_id',
+		case when e.actionprogram_id is not null then 5
+		when a.push_is_handle =5 then 1 else 0 end as 'event_state',
+		ispush_time	 pushTime,
+		push_handle_time handleTime
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_plan_main dpm on dpm.actionprogram_id = e.actionprogram_id
+		where a.ispush=5 and a.examine_type!=10 and (e.actionprogram_id is null or not exists (select 1 from archive_actionprogram_main act where act.id = e.actionprogram_id and act.closecase_date is null))
+		order by a.push_handle_time desc
+	</select>
+
+	<!--当前值班人员-->
+	<select id="getCurrentDutyPerson" resultType="java.util.Map">
+		select p.id as deptperson_id,p.name from safeguard_deptperson p where p.name in
+		(select sd.name  from safeguard_daily t left join safeguard_deptperson sd on sd.id=t.deptperson_id
+		<where>
+			<if test="startTime != null and startTime !=''">and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> #{startTime}</if>
+			<if test="endTime != null and endTime != ''">and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> #{endTime}</if>
+			<!--<if test="personId != null and personId != ''">and sd.id=#{personId}</if>-->
+		</where>
+		<if test="personId != null and personId !=''">
+			union
+			select sd.name  from safeguard_daily t left join safeguard_deptperson sd on sd.id=t.deptperson_id
+			where  sd.id=#{personId}
+		</if>
+		)
+	</select>
+
+	<!--部门负责人-->
+	<select id="getDeptContactPerson" resultType="java.util.Map">
+		select sdp.id as 'deptId',sdp.name as 'deptName',sdp.contact,sdp.mobile from safeguard_dept sdp
+		order by (case when sdp.name like concat('镇','%') then 1 when sdp.name like concat('%','村') then 3 else 2 end)
+	</select>
+
+	<!--当前值班人员-->
+	<select id="getNowDutyPreson" resultType="java.util.Map">
+		select sdt.id as 'deptId',sdt.name as 'deptName',sde.id as 'personId',sde.name as 'dutyPerson',
+		sde.mobile as 'dutyMobile' from safeguard_deptperson sde left join safeguard_dept sdt on sde.dept_id=sdt.id
+		where
+		sde.id in
+		(
+		select distinct sda.deptperson_id from safeguard_daily sda where
+		DATE_FORMAT(sda.scheduling_date,'%Y-%m-%d %H:%i:%S')  <![CDATA[>=]]>#{startTime}
+		and DATE_FORMAT(sda.scheduling_date,'%Y-%m-%d %H:%i:%S')  <![CDATA[<=]]> #{endTime}
+		)
+	</select>
+
+	<!--查询上报审批中的信息-->
+	<select id="queryExamine" parameterType="com.bootdo.support.dto.ReceiveInfoDTO" resultType="java.util.Map">
+		select rs.*,
+		(select ws.name from watch_source ws where ws.enabled='1' and rs.source_type=ws.id) source_name,
+		(select sd.name from safeguard_dept sd where sd.enabled='1' and rs.dept_id=sd.id) dept,
+		(select a.name from plan_accident_type a where rs.accident_type_id=a.id) accident_name,
+		(select d.name from safeguard_deptperson d where rs.accident_type_id=d.id) deptperson,
+		(select e.name from plan_earlywarn_type e where rs.earlywarn_id=e.id) warntype,
+		(select pel.name from plan_earlywarn_level pel where rs.eventlevel=pel.id) warnlevel,
+		(@rowNum:=@rowNum+1) RN
+		from watch_receiveinfo rs,(select (@rowNum:=0)) b
+		<where>
+			rs.is_acceptance='1'
+			<if test="id != null and id != ''"> and rs.id = #{id} </if>
+			<if test="repname != null and repname != ''">
+				AND rs.repname like concat('%',#{repname},'%')
+			</if>
+			<if test="repphone != null and repphone != ''"> and rs.repphone = #{repphone} </if>
+			<if test="sex != null and sex != ''"> and rs.sex = #{sex} </if>
+			<if test="eventaddr != null and eventaddr != ''"> and rs.eventaddr = #{eventaddr} </if>
+			<if test="lat_lon != null and lat_lon != ''"> and rs.lat_lon = #{lat_lon} </if>
+			<if test="eventdesc != null and eventdesc != ''"> and rs.eventdesc = #{eventdesc} </if>
+			<if test="repdate != null and repdate != ''"> and rs.repdate = #{repdate} </if>
+			<if test="source_type != null and source_type != ''"> and rs.source_type = #{source_type} </if>
+			<if test="dept_id != null and dept_id != ''"> and rs.dept_id = #{dept_id} </if>
+			<if test="accident_type_id != null and accident_type_id != ''"> and rs.accident_type_id = #{accident_type_id} </if>
+			<if test="eventlevel != null and eventlevel != ''"> and rs.eventlevel = #{eventlevel} </if>
+			<if test="tempsaveFlag != null and tempsaveFlag != ''"> and rs.tempsave_flag = #{tempsaveFlag} </if>
+			<if test="remarks != null and remarks != ''"> and rs.remarks = #{remarks} </if>
+			<if test="ispush != null and ispush != ''"> and rs.ispush = #{ispush} </if>
+			<if test="deptperson_id != null and deptperson_id != ''"> and rs.deptperson_id = #{deptperson_id} </if>
+			<if test="earlywarn_id != null and earlywarn_id != ''"> and rs.earlywarn_id = #{earlywarn_id} </if>
+			<if test="is_acceptance != null and is_acceptance != ''"> and rs.is_acceptance = #{is_acceptance} </if>
+			<if test="acceptance_type != null and acceptance_type != ''"> and rs.acceptance_type = #{acceptance_type} </if>
+			<if test="examine_opinion != null and examine_opinion != ''"> and rs.examine_opinion = #{examine_opinion} </if>
+			<if test="examiner_type != null and examiner_type != ''"> and rs.examiner_type = #{examiner_type} </if>
+			<if test="examine_type != null and examine_type != ''"> and rs.examine_type = #{examine_type} </if>
+			<if test="createBy != null and createBy != ''"> and rs.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and rs.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and rs.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and rs.update_date = #{updateDate} </if>
+		</where>
+		order by rs.create_date desc
+	</select>
+
+	<update id="updateReceiveExamineType">
+		update watch_receiveinfo set examine_type = '10' where id=#{id}
+	</update>
+
+
+    <select id="getEventById" resultType="com.bootdo.dispatch.center.vo.BaseEventVO">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		ispush_time	 pushTime,
+		push_handle_time handleTime,
+		a.source_type sourceType
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		where a.id = #{eventId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getAppReportEventImg" resultType="com.bootdo.common.domain.CommonFileDO">
+		select cf.id,cf.relation_id,cf.file_type,(case when cf.file_url like '%http%' then cf.file_url else concat('\\appFile',cf.file_url) end )as file_url
+		from common_file cf inner join t_app_sign_report ta on cf.relation_id =ta.id
+		inner join watch_receiveinfo wr on wr.id=ta.watch_receive_id
+		where wr.id=#{eventId} and cf.file_type=0
+	</select>
+
+	<select id="getEarlyWarnTypeByAccidentId" resultType="java.util.Map">
+		select pe.* from  plan_earlywarn_type pe left join plan_accident_type pa on pa.id=pe.accident_type_id
+		where pa.id=#{id} and  pe.status!=3 AND pe.status!=0
+	</select>
+	<select id="getEarlyWarnLevelByTypeId" resultType="java.util.Map">
+		select pel.* from plan_earlywarn_level pel left join plan_earlywarn_type pet on pet.id=pel.earlywarn_type_id
+		where pet.id=#{id} and  pel.status!=3 AND pel.status!=0
+	</select>
+	<update id="updateInHandle">
+		update watch_receiveinfo set push_is_handle = 5,push_handle_time=now() where id=#{eventId,jdbcType=VARCHAR}
+	</update>
+	<!--app事件接口-->
+	<!--查询当前用户关联的推送的任务信息（通讯消息的消息列表）-->
+	<select id="getAPPEmergencyEvent" resultType="java.util.Map">
+		select
+		dey.eventdesc,
+		dey.repdate,
+		wri.ispush_time,
+		dt0.id as 'taskId',
+		dt0.name as 'taskName',
+		dt0.content as 'taskContent',
+		pm.accident_type_id as 'event_type_id',
+		dpm.accident_type_name as 'event_type',
+		dpm.reprot_dept_name as 'rep_dept',
+		pm.earlywarn_level_id as 'warn_level_id',
+		dpm.earlywarn_level_name as 'warn_level',
+		pm.earlywarn_type_id as 'warn_type_id',
+		dpm.earlywarn_type_name as 'warn_type',
+		dt0.actionprogram_id as 'action_program_id',
+		case dt0.action_status
+		when 1 then '已接收到任务'
+		when 2 then '开始执行中'
+		when 3 then '执行遇到困难'
+		when 4 then '执行完成'
+		end
+		as 'task_status',
+		dt0.create_date
+		from dispatch_task dt0
+		left join dispatch_earlywarn dey on dt0.actionprogram_id=dey.actionprogram_id
+		left join dispatch_plan_main dpm on dt0.dispatch_planmain_id=dpm.id
+		left join plan_main pm on dpm.planmain_id=pm.id
+		left join watch_receiveinfo wri on dey.id=wri.id
+		where dt0.id in
+		(
+		select dt.id from dispatch_task dt
+		where dt.type=1 and dt.liability_id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt1.id from dispatch_task dt1
+		left join safeguard_expert_info sei on dt1.liability_id=sei.id
+		left join safeguard_deptperson sfp on sei.name=sfp.name
+		where dt1.type=4 and sfp.id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt2.id from dispatch_task dt2
+		left join safeguard_dept sdp on dt2.liability_id =sdp.id
+		left join safeguard_deptperson sde
+		on sdp.contact=sde.name
+		where dt2.type=3 and sde.id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt3.id from  dispatch_task dt3
+		left join safeguard_team t
+		on dt3.liability_id=t.id
+		left join safeguard_dept t2
+		on t.dept_id=t2.id
+		left join safeguard_deptperson t3
+		on t2.contact=t3.name
+		where dt3.type=2 and t3.id=#{personId, jdbcType=VARCHAR}
+		)
+		order by wri.ispush_time desc
+	</select>
+
+    <select id="getAPPEmergencyEvent2" resultType="java.util.Map">
+		SELECT
+			dey.eventdesc,
+			dey.repdate,
+			wri.ispush_time,
+			dre.id as 'taskId',
+			dre.dept_name AS 'taskName',
+			dre.content AS 'taskContent',
+			pma.accident_type_id AS 'event_type_id',
+			dpl.accident_type_name AS 'event_type',
+			dpl.reprot_dept_name AS 'rep_dept',
+			pma.earlywarn_level_id AS 'warn_level_id',
+			dpl.earlywarn_level_name AS 'warn_level',
+			pma.earlywarn_type_id AS 'warn_type_id',
+			dpl.earlywarn_type_name AS 'warn_type',
+			dre.actionprogram_id AS 'action_program_id',
+		CASE
+				dre.action_status
+				WHEN 1 THEN
+				'已接收到任务'
+				WHEN 2 THEN
+				'开始执行中'
+				WHEN 3 THEN
+				'执行遇到困难'
+				WHEN 4 THEN
+				'执行完成'
+			END AS 'task_status',
+			dre.create_date
+		FROM
+			dispatch_respdept dre
+			LEFT JOIN dispatch_earlywarn dey on dre.actionprogram_id=dey.actionprogram_id
+			LEFT JOIN dispatch_plan_main dpl ON dre.dispatch_planmain_id = dpl.id
+			LEFT JOIN plan_main pma ON dpl.planmain_id = pma.id
+			LEFT JOIN safeguard_deptperson sdep ON dre.liability_man = sdep.name
+			LEFT JOIN watch_receiveinfo wri on dey.id=wri.id
+		WHERE
+			sdep.id = #{personId, jdbcType=VARCHAR}
+			order by wri.ispush_time desc
+    </select>
+
+	<!--应急指挥部（事件消息）-->
+	<select id="getEmergencyEventMessage" resultType="java.util.Map">
+		select
+		dpmt.id as 'eventId',
+		dpmt.actionprogram_id,
+		dpmt.repname,
+		dpmt.repphone,
+		dpmt.sex,
+		dpmt.eventaddr as 'eventAddress',
+		dpmt.eventdesc as 'eventDesc',
+		dpmt.repdate,
+		dpmt.dept_name as 'repDept',
+		dpmt.accident_type_name as 'eventType',
+		pm.accident_type_id as 'eventTypeId',
+		dpmt.earlywarn_type_name as 'warnType',
+		pm.earlywarn_type_id as 'warnTypeId',
+		dpmt.eventlevel_name as 'warnLevel',
+		pm.earlywarn_level_id as 'warnLevelId',
+		dpmt.lat_lon as 'latLon',
+		wri.ispush_time as 'ispushTime'
+		from dispatch_earlywarn dpmt left join dispatch_task dt0 on dpmt.actionprogram_id=dt0.actionprogram_id
+		left join dispatch_plan_main dpm on dt0.dispatch_planmain_id=dpm.id
+		left join plan_main pm on dpm.planmain_id=pm.id
+		left join watch_receiveinfo wri on dpmt.id=wri.id
+		where dt0.id in
+		(
+		select dt.id from dispatch_task dt
+		where dt.type=1 and dt.liability_id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt1.id from dispatch_task dt1
+		left join safeguard_expert_info sei on dt1.liability_id=sei.id
+		left join safeguard_deptperson sfp on sei.name=sfp.name
+		where dt1.type=4 and sfp.id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt2.id from dispatch_task dt2
+		left join safeguard_dept sdp on dt2.liability_id =sdp.id
+		left join safeguard_deptperson sde
+		on sdp.contact=sde.name
+		where dt2.type=3 and sde.id=#{personId, jdbcType=VARCHAR}
+		union
+		select dt3.id from  dispatch_task dt3
+		left join safeguard_team t
+		on dt3.liability_id=t.id
+		left join safeguard_dept t2
+		on t.dept_id=t2.id
+		left join safeguard_deptperson t3
+		on t2.contact=t3.name
+		where dt3.type=2 and t3.id=#{personId, jdbcType=VARCHAR}
+		)
+		order by wri.ispush_time desc
+	</select>
+
+	<select id="getEmergencyEventMessage2" resultType="java.util.Map">
+		select
+		distinct dpmt.id as 'eventId',
+		dpmt.actionprogram_id,
+		dpmt.repname,
+		dpmt.repphone,
+		dpmt.sex,
+		dpmt.eventaddr as 'eventAddress',
+		dpmt.eventdesc as 'eventDesc',
+		dpmt.repdate,
+		dpmt.dept_name as 'repDept',
+		dpmt.accident_type_name as 'eventType',
+		pm.accident_type_id as 'eventTypeId',
+		dpmt.earlywarn_type_name as 'warnType',
+		pm.earlywarn_type_id as 'warnTypeId',
+		dpmt.eventlevel_name as 'warnLevel',
+		pm.earlywarn_level_id as 'warnLevelId',
+		dpmt.lat_lon as 'latLon',
+		wri.ispush_time as 'ispushTime'
+		from  dispatch_earlywarn dpmt left join dispatch_respdept drd on dpmt.actionprogram_id=drd.actionprogram_id
+		left join dispatch_plan_main dpm on drd.dispatch_planmain_id=dpm.id
+		left join plan_main pm on dpm.planmain_id=pm.id
+		left join safeguard_deptperson sdp on drd.liability_man=sdp.name
+		left join watch_receiveinfo wri on dpmt.id=wri.id
+		where sdp.id=#{personId, jdbcType=VARCHAR}
+		order by wri.ispush_time desc
+	</select>
+	<!-- 根据事件的方案id查询该事件的任务-->
+	<select id="getTaskListByEventProgramId" resultType="java.util.Map">
+		select
+			tmp.id,
+			tmp.actionprogram_id,
+			tmp.liability_id,
+			tmp.type,
+			tmp.taskName,
+			tmp.taskContent,
+			tmp.taskStatus,
+			tmp.sort_no
+		from
+			(select
+			dt.id,
+			dt.actionprogram_id,
+			dt.liability_id,
+			dt.type,
+			dt.name as 'taskName',
+			dt.content as 'taskContent',
+			case dt.action_status
+			when 1 then '已接收到任务'
+			when 2 then '开始执行中'
+			when 3 then '执行遇到困难'
+			when 4 then '执行完成'
+			end
+			as 'taskStatus',
+			dt.sort_no
+			from dispatch_task dt where dt.actionprogram_id=#{actionprogramId, jdbcType=VARCHAR}
+			union
+			select
+			dt0.id,
+			dt0.actionprogram_id,
+			dt0.id as 'liability_id',
+			'5' as type,
+			dt0.dept_name as 'taskName',
+			dt0.content as 'taskContent',
+			case dt0.action_status
+			when 1 then '已接收到任务'
+			when 2 then '开始执行中'
+			when 3 then '执行遇到困难'
+			when 4 then '执行完成'
+			end
+			as 'taskStatus',
+			dt0.sort_no
+			from dispatch_respdept dt0 left join safeguard_dept st on dt0.dept_name=st.name
+			where dt0.actionprogram_id=#{actionprogramId, jdbcType=VARCHAR}) tmp
+		order by (case tmp.type when '5' then 0 else 1 end) asc,tmp.sort_no asc
+	</select>
+	<!-- 事件对应应急人员-->
+	<select id="getEventEmergencyPerson" resultType="java.util.Map">
+		select sdp.id,sdp.name,sdp.mobile,sdp.position,sdt.name as 'dept'
+		from safeguard_deptperson sdp left join safeguard_dept sdt on sdp.dept_id=sdt.id where sdp.id=#{liabilityId, jdbcType=VARCHAR}
+		union
+		select sdt2.id,sdt2.contact as name,sdt2.mobile,'部门负责人' as position,sdt2.name as 'dept' from safeguard_dept sdt2 where sdt2.id=#{liabilityId, jdbcType=VARCHAR}
+		union
+		select sei.id,sei.name,sei.mobile,sei.position,sei.organization as 'dept' from safeguard_expert_info sei where sei.id=#{liabilityId, jdbcType=VARCHAR}
+		union
+		select sdp2.id,sdp2.name,sdp2.mobile,sdp2.position,ste.name as 'dept' from safeguard_deptperson sdp2 left join safeguard_dept stp on sdp2.name=stp.contact
+		left join safeguard_team ste on stp.id=ste.dept_id
+		where ste.id=#{liabilityId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getgetEventEmergencyPersonByRespDept" resultType="java.util.Map">
+		select drd.id,drd.liability_man as name,drd.mobile,'部门联系人' as position,drd.dept_name as 'dept'
+		from dispatch_respdept drd
+		where drd.id=#{liabilityId, jdbcType=VARCHAR}
+	</select>
+
+	<!--本人接收处理的事件的详细情况信息查询接口 作废-->
+	<select id="getReciveHandleEventInfo" resultType="java.util.Map">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon
+		from
+		watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_earlywarn e on  a.id = e.id
+		left join sms_send_record s on e.actionprogram_id=s.actionprogram_id
+		left join safeguard_deptperson p on s.mobile=p.mobile
+		where p.id=#{personId, jdbcType=VARCHAR}
+	</select>
+
+	<!--查询当前用户关联的推送事件信息-->
+	<select id="getAPPEmergencyEventTest" resultType="java.util.Map">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		where a.examine_type in ('1','5') and a.deptperson_id = #{personId, jdbcType=VARCHAR}
+	</select>
+
+	<!--接收处理的事件详情-->
+	<select id="getReceiveEventInfo" resultType="java.util.Map">
+		select
+		dt.name as 'taskName',
+		dt.content,
+		dt.liability_id as 'persoinId',
+		dt.actionprogram_id,
+		dpm.name as 'planName',
+		dpm.accident_type_name as 'eventType',
+		dm.accident_type_id as 'eventId',
+		dpm.earlywarn_type_name as 'warnType',
+		dm.earlywarn_type_id as 'warnTypeId',
+		dpm.earlywarn_level_name as 'warnLevel',
+		dm.earlywarn_level_id as 'warnLevelId',
+		dpm.duty_dept_name as 'dutyDept',
+		dm.duty_dept_id as 'dutyDeptId',
+		dpm.reprot_dept_name as 'repDept',
+		dm.reprot_dept_id as 'repDeptId',
+		dpm.remarks
+		from dispatch_task dt
+		left join dispatch_plan_main dpm on dt.dispatch_planmain_id=dpm.id
+		left join plan_main dm on dpm.planmain_id=dm.id
+		where dt.liability_id=#{personId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getHandleWorkContent" resultType="java.util.Map">
+		select
+		dt.name as 'taskName',
+		dt.content,
+		dt.liability_id as 'persoinId',
+dr.liability_man as 'respPersonName',
+dr.mobile as 'respPersonPhone',
+	dt.actionprogram_id,
+	 dpm.name as 'planName',
+		 dpm.accident_type_name as 'eventType',
+		 dm.accident_type_id as 'eventId',
+		 dpm.earlywarn_type_name as 'warnType',
+		 dm.earlywarn_type_id as 'warnTypeId',
+		 dpm.earlywarn_level_name as 'warnLevel',
+		 dm.earlywarn_level_id as 'warnLevelId',
+		  dpm.duty_dept_name as 'dutyDept',
+		 dm.duty_dept_id as 'dutyDeptId',
+		 dpm.reprot_dept_name as 'repDept',
+		  dm.reprot_dept_id as 'repDeptId',
+		 dpm.remarks
+		from dispatch_task dt
+		 left join dispatch_plan_main dpm on dt.dispatch_planmain_id=dpm.id
+		 left join plan_main dm on dpm.planmain_id=dm.id
+		 left join dispatch_respdept dr on dt.actionprogram_id=dr.actionprogram_id
+		where dt.liability_id=#{personId, jdbcType=VARCHAR}
+	</select>
+
+	<!--已启动应急方案-->
+	<select id="getStartEventInfo" resultType="java.util.Map">
+		select
+		dt.name as 'taskName',
+		dt.content,
+		dt.liability_id as 'persoinId',
+	dt.actionprogram_id,
+	 dpm.name as 'planName',
+		 dpm.accident_type_name as 'eventType',
+		 dm.accident_type_id as 'eventId',
+		 dpm.earlywarn_type_name as 'warnType',
+		 dm.earlywarn_type_id as 'warnTypeId',
+		 dpm.earlywarn_level_name as 'warnLevel',
+		 dm.earlywarn_level_id as 'warnLevelId',
+		  dpm.duty_dept_name as 'dutyDept',
+		 dm.duty_dept_id as 'dutyDeptId',
+		 dpm.reprot_dept_name as 'repDept',
+		  dm.reprot_dept_id as 'repDeptId',
+		 dpm.remarks
+		from dispatch_task dt
+		 left join dispatch_plan_main dpm on dt.dispatch_planmain_id=dpm.id
+		 left join plan_main dm on dpm.planmain_id=dm.id
+		where dt.liability_id=#{personId, jdbcType=VARCHAR} and dm.enabled='1'
+	</select>
+	<update id="updateByActionProId">
+	update watch_receiveinfo set examine_type=10 WHERE id=(SELECT id from  dispatch_earlywarn where actionprogram_id=#{actionprogram_id})
+	</update>
+	
+		<!--物联设备重大事件接口-->
+	<select id="getWarnByDevice" resultType="com.bootdo.dispatch.center.vo.BaseEventVO">
+		select 
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.lat_lon,
+		a.source_type sourceType
+  		from watch_receiveinfo a where source_type in (select id from watch_source where source_type =0)  and examine_type is null and ispush is null ORDER BY create_date desc limit 500
+	</select>
+	<!--获取设备维护人员接口-->
+	<select id="getMaintenancePerson" resultType="java.util.Map">
+	select  name, mobile  from watch_maintenance_person 
+	<where>
+	 	and is_enabled=1
+		<if test="deviceType != null and deviceType != ''"> and device_type = #{deviceType} </if>
+	</where>
+	</select>
+
+<!-- 	<select id="getEventByType" resultType="java.util.Map">
+	SELECT a1.*,ws.name as source_name,sd.name as dept,a.name as accident_name,d.name as deptperson,e.name as warntype,pel.name as warnlevel
+	FROM watch_receiveinfo a1 
+  	 INNER JOIN (SELECT a.source_type,a.create_date FROM watch_receiveinfo a 
+   	      LEFT JOIN watch_receiveinfo b 
+     	    ON a.source_type = b.source_type AND a.create_date <![CDATA[ <= ]]> b.create_date
+   		      GROUP BY a.source_type,a.create_date
+    	     HAVING COUNT(b.create_date) <![CDATA[ <= ]]> 10
+  	 ) b1
+  			ON a1.source_type = b1.source_type AND a1.create_date = b1.create_date
+  		LEFT JOIN watch_source ws ON a1.source_type=ws.id and ws.enabled='1'
+		LEFT JOIN safeguard_dept sd ON sd.enabled='1' and a1.dept_id=sd.id
+		LEFT JOIN plan_accident_type a ON a1.accident_type_id=a.id
+		LEFT JOIN safeguard_deptperson d ON a1.accident_type_id=d.id
+		LEFT JOIN plan_earlywarn_type e ON a1.earlywarn_id=e.id
+		LEFT JOIN plan_earlywarn_level pel ON a1.eventlevel=pel.id
+  	where   examine_type is null and ispush is null 
+  		<if test="sourceType != null and sourceType != ''"> and a1.source_type = #{sourceType} </if>
+	ORDER BY a1.source_type,b1.create_date DESC
+	</select>  -->
+	
+	<select id="getEventByType"   resultType="com.bootdo.dispatch.center.vo.BaseEventVO">
+	select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		dpm.id as 'dispatch_planmain_id',
+		case when e.actionprogram_id is not null then 5
+		when a.push_is_handle =5 then 1 else 0 end as 'event_state',
+		ispush_time	 pushTime,
+		push_handle_time handleTime,
+		ws.name source_name,
+		a.source_type
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_plan_main dpm on dpm.actionprogram_id = e.actionprogram_id
+		left join watch_source ws on a.source_type=ws.id
+		<where>	
+				and a.examine_type is null and a.ispush is null 
+			<if test="sourceType != null and sourceType != ''"> and a.source_type = #{sourceType} </if>
+		</where>
+	
+				ORDER BY a.create_date DESC
+		
+				limit 3
+		
+	</select>
+	
+	<update id="batchEndCase">
+		update  watch_receiveinfo
+		set examine_type =10,
+			acceptance_type=10,
+			update_date=now()
+		 where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<select id="getEventIdsByType"   resultType="java.lang.String">
+		select a.id
+		from watch_receiveinfo a
+		<where>
+			and a.examine_type is null and a.ispush is null
+			<if test="sourceType != null and sourceType != ''"> and a.source_type = #{sourceType} </if>
+		</where>
+		ORDER BY a.create_date DESC
+		limit 3
+	</select>
+
+	<select id="getEventByIds"   resultType="com.bootdo.dispatch.center.vo.BaseEventVO" parameterType="list">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		dpm.id as 'dispatch_planmain_id',
+		case when e.actionprogram_id is not null then 5
+		when a.push_is_handle =5 then 1 else 0 end as 'event_state',
+		ispush_time	 pushTime,
+		push_handle_time handleTime,
+		ws.name source_name,
+		a.source_type
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_plan_main dpm on dpm.actionprogram_id = e.actionprogram_id
+		left join watch_source ws on a.source_type=ws.id
+		<where>
+			and a.examine_type is null and a.ispush is null
+			and a.id in
+			<foreach item="id" collection="list" index="index"  open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</where>
+		ORDER BY a.create_date DESC
+	</select>
+
+
+	<select id="getChartSourceType"   resultType="java.util.Map">
+		SELECT s.name AS name ,COUNT(t.id) AS value
+		FROM watch_receiveinfo t
+		LEFT JOIN watch_source s ON s.`id` = t.`source_type`
+		WHERE DATE_FORMAT(t.create_date,'%Y') = #{year}
+		GROUP BY t.`source_type`
+		ORDER BY value DESC
+	</select>
+
+	<select id="getChartLevel"   resultType="java.util.Map">
+		SELECT l.name AS name ,COUNT(t.id) AS value
+		FROM watch_receiveinfo t
+		LEFT JOIN plan_earlywarn_level l ON l.`id` = t.`eventlevel`
+		WHERE DATE_FORMAT(t.create_date,'%Y') = #{year} AND t.`eventlevel` IS NOT NULL AND t.`eventlevel` !=''
+		GROUP BY l.name
+		ORDER BY value DESC
+	</select>
+
+	<select id="getChartMonth"   resultType="java.util.Map">
+		SELECT DATE_FORMAT(t.create_date,'%m') AS month,COUNT(t.id) AS value
+		FROM watch_receiveinfo t
+		WHERE DATE_FORMAT(t.create_date,'%Y') = #{year}
+		GROUP BY month
+	</select>
+	<select id="taskList" resultType="java.util.Map">
+		select
+		a.id as 'event_id',
+		a.eventaddr as 'address',
+		a.eventdesc as 'event_desc',
+		a.accident_type_id as 'event_type_id',
+		b.name as 'event_type',
+		a.repdate as 'rep_time',
+		a.repphone as 'rep_phone',
+		a.repname as 'rep_name',
+		a.dept_id as 'rep_dept_id',
+		c.name as 'rep_dept',
+		a.eventlevel as 'warn_level_id',
+		f.name as 'warn_level',
+		a.earlywarn_id as 'warn_type_id',
+		d.name as 'warn_type',
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		dpm.id as 'dispatch_planmain_id',
+		case when e.actionprogram_id is not null then 5
+		when a.push_is_handle =5 then 1 else 0 end as 'event_state',
+		ispush_time	 pushTime,
+		push_handle_time handleTime
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_plan_main dpm on dpm.actionprogram_id = e.actionprogram_id
+		where a.ispush=5 and a.examine_type!=10 and (e.actionprogram_id is null or not exists (select 1 from archive_actionprogram_main act where act.id = e.actionprogram_id and act.closecase_date is null))
+		order by a.push_handle_time desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="countTaskList" resultType="int">
+		select count(*)
+		from watch_receiveinfo a
+		left join plan_accident_type b on a.accident_type_id = b.id
+		left join safeguard_dept c on a.dept_id = c.id
+		left join plan_earlywarn_type d on a.earlywarn_id = d.id
+		left join dispatch_earlywarn e on a.id = e.id
+		left join plan_earlywarn_level f on a.eventlevel = f.id
+		left join dispatch_plan_main dpm on dpm.actionprogram_id = e.actionprogram_id
+		where a.ispush=5 and a.examine_type!=10 and (e.actionprogram_id is null or not exists (select 1 from archive_actionprogram_main act where act.id = e.actionprogram_id and act.closecase_date is null))
+	</select>
+</mapper>

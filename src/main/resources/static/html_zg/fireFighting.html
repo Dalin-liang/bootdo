@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>消防安全形势分析</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+	<script type="text/javascript" src="plugin/mapPlugin.js"></script>
+	<style>
+		.content-b{
+			background-color:rgba(0, 41, 133, 0.7)!important;
+			width: 100%;
+			left: 0;
+			bottom: 0;
+		}
+		#map-cont{
+			height: 100%;
+		}
+		.amap-info-close{
+			font-size: 18px;
+			top:10px;
+		}
+		.amap-info-content table th{
+			text-align: center;
+			font-weight: 500;
+		}
+		.amap-info-content table tr{
+			height: 40px;
+		}
+		.amap-info-content table td{
+			line-height: 40px ;
+		}
+		.amap-info-content table .warn{
+			background-color: red;
+		}
+		#planList{
+			position: relative;
+		}
+		.pop_box{
+			width: 400px;
+			padding:5px 10px;
+		}
+		.pop_tl{
+			line-height: 35px;
+			background: #1d90c5;
+			padding: 0 10px;
+		}
+
+		.pop_box table{
+			width: 100%;
+		}
+		.pop_box table tbody tr td{
+			vertical-align: top;
+		}
+		.amap-info-content{
+			border: #03A9F4 thin solid;
+			background: rgba(37,88,139,0.8);
+			padding: 0;
+			font-size: 14px;
+			line-height: 24px;
+		}
+		.bottom-center .amap-info-sharp{
+			border-top-color: #03A9F4;
+		}
+		.amap-info-content table.table-bordered tr{
+			height: auto!important;
+		}
+		.content{
+			top: 80px;
+			bottom: 310px;
+		}
+		#map-cont{
+			width: calc(100% - 920px);
+			height: calc(100% - 390px);
+			top:80px;
+			left: 460px;
+			bottom: 310px;
+		}
+		.topTitle,.header{
+			z-index: 99;
+		}
+	</style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+<!--<div class="map">
+	<div class="example-map" style="background-image: url(images/map.png)"></div>
+</div>-->
+<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+<div class="header flex flex-m">
+	<div class="title PangMen">消防安全形势分析</div>
+</div>
+
+
+
+<div class="topTitle">
+		<div class="math-box flex flex-m">
+			<li class="flex-1">
+				<div class="math Digital rfc-info shadow m1">38次</div>
+				<div class="msg"><span>接警出动次数</span></div>
+			</li>
+			<li class="flex-1">
+				<div class="math Digital rfc-warning shadow m2">8起</div>
+				<div class="msg"><span>火灾扑救</span></div>
+			</li>
+			<li class="flex-1">
+				<div class="math Digital rfc-info shadow">30起</div>
+				<div class="msg"><span>社会救助</span></div>
+			</li>
+		</div>
+	</div>
+<!--<div class="data-map" style="top:280px;">
+		<div class="warning_m" style="left: 250px;top:180px;">
+			<div class="warning_t">出动消防车<br>39辆</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<div class="warning_m warning_m2" style="left: 420px;top:120px;">
+			<div class="warning_t">出动警力<br>149人次</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<div class="warning_m warning_m3" style="left: 580px;top:250px;width: 130px;">
+			<div class="warning_t" style="width: 110px;">解救被困人员<br>9人</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+	<div class="warning_m warning_m4" style="left: 400px;top:250px;width: 130px;">
+			<div class="warning_t" style="width: 110px;">疏散被困人群<br>19人</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<img src="images/3dmap.png" alt="">
+	</div>-->
+<div class="content content-left flex flex-v" style="width: 450px">
+	<div class="item">
+		<div class="hd"><span>季度接警分析</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart">
+
+		</div>
+	</div>
+    <div class="item" style="margin-bottom: 0;">
+            <div class="hd"><span>消防设施信息</span></div>
+            <div style="margin-top: 20px;">
+                <div class="content-left" style="width: 57%;color: #0CFFFD;display:inline-block;text-align: center;margin-bottom: 10px;">
+                    <span>消防栓数量：</span><div class="math Digital rfc-info shadow di">928个</div>
+                </div>
+                <div class="content-left" style="width: 42%;color: #0CFFFD;display: inline-block;text-align: center;margin-bottom: 10px;">
+                    <span>消防栓压力传感器：</span><div class="math Digital rfc-info shadow di">20个</div>
+                </div>
+                <div style="margin-top: 40px;"></div>
+                <div class="content-left" style="width: 58%;color: #0CFFFD;display: inline-block;text-align: center;">
+                    <span>重点消防设施单位电子标签：</span><div class="math Digital rfc-info shadow di">30个</div>
+                </div>
+                <div class="content-left" style="width: 40%;color: #0CFFFD;display: inline-block;text-align: center;">
+                    <span>感烟探测报警器：</span><div class="math Digital rfc-info shadow di">30个</div>
+                </div>
+            </div>
+		</div>
+</div>
+<div id="map-cont"></div>
+<div class="content content-right flex flex-v" style="width: 450px;">
+	<div class="item">
+		<div class="hd"><span>危险源分布情况</span></div>
+		<div class="bd flex flex-m" style="height:250px;width: 100%;color:white;" id="chart1">
+
+		</div>
+	</div>
+    <div class="item">
+		<div class="hd"><span>场所检查情况</span></div>
+		<div class="bd flex flex-m" style="height:250px;width: 100%;color:white;" id="chart2">
+
+		</div>
+	</div>
+</div>
+<div class="content-b content-left flex">
+	<div class="item" style="width: 50%;display: inline-block;">
+		<div class="hd"><span>火灾隐患类别分析</span></div>
+		<div class="bd flex flex-m" style="height:250px;width: 100%;color:white;" id="chart3">
+
+		</div>
+	</div>
+    <div class="item" style="width: 50%;display: inline-block;">
+		<div class="hd"><span>特殊人群种类分布</span></div>
+		<div class="bd flex flex-m" style="height:250px;width: 100%;color:white;" id="chart4">
+
+		</div>
+	</div>
+</div>
+</body>
+<script>
+	var mapComp;
+	var map;
+	mapComp = new MapComp();
+    mapComp.init();
+    var dom = document.getElementById("chart");
+    var myChart = echarts.init(dom);
+    var tmp=[];
+    $.ajax({
+		url:'/api/nt/fireScene/getFireAlarm',
+		type:'get',
+		dataType:'json',
+		data:{
+		    ssq:'2019'
+		},
+		success:function(data){
+		    for(var i in data.data.fireAlarmQuarterList){
+		        tmp.push(data.data.fireAlarmQuarterList[i].quarterCount);
+			}
+			console.log(!!tmp[3]);
+			option = null;
+			option = {
+					legend: {
+						textStyle:{
+							color:'white'
+						}
+					},
+					tooltip: {},
+					dataset: {
+						dimensions: ['product', '火灾', '社会救援'],
+						source: [
+							{product: '第一季度', '火灾': tmp[0], '社会救援': 25},
+							{product: '第二季度', '火灾': tmp[1], '社会救援': 13},
+							{product: '第三季度', '火灾': tmp[2], '社会救援': 15},
+							{product: '第四季度', '火灾': (!!tmp[3]?tmp[3]:0), '社会救援': 23}
+						]
+					},
+					xAxis: {
+						type: 'category',
+						axisLabel: {
+							color: 'white'
+						}
+					},
+					yAxis: {
+						axisLabel: {
+							color: 'white'
+						},
+						nameTextStyle:{
+							color:'white'
+						}
+					},
+					// Declare several bar series, each will be mapped
+					// to a column of dataset.source by default.
+					series: [
+						{type: 'bar'},
+						{type: 'bar'}
+					]
+				};
+
+			if (option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+    	}
+	})
+
+    var dom1 = document.getElementById("chart1");
+    var myChart1 = echarts.init(dom1);
+    option1 = null;
+    option1 = {
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    left: 'center',
+                    data: ['居委社区','中西社区','水围社区','庙尾社区','汀塘社区'],
+                    textStyle:{
+                        color:'white'
+                    }
+                },
+                series : [
+                    {
+                        name: '',
+                        type: 'pie',
+                        radius : '60%',
+                        center: ['50%', '55%'],
+                        data:[
+                            {value:33, name:'居委社区'},
+                            {value:31, name:'中西社区'},
+                            {value:23, name:'水围社区'},
+                            {value:13, name:'庙尾社区'},
+                            {value:154, name:'汀塘社区'}
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+    };
+
+    if (option1 && typeof option1 === "object") {
+        myChart1.setOption(option1, true);
+    }
+
+    var dom2 = document.getElementById("chart2");
+    var myChart2 = echarts.init(dom2);
+    option2 = null;
+    option2 = {
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['检查场所间次', '烟花爆竹销售点间次','企业间次'],
+                    textStyle:{
+                        color:'white'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis:  {
+                    type: 'value',
+                    axisLabel: {
+                        color: 'white'
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['2010','2011','2012','2013','2014','2015','2016'],
+                    axisLabel: {
+                        color: 'white'
+                    },
+                    nameTextStyle:{
+                        color:'white'
+                    }
+                },
+                series: [
+                    {
+                        name: '检查场所间次',
+                        type: 'bar',
+                        stack: '间次',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [320, 302, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: '烟花爆竹销售点间次',
+                        type: 'bar',
+                        stack: '间次',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: '企业间次',
+                        type: 'bar',
+                        stack: '间次',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    }
+                ]
+
+    };
+
+    if (option2 && typeof option2 === "object") {
+        myChart2.setOption(option2, true);
+    }
+
+    var dom3 = document.getElementById("chart3");
+    var myChart3 = echarts.init(dom3);
+    option3 = null;
+    option3 = {
+        tooltip: {
+            formatter: function (info) {
+                var name = info.name;
+                var value = info.value;
+
+                return '<div class="tooltip-title">'+name+'：' + value+ '处</div>';
+            }
+        },
+        series: [{
+            type: 'treemap',
+            data: [
+                {
+                    name: '消防设施、器材、消防安全标志设置不符合标准或未保存完好',
+                    value: 110
+                }, {
+                    name: '损坏/挪用、拆除/停用消防设施或器材',
+                    value: 25
+                }, {
+                    name: '占用/堵塞、封闭疏散通道、消防通道、安全出口',
+                    value: 25
+                }, {
+                    name: '占用/堵塞、封闭消防车通道',
+                    value: 24
+                }, {
+                    name: '使用不符合的消防产品',
+                    value: 13
+                }, {
+                    name: '电器产品、燃气用具使用不符合要求',
+                    value: 26
+                }, {
+                    name: '其他违法行为或火灾隐患',
+                    value: 26
+                }
+            ]
+        }]
+    };
+    if (option3 && typeof option3 === "object") {
+        myChart3.setOption(option3, true);
+    }
+
+    var dom4 = document.getElementById("chart4");
+    var myChart4 = echarts.init(dom4);
+    option4 = null;
+    option4 = {
+              tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        crossStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                legend: {
+                    data:['发现隐患处','整改隐患处','整改完成率(%)'],
+                    textStyle:{
+                        color:'white'
+                    }
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['2015年','2016年','2017年','2018年','2019年'],
+                        axisPointer: {
+                            type: 'shadow'
+                        },
+                        axisLabel: {
+                            color: 'white'
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '处',
+                        min: 0,
+                        max: 40,
+                        interval: 10,
+                        axisLabel: {
+                            formatter: '{value} 处',
+                            color: 'white'
+                        },
+                        nameTextStyle:{
+                            color:'white'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '整改率',
+                        min: 0,
+                        max: 100,
+                        interval: 20,
+                        axisLabel: {
+                            formatter: '{value} %',
+                            color: 'white'
+                        },
+                        nameTextStyle:{
+                            color:'white'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name:'发现隐患处',
+                        type:'bar',
+                        data:[10,20,16,30,8]
+                    },
+                    {
+                        name:'整改隐患处',
+                        type:'bar',
+                        data:[8,10,12,21,8]
+                    },
+                    {
+                        name:'整改完成率(%)',
+                        type:'line',
+                        yAxisIndex: 1,
+                        data:[80,50,75,70,100]
+                    }
+                ]
+    };
+
+    if (option4 && typeof option4 === "object") {
+        myChart4.setOption(option4, true);
+    }
+
+    $(document).ready(function(){
+		$(".toggle_nav_btn").click(function(){
+			$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+			$(".toggle_nav_con").slideToggle()
+		})
+	})
+
+	$.ajax({
+		url:'/api/nt/fireScene/getFireFightingCount',
+		type:'get',
+		dataType:'json',
+		success:function(data){
+		    $(".m1").text((data.data.fireFightingCount+30)+"次")
+		    $(".m2").text(data.data.fireFightingCount+"起")
+		}
+	})
+
+	 function MapComp(){
+		var domId="map-cont";
+		var _center = [113.892436,23.416955];
+		var _map;
+		var _def_zoom=12;
+		var _curr_zoom = _def_zoom;
+		var _max_zoom=20;
+		var _min_zoom=8;
+		this.init = function(){
+			_map = new AMap.Map(domId, {
+				/*mapStyle: "amap://styles/dark"	,*/
+				zoom:_curr_zoom,//级别
+				center: _center,//中心点坐标
+				expandZoomRange:true,
+				zooms:[_min_zoom,_max_zoom],
+				layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]
+			});
+			map=_map;
+		};
+	}
+	$.ajax({
+		url:'/api/fire/electricDeviceInfo/getDeviceByParam',
+		type:'get',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    for(var i in data){
+		        var lonlat=data[i].lon_lat.split(",");
+		        var marker = new AMap.Marker({
+					position: new AMap.LngLat(lonlat[1], lonlat[0]),
+					offset: new AMap.Pixel(-10, -10),
+					icon: 'img/mapIcon/7_16.png',
+					data: data[i]
+				})
+				marker.on('click',getHyData)
+				map.add(marker);
+			}
+		}
+	})
+	function getHyData(e){
+		 var id=e.target.get("data").id;
+		 $.ajax({
+			 url: '/api/fire/electricDeviceInfo/getDeviceDetailById',
+			 dataType: 'json',
+			 type: 'get',
+			 data: {
+				 id: id
+			 },
+			 success:function(data){
+				 var level,pressure,batteryvalue,signal;
+				 if(data.detail.FireWaterCycleV22[0]){
+					 if(data.detail.FireWaterCycleV22[0].channel1type==1){
+						 level=data.detail.FireWaterCycleV22[0].channel1;
+					 }else if(data.detail.FireWaterCycleV22[0].channel1type==0){
+						 pressure=data.detail.FireWaterCycleV22[0].channel1;
+					 }
+					 if(data.detail.FireWaterCycleV22[0].channel2type==1){
+						 level=data.detail.FireWaterCycleV22[0].channel2;
+					 }else if(data.detail.FireWaterCycleV22[0].channel2type==0){
+						 pressure=data.detail.FireWaterCycleV22[0].channel2;
+					 }
+					 batteryvalue=data.detail.FireWaterCycleV22[0].batteryvalue;
+					 signal=data.detail.FireWaterCycleV22[0].signal;
+				 }
+				 var lnglat=[e.lnglat.lng,e.lnglat.lat]
+				 var content=[
+						"<div style='font-weight: 300;border:1px solid #f2f2f2;padding-bottom: 10px;'><div style='color:white;' class='pop_tl'>消防栓</div>",
+						"<div style='color:white;padding-left: 10px;' class='pop_box'>SN："+(data.data[0].sn?data.data[0].sn:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;' class='pop_box'>地址："+(data.data[0].address?data.data[0].address:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;' class='pop_box'>经纬度："+(data.data[0].gps?data.data[0].gps:'')+"</div>",
+						"<hr/><div style='color:white;padding-left: 10px;'>液位："+(level?level:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;'>电压(mV)："+(batteryvalue?batteryvalue:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;'>信号强度："+(signal?signal:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;'>压力："+(pressure?pressure:'')+"</div>",
+						"<div style='color:white;padding-left: 10px;'>更新时间："+(data.data[0].updatetime?data.data[0].updatetime:'')+"</div>"
+					]
+					var infoWindow = new AMap.InfoWindow({
+						content: content.join("<br>")
+					});
+
+					// 打开信息窗体
+					infoWindow.open(map,lnglat);
+			 }
+		 })
+	}
+</script>
+</html>

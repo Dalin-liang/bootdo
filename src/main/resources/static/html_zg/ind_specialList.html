@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果镇综合态势运行监控平台</title>
+
+
+		<!--<link rel="stylesheet" href="plugin/js/layer_v3.1.1/mobile/need/layer.css" media="all">-->
+		<link rel="stylesheet" href="plugin/js/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="plugin/js/css/bace.css" />
+		<link rel="stylesheet" href="plugin/js/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="plugin/js/css/fonts/font-awesome.min.css" />
+
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="bootstrap.min.js" ></script>
+		<script type="text/javascript" src="plugin/sweetalert/sweetalert.min.js"></script>
+
+
+
+
+		<!--<script type="text/javascript" src="plugin/otherData.js"></script>-->
+		<!--<script type="text/javascript" src="plugin/ws/sockjs.min.js" ></script>-->
+		<!--<script type="text/javascript" src="plugin/ws/stomp.min.js" ></script>-->
+
+		<!--<script type="text/javascript" src="plugin/scroll.js" ></script>-->
+		<!--<script type="text/javascript" src="bootstrap.min.js" ></script>-->
+		<!--<script type="text/javascript" src="plugin/laydate/laydate.js" ></script>-->
+		<!--<script type="text/javascript" src="plugin/layui/layui.js" ></script>-->
+		<!--<link rel="stylesheet" href="plugin/select2.css" />-->
+		<!--<script type="text/javascript" src="plugin/select2.js" ></script>-->
+
+		<!--<script src="plugin/clipboard.min.js"></script>-->
+		<script type="text/javascript" src="plugin/js/layer_v3.1.1/layer.js"></script>
+
+
+
+		<style>
+			body {
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="tl comtl">
+					特殊人群设备列表
+				</div>
+				<div class="pad10 ind_cont clearfix font12">
+					<div class="col-xs-6">
+						<div class="clearfix">
+							<div class="col-xs-3 pad5 text-right">
+								穿带者 :
+							</div>
+							<div class="col-xs-9 pad0">
+								<input class="form-control" id="wearerName" autocomplete="off" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-1" style="width: 12%;">
+						<button class="btn btn-warning btn-xs btn_ind" style="height: 30px;"onclick="queryrep()">查 询</button>
+					</div>
+					<div class="clearfix"></div>
+					<div class="padlr10 srcollcom" id="rep_info" style="height:400px">
+						<div class="info">
+							<p class="mt10" style="line-height: 30px;">基本信息</p>
+							<table class="table table-bordered text-center" id="info_table">
+								<thead>
+									<tr>
+										<td>设备imei</td>
+										<td>社区</td>
+										<td>穿带者</td>
+										<td>穿戴者号码</td>
+										<td>状态</td>
+										<td>轨迹</td>
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!--<div class="col-xs-12 mt10" id="down_btn">
+						<button class="btn btn-success" onclick="downfile()">下载</button>
+					</div>-->
+				</div>
+			</div>
+		</div>
+		<!--//<script type="text/javascript" src="js/layer_v3.1.1/layer.js"></script>-->
+		<script type="text/javascript" src="plugin/layui/layui.js" ></script>
+		<script>
+            queryrep();
+
+			
+			// function reptype(opt) {
+			// 	$("#rep_class").find(".btn").text($(opt).text())
+			// }
+			var info;
+			function queryrep(){
+				var wearerName=$("#wearerName").val().trim();
+				$.ajax({
+                    url: '/api/special/populationPosition/getDeviceByParamPost',
+                    dataType: 'json',
+                    type: 'post',
+					data:{
+                        wearerName:wearerName,
+					},
+                // {"wearerMobile":"18498833407",
+                //     "wearerName":"试用设备",
+                //     "id":"866801040174942",
+                //     "userType":"五保户老人",
+                //     "community":"正果镇政府",
+                //     "TYPE":"special",
+                //     "lon_lat":"23.140619,113.5380029",
+                //     "live":"独居"}
+					success: function(result) {
+						//console.log(result)
+						$("#info_table tbody").empty();
+						$.each(result,function(index,item){
+						    //console.log(item)
+							$("#info_table").append("<tr><td>"+item.id+"</td>"+
+							"<td>"+item.community+"</td>"+
+							"<td>"+item.wearerName+"</td>"+
+							"<td>"+item.wearerMobile+"</td>"+
+							"<td>"+item.live+"</td>"+
+							"<td><button class='btn btn-success btn-xs' onclick='getinfo("+item.id+")'>轨迹</button></td>"+
+							"</tr>")
+						})
+					}
+				})
+			}
+			function getinfo(id){
+                $.each(parent.groupmarkergg,function(idx,item){
+                    item.setMap(null);
+                })
+                parent.getgroupguiji(id);
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+			}
+		</script>
+	</body>
+
+</html>

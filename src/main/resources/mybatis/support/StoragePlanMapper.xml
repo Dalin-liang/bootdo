@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.StoragePlanMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportStoragePlan">
+        insert into safeguard_storageplan(
+            id,
+            goodsinfo_id,
+            goodsstorehouse_id,
+            min_storage,
+            plan_storage,
+            remarks,
+            update_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{goodsinfo_id,jdbcType=VARCHAR},
+            #{goodsstorehouse_id,jdbcType=VARCHAR},
+            #{min_storage,jdbcType=INTEGER},
+            #{plan_storage,jdbcType=INTEGER},
+            #{remarks,jdbcType=VARCHAR},
+            #{update_date,jdbcType=TIMESTAMP}
+
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportStoragePlanDTO">
+          select hc.*,(@rowNum:=@rowNum+1) RN,
+          (select g.goodsname from safeguard_goodsinfo g where hc.goodsinfo_id=g.id) goodsname,
+          (select g.unit from safeguard_goodsinfo g where hc.goodsinfo_id=g.id) unit,
+          (select gs.name from safeguard_goodsstorehouse gs where hc.goodsstorehouse_id=gs.id) storehousename
+          from safeguard_storageplan hc,(select (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="goodsinfo_id != null  and goodsinfo_id != '' ">
+	            AND HC.goodsinfo_id = #{goodsinfo_id}
+	        </if>
+			<if test="goodsstorehouse_id != null and goodsstorehouse_id != '' ">
+                AND HC.goodsstorehouse_id  = #{goodsstorehouse_id}
+	        </if>
+			<if test="min_storage != null and min_storage != '' ">
+	            AND  HC.min_storage = #{min_storage}
+	        </if>
+			<if test="plan_storage != null and plan_storage != '' ">
+	            AND  HC.plan_storage = #{plan_storage}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="update_date != null and update_date != '' ">
+	            AND  HC.update_date = #{update_date}
+	        </if>
+        </where>
+        order by HC.update_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportStoragePlan">
+        update safeguard_storageplan set
+            goodsinfo_id=#{goodsinfo_id,jdbcType=VARCHAR},
+            goodsstorehouse_id=#{goodsstorehouse_id,jdbcType=VARCHAR},
+            min_storage=#{min_storage,jdbcType=INTEGER},
+            plan_storage=#{plan_storage,jdbcType=INTEGER},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=TIMESTAMP}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_storageplan where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_storageplan set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_storageplan where id=#{id}
+    </select>
+
+    <select id="getStoreHouse" resultType="java.util.Map">
+        select rs.id,rs.name from safeguard_goodsstorehouse rs WHERE rs.enabled ='1'
+    </select>
+
+    <select id="getGoods" resultType="java.util.Map">
+        select rs.id,rs.goodsname from safeguard_goodsinfo rs
+    </select>
+
+</mapper>

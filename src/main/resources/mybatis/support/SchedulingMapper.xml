@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.SchedulingMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportScheduling">
+        insert into safeguard_scheduling(
+            id,
+            scheduling_date,
+            deptperson_id
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{scheduling_date,jdbcType=DATE},
+            #{deptperson_id,jdbcType=VARCHAR}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportSchedulingDTO">
+ 
+          
+             SELECT  HC.id,DATE_FORMAT(HC.scheduling_date,'%Y-%m-%d') scheduling_date,b1.name username,b1.position,b2.name deptname,b1.mobile,b1.id userid,HC.work
+             from  safeguard_scheduling HC
+             LEFT JOIN safeguard_deptperson   b1 on HC.deptperson_id=b1.id
+             LEFT JOIN safeguard_dept b2 on b1.dept_id=b2.id
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="scheduling_date != null  ">
+	            AND  HC.scheduling_date = #{scheduling_date}
+	        </if>
+			<if test="deptperson_id != null and deptperson_id != '' ">
+	            AND  HC.deptperson_id = #{deptperson_id}
+	        </if>
+	       
+        </where>
+        order by HC.scheduling_date desc
+    </select>
+    
+        <!--查询-->
+    <select id="getUserByDeptId" resultType="java.util.Map" parameterType="java.util.Map">
+ 
+       SELECT  t.*,(select  t1.name from safeguard_dept t1 where t1.id=t.dept_id)  deptName from safeguard_deptperson  t
+          <where>
+			1=1
+			<if test="deptId != null  and deptId != '' ">
+	            AND  t.dept_id = #{deptId}
+	        </if>
+		  	<if test="deptpersonName != null  and deptpersonName != '' ">
+			  	AND  t.name like concat('%',#{deptpersonName},'%')
+		 	 </if>
+		  	<if test="mobile != null  and mobile != '' ">
+			  	AND  t.mobile like concat('%',#{mobile},'%')
+		  	</if>
+	        <if test="schedulingDate != null  and schedulingDate != '' ">
+	         and id not in(
+			select t1.deptperson_id from safeguard_scheduling  t1 where 	 DATE_FORMAT(t1.scheduling_date,'%Y-%m-%d')=#{schedulingDate})
+  			</if>
+  			and is_duty =1
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+        </where>
+
+    </select>
+    
+     	<select id="count" resultType="int">
+ 			SELECT  count(*) from safeguard_deptperson  t
+		 <where>  
+		  	<if test="deptId != null  and deptId != '' ">
+	            AND  t.dept_id = #{deptId}
+	        </if>
+			 <if test="deptpersonName != null  and deptpersonName != '' ">
+				 AND  t.name like concat('%',#{deptpersonName},'%')
+			 </if>
+			 <if test="mobile != null  and mobile != '' ">
+				 AND  t.mobile like concat('%',#{mobile},'%')
+			 </if>
+	        <if test="schedulingDate != null  and schedulingDate != '' ">
+	         and id not in(
+			select t1.deptperson_id from safeguard_scheduling  t1 where 	 DATE_FORMAT(t1.scheduling_date,'%Y-%m-%d')=#{schedulingDate})
+  			</if>
+  					and is_duty =1
+		  		</where>
+	</select>
+	
+	<select id="countByUser" resultType="java.util.Map">
+		SELECT t1.name AS name, t1.position AS position,t2.`name` AS deptName,t4.is_personincharge AS is_personincharge,COUNT(t.id) count,t.deptperson_id
+		FROM safeguard_scheduling t
+		LEFT JOIN safeguard_deptperson t1 ON t.deptperson_id=t1.id
+		LEFT JOIN safeguard_dept t2 ON t1.`dept_id`=t2.id
+		LEFT JOIN safeguard_daily t4 ON t.deptperson_id=t4.deptperson_id AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(t4.scheduling_date,'%Y-%m-%d')
+		where 1=1
+		<if test="name != null and name != '' ">
+			and t1.name like concat('%',#{name},'%')
+		</if>
+		<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+			and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+		</if>
+		<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+			and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+		</if>
+		GROUP BY  t.deptperson_id
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="countByUserCount" resultType="int">
+		SELECT COUNT(a.name)
+		FROM (
+			SELECT t1.name
+			FROM safeguard_scheduling t
+			LEFT JOIN safeguard_deptperson t1 ON t.deptperson_id=t1.id
+			LEFT JOIN safeguard_dept t2 ON t1.`dept_id`=t2.id
+			LEFT JOIN safeguard_daily t4 ON t.deptperson_id=t4.deptperson_id AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(t4.scheduling_date,'%Y-%m-%d')
+			where 1=1
+			<if test="name != null and name != '' ">
+				and t1.name like concat('%',#{name},'%')
+			</if>
+			<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			GROUP BY  t.deptperson_id
+		) a
+	</select>
+	
+	<select id="countByDept" resultType="java.util.Map">
+		SELECT  t2.name AS deptName,COUNT(t.id) count,SUM(t4.`is_exception`) exceptionCount
+		FROM  safeguard_scheduling t
+		LEFT JOIN safeguard_deptperson t1 ON t.deptperson_id=t1.id
+		LEFT JOIN safeguard_dept t2 ON t1.`dept_id`=t2.id
+		LEFT JOIN safeguard_daily t4 ON t.deptperson_id=t4.deptperson_id AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(t4.scheduling_date,'%Y-%m-%d')
+		WHERE 1=1
+		<if test="deptName != null and deptName != '' ">
+			and t2.name like concat('%',#{deptName},'%')
+		</if>
+		<if test="start_schedulingDate != null and start_schedulingDate != '' "> 
+			and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate} 
+			</if>
+		<if test="end_schedulingDate != null and end_schedulingDate != ''  "> 
+			and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate} 
+			</if>
+		GROUP BY  t2.name
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="countByDeptCount" resultType="int">
+		SELECT COUNT(a.name)
+		FROM (
+			SELECT  t2.name
+			FROM  safeguard_scheduling t
+			LEFT JOIN safeguard_deptperson t1 ON t.deptperson_id=t1.id
+			LEFT JOIN safeguard_dept t2 ON t1.`dept_id`=t2.id
+			LEFT JOIN safeguard_daily t4 ON t.deptperson_id=t4.deptperson_id AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(t4.scheduling_date,'%Y-%m-%d')
+			WHERE 1=1
+			<if test="deptName != null and deptName != '' ">
+				and t2.name like concat('%',#{deptName},'%')
+			</if>
+			<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			GROUP BY  t2.name
+		) a
+	</select>
+	
+ 
+
+
+	
+	
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportScheduling">
+        update safeguard_scheduling set
+            scheduling_date=#{scheduling_date,jdbcType=DATE},
+            deptperson_id=#{scheduling_date,jdbcType=VARCHAR}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+	<update id="workUpdate" parameterType="com.bootdo.support.entity.SupportScheduling">
+		update safeguard_scheduling
+		<set>
+			<if test="work != null">`work` = #{work} </if>
+		</set>
+		where id = #{id}
+	</update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_scheduling where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_scheduling set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_scheduling where id=#{id}
+    </select>
+    
+    <delete id="batchRemove">
+		delete from safeguard_scheduling where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getSchedulingsDateByUserId" resultType="java.lang.String">
+		SELECT DATE_FORMAT(s.scheduling_date,'%Y-%m-%d') schedulingDate
+		FROM safeguard_scheduling s
+		INNER JOIN safeguard_deptperson p ON p.`id` = s.`deptperson_id`
+		WHERE p.`user_id` = #{userId}
+		order by s.scheduling_date desc
+	</select>
+
+	<select id="getUserViewSchedulingDate" resultType="java.lang.String">
+		SELECT DATE_FORMAT(s.scheduling_date,'%Y-%m-%d') schedulingDate
+		FROM safeguard_scheduling s
+		INNER JOIN safeguard_deptperson p ON p.`id` = s.`deptperson_id`
+		<where>
+			1=1
+			<if test="deptIdsList !=null and deptIdsList.size()>0 ">
+				and ( p.`dept_id` IN
+				<foreach item="deptId" collection="deptIdsList" open="(" separator="," close=")">
+					#{deptId}
+				</foreach>
+				OR
+				p.`user_id` = #{userId}
+				)
+			</if>
+			<if test="deptIdsList ==null">
+				and p.`user_id` = #{userId}
+			</if>
+		</where>
+		order by s.scheduling_date desc
+	</select>
+
+</mapper>

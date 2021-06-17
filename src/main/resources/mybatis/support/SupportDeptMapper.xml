@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.SupportDeptDao">
+
+
+	<select id="get" resultType="com.bootdo.support.entity.SupportDeptDO">
+		select hc.`id`,hc.`name`,hc.`contact`,hc.`mobile`,hc.`lat_lon` as latLon,hc.`addr`,
+		hc.`enabled`,hc.`remarks`,hc.`create_by` as createBy,
+		hc.`create_date` as createDate,hc.`update_by` as updateBy,
+		hc.`update_date` as updateDate,(@rowNum:=@rowNum+1) RN
+		from safeguard_dept hc,(select (@rowNum:=0)) b
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name like concat('%',#{name},'%') </if>
+		  		  <if test="contact != null and contact != ''"> and contact like concat('%', #{contact},'%') </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="latLon != null and latLon != ''"> and lat_lon = #{latLon} </if>
+		  		  <if test="addr != null and addr != ''"> and addr like concat('%', #{addr},'%') </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by like concat('%',#{createBy},'%') </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by like concat('%', #{updateBy},'%') </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+		order by HC.create_date desc
+	</select>
+
+	 
+	<insert id="insert" parameterType="com.bootdo.support.entity.SupportDeptDO">
+		insert into safeguard_dept
+		(
+			`id`, 
+			`name`, 
+			`contact`, 
+			`mobile`, 
+			`lat_lon`, 
+			`addr`, 
+			`enabled`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id,jdbcType=VARCHAR},
+			#{name,jdbcType=VARCHAR},
+			#{contact,jdbcType=VARCHAR},
+			#{mobile,jdbcType=VARCHAR},
+			#{latLon,jdbcType=VARCHAR},
+			#{addr,jdbcType=VARCHAR},
+			#{enabled,jdbcType=INTEGER},
+			#{remarks,jdbcType=VARCHAR},
+			#{createBy,jdbcType=VARCHAR},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{updateBy,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.SupportDeptDO">
+		update safeguard_dept 
+		<set>
+			<if test="name != null">`name` = #{name,jdbcType=VARCHAR}, </if>
+			<if test="contact != null">`contact` = #{contact,jdbcType=VARCHAR}, </if>
+			<if test="mobile != null">`mobile` = #{mobile,jdbcType=VARCHAR}, </if>
+			<if test="latLon != null">`lat_lon` = #{latLon,jdbcType=VARCHAR}, </if>
+			<if test="addr != null">`addr` = #{addr,jdbcType=VARCHAR}, </if>
+			<if test="enabled != null">`enabled` = #{enabled,jdbcType=INTEGER}, </if>
+			<if test="remarks != null">`remarks` = #{remarks,jdbcType=VARCHAR}, </if>
+			<if test="createBy != null">`create_by` = #{createBy,jdbcType=VARCHAR}, </if>
+			<if test="createDate != null">`create_date` = #{createDate,jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy,jdbcType=VARCHAR}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate,jdbcType=TIMESTAMP}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from safeguard_dept where id = #{id}
+	</delete>
+
+	<update id="logicalDelete">
+        update safeguard_dept set enabled='0' where id=#{id}
+    </update>
+
+	<select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_dept where id=#{id}
+    </select>
+
+	<select id="getDeptPersonCountById" resultType="integer">
+		select count(id) from safeguard_deptperson t where t.dept_id=#{id}
+	</select>
+
+
+	<resultMap id="deptPersonTree" type="com.bootdo.support.entity.SupportDeptDO">
+		<id column="id" property="id" />
+		<result column="name" property="name"/>
+		<collection property="deptperson" ofType="com.bootdo.support.entity.SupportDeptPerson">
+			<id column="personid" property="id"/>
+			<result column="personname" property="name"/>
+			<result column="personmobile" property="mobile"/>
+			<result column="personposition" property="position"/>
+		</collection>
+	</resultMap>
+	<!-- 查询部门和对应的部门人员 -->
+	<select id="getDeptAndPersons" resultMap="deptPersonTree">
+		select (case when sd.id is null then '00001' else sd.id end) as id,(case when sd.name is null then '未分配部门' else sd.name end) as name,sdp.id as personid,sdp.name as personname,
+		sdp.mobile as personmobile,
+		(case when sdp.position is null then '职员' when sdp.position ='' then '职员' else sdp.position end) as personposition
+		from safeguard_dept sd right join safeguard_deptperson sdp on sd.id=sdp.dept_id where sdp.name not in ('乔打凯','1')
+		order by (case when sd.name like '镇%' then 0
+		when sd.name like '%所' then 1
+		when sd.name like '%组' then 2
+		when sd.name like '%中心' then 3
+		when sd.name like '%村' then 5 else 4 end)
+	</select>
+
+	<select id="getByIdAndContact" resultType="java.util.Map">
+        SELECT d.* 
+        FROM safeguard_dept d 
+        <where>
+			<if test="id != null and id != '' ">
+	            AND  d.id = #{id}
+	        </if>
+            <if test="contact != null and contact != '' ">
+	            AND d.contact like concat('%',#{contact},'%')
+	        </if>
+        </where>
+    </select>
+
+	<select id="getMaintenancePerson" resultType="java.util.Map">
+		SELECT p.*
+		FROM safeguard_dept d
+		INNER JOIN safeguard_deptperson p ON p.dept_id = d.id
+		<where>
+			<if test="name != null and name != '' ">
+				AND  d.name LIKE concat('%',#{name},'%')
+			</if>
+			AND p.mobile IN (
+				SELECT t.mobile
+				FROM watch_maintenance_person t
+				WHERE t.is_enabled = '1'
+			)
+		</where>
+	</select>
+
+	<select id="getDeptIdsByUserId" resultType="java.lang.String">
+		SELECT d.`id` deptId
+		FROM safeguard_deptperson p
+		INNER JOIN safeguard_dept d ON d.`contact` = p.`name`
+		INNER JOIN sys_user u ON p.`user_id` = u.`user_id`
+		WHERE u.`user_id` = #{userId}
+	</select>
+
+	<select id="getIdByName" resultType="String">
+		SELECT id
+		FROM safeguard_dept
+		WHERE NAME = #{name}
+		LIMIT 1
+	</select>
+</mapper>

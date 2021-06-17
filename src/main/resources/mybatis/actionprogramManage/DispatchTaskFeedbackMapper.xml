@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.actionprogramManage.dao.DispatchTaskFeedbackDao">
+
+	<select id="get" resultType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		select `id`,`from_table`,`feedback_date`,`address`,`source_type`,`person_type`,`deptperson_id`,`del_flag`,`remark`,`create_by`,`create_date`,`update_by`,`update_date`,`deptpeson_name`,`relation_id` from dispatch_task_feedback where id = #{value}
+	</select>
+
+	<select id="getFeedBackByTaskId" resultType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		select `id`,`from_table`,`feedback_date`,`address`,`source_type`,`person_type`,
+		`deptperson_id`,`del_flag`,`remark`,`create_by`,`create_date`,`update_by`,
+		`update_date`,`deptpeson_name`,`relation_id` from dispatch_task_feedback where relation_id = #{value}
+	</select>
+	
+	<select id="getfeedbackAndDetail" resultType="Map">
+	SELECT
+		t.*,t1.content,t1.is_visible,t1.type
+	FROM
+		dispatch_task_feedback t
+	INNER JOIN dispatch_task_feedback_detail t1 ON t.id = t1.feedback_id
+	<where>
+	 <if test="relationId != null and relationId != ''"> and relation_id = #{relationId} </if>
+	 <if test="deptpesonName != null and deptpesonName != ''">and deptpeson_name like concat('%',#{deptpesonName},'%')  </if>
+	 <if test="feedbackDate != null and feedbackDate != ''">and DATE_FORMAT(feedback_date,'%Y-%m-%d') = #{feedbackDate} </if>
+	
+	</where>
+</select>
+	<select id="list" resultType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		select `id`,`from_table`,`feedback_date`,`address`,`source_type`,`person_type`,`deptperson_id`,`del_flag`,`remark`,`create_by`,`create_date`,`update_by`,`update_date`,`deptpeson_name`,`relation_id` from dispatch_task_feedback
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fromTable != null and fromTable != ''"> and from_table = #{fromTable} </if>
+		  		  <if test="feedbackDate != null and feedbackDate != ''">and DATE_FORMAT(feedback_date,'%Y-%m-%d') = #{feedbackDate} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="personType != null and personType != ''"> and person_type = #{personType} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="deptpesonName != null and deptpesonName != ''">and deptpeson_name like concat('%',#{deptpesonName},'%')  </if>
+		  		  <if test="relationId != null and relationId != ''"> and relation_id = #{relationId} </if>
+		  		  
+		  		  
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dispatch_task_feedback
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fromTable != null and fromTable != ''"> and from_table = #{fromTable} </if>
+		  		  <if test="feedbackDate != null and feedbackDate != ''"> and feedback_date = #{feedbackDate} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="personType != null and personType != ''"> and person_type = #{personType} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="deptpesonName != null and deptpesonName != ''"> and deptpeson_name = #{deptpesonName} </if>
+		  		  <if test="relationId != null and relationId != ''"> and relation_id = #{relationId} </if>
+		  		  
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		insert into dispatch_task_feedback
+		(
+			`id`, 
+			`from_table`, 
+			`feedback_date`, 
+			`address`, 
+			`source_type`, 
+			`person_type`, 
+			`deptperson_id`, 
+			`del_flag`, 
+			`remark`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`, 
+			`deptpeson_name`,
+			`relation_id`
+		)
+		values
+		(
+			#{id}, 
+			#{fromTable}, 
+			#{feedbackDate}, 
+			#{address}, 
+			#{sourceType}, 
+			#{personType}, 
+			#{deptpersonId}, 
+			#{delFlag}, 
+			#{remark}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{deptpesonName},
+			#{relationId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		update dispatch_task_feedback 
+		<set>
+			<if test="fromTable != null">`from_table` = #{fromTable}, </if>
+			<if test="feedbackDate != null">`feedback_date` = #{feedbackDate}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="sourceType != null">`source_type` = #{sourceType}, </if>
+			<if test="personType != null">`person_type` = #{personType}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="deptpesonName != null">`deptpeson_name` = #{deptpesonName}</if>
+			<if test="relationId != null">`relation_id` = #{relationId}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateByrelationId" parameterType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+		update dispatch_task_feedback
+		<set>
+			<if test="fromTable != null">`from_table` = #{fromTable}, </if>
+			<if test="feedbackDate != null">`feedback_date` = #{feedbackDate}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="sourceType != null">`source_type` = #{sourceType}, </if>
+			<if test="personType != null">`person_type` = #{personType}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="deptpesonName != null">`deptpeson_name` = #{deptpesonName}</if>
+		</set>
+		where relation_id = #{relationId}
+	</update>
+	
+	 <update id="logicalDelete">
+        update dispatch_task_feedback set del_flag='1' where id=#{id}
+    </update>
+	
+	<delete id="remove">
+		delete from dispatch_task_feedback where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from dispatch_task_feedback where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<delete id="removeByTask" >
+		DELETE FROM dispatch_task_feedback WHERE relation_id in    (SELECT  id from dispatch_task t where t.actionprogram_id =#{actionprogramId} );
+	</delete>
+	
+	<delete id="removeByRespdept" >
+		DELETE FROM dispatch_task_feedback WHERE relation_id in   (SELECT  id from dispatch_respdept t where t.actionprogram_id =#{actionprogramId}  );
+	</delete>
+	<select id="getFeedBackByRelationId" resultType="Map">
+	SELECT
+ 	t.id,t.deptpeson_name,t.address,t.remark,t.feedback_date,t1.createDate,t1.type,t1.content
+	FROM
+	dispatch_task_feedback t
+	left JOIN dispatch_task_feedback_detail t1 ON t.id = t1.feedback_id
+	    where t.relation_id = #{relationId}
+	    order by t1.createDate desc
+	</select>
+	
+	<select id="getUnique" resultType="com.bootdo.actionprogramManage.domain.DispatchTaskFeedbackDO">
+	SELECT
+	*
+	FROM
+	dispatch_task_feedback t WHERE relation_id=#{relationId} ORDER BY feedback_date desc   limit 1
+	</select>
+</mapper>

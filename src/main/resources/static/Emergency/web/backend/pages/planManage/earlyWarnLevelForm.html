@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+	<body>
+		<div class=" layui-pad10">
+			<form class="layui-form" lay-filter="earlyWarnLevelForm"  action="">
+				<input type="text" id="earlyWarnLevelId" name="id"  class="layui-input" style="display:none;">
+				<div class="layui-col-xs6">
+					<div class="layui-form-item">
+						<label class="layui-form-label">事故类型：</label>
+						<div class="layui-input-block">
+							<select id="accidentTypeId"  name="accidentTypeId" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？" lay-filter="accidentTypeChange">
+						</select>
+						</div>
+					</div>	
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">预警类型：</label>
+				    <div class="layui-input-block">
+				        <select id="earlywarnTypeId"  name="earlywarnTypeId" lay-verify="required" lay-reqtext="预警类型是必填项，岂能为空？">
+						</select>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+					<div class="layui-form-item">
+						<label class="layui-form-label">预警级别：</label>
+						<div class="layui-input-block">
+						  <input id="name"  name="name" class="layui-input" lay-verify="required|nameLong" lay-reqtext="预警级别是必填项，岂能为空？" lay-filter="earlywarnTypeChange">
+						</div>
+				    </div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">划分标准：</label>
+				    <div class="layui-input-block">
+				      <textarea id="standards" name="standards" placeholder="请输入内容" lay-verify="required|standardsLong" class="layui-textarea"></textarea>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">是否启用：</label>
+					<div class="layui-input-block">
+					  <input type="checkbox" id="status" checked="checked" name="status" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+					</div>
+				</div>
+				 <div class="layui-form-item layui-mt10 layui-text-center">
+			 		<button type="button" class="layui-btn layui-btn-radius" lay-submit lay-filter="formSubmit">保 存</button>
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+				 </div>
+			 </form>
+		</div>
+		
+		
+		
+		
+		<script type="text/javascript" src="../../layui/layui.js" ></script>
+		<script>
+		 var prefix = "/planManage/planEarlywarnLevel"; 
+		 var parentData;
+		 var earlywarnType ;
+		 var accidentType;
+		 var parentData;
+		 layui.use(['form', 'layedit'], function(){
+			 var form = layui.form,
+			  layer = layui.layer,
+			  $ = layui.$;
+			  
+			  $.ajax({   
+		    		url: prefix + '/getSelectData',       
+		        	method:'post',       
+		        	data:{
+		  			},
+		  			async: false,       
+		        	success:function(data){      
+			  			if(data.msg =='true'){       
+			  				if(data.accidentTypeList !=null && data.accidentTypeList !=""){
+			  					accidentType = data.accidentTypeList;
+			  					var html = '<option value=""></option>';
+			  					for(var i=0;i<accidentType.length;i++){
+			  						html += '<option value="'+accidentType[i].id+'">'+accidentType[i].name+'</option>';
+			  					}
+		  						$("#accidentTypeId").html(html);
+		  					}
+			  				if(data.EarlywarnTypeList !=null && data.EarlywarnTypeList !=""){
+			  					earlywarnType = data.EarlywarnTypeList;
+			  					var html = '<option value=""></option>';
+			  					for(var i=0;i<earlywarnType.length;i++){
+			  						html += '<option value="'+earlywarnType[i].id+'">'+earlywarnType[i].name+'</option>';
+			  					}
+		  						$("#earlywarnTypeId").html(html);
+			  					$("#earlywarnTypeId").attr('disabled','disabled');
+		  					}
+			  				form.render('select', 'earlyWarnLevelForm');
+		  				} else {
+							layer.msg("获取下拉框失败");
+		  				}           
+		       	 	},              
+		       		error:function (data) {
+			  			layer.msg("获取下拉框失败");
+		  			}           
+		      }) ; 
+			  
+			  //回显
+			  if(parent.editDate !=null && parent.editDate !=""){
+				  parentData = parent.editDate;
+				  parent.editDate =null;
+				  //form初始化赋值
+				  form.val('earlyWarnLevelForm', {
+	            	    "id": parentData.id 
+	            	    ,"earlywarnTypeId": parentData.earlywarnTypeId
+	            	    ,"accidentTypeId": parentData.accidentTypeId
+	            	    ,"name": parentData.name 
+	            	    ,"standards": parentData.standards
+	            	    ,"status": (parentData.status =='0' ||parentData.status =='3')?false:true
+	              });
+				  $("#earlywarnTypeId").removeAttr('disabled');
+				  form.render('select', 'earlyWarnLevelForm');
+			  }
+			  
+			  form.on('select(accidentTypeChange)', function(data){   
+				 	$("#earlywarnTypeId").empty();
+				  	$("#earlywarnTypeId").attr('disabled','disabled');	
+				  	var html = '<option value=""></option>';	
+				  	var change = false;	
+				  	for(var i=0;i<earlywarnType.length;i++){
+ 						if(data.value == earlywarnType[i].accidentTypeId){
+ 							html += '<option value="'+earlywarnType[i].id+'">'+earlywarnType[i].name+'</option>';
+ 							change = true;	
+ 						}
+	 				}
+				 	if(change){
+					  $("#earlywarnTypeId").removeAttr('disabled');
+					  $("#earlywarnTypeId").html(html); 
+				 	}else if(data.value !=null && data.value !=""){
+				 		layer.alert("该事件类型下，还没有配置预警类型");
+				 	}
+				 	form.render('select', 'earlyWarnLevelForm');
+			  });  
+			  
+			//表单校验
+			form.verify({
+				nameLong: function(value){ 
+					if(value.length > 60){
+		                 return '预警级别名称长度大于60！请重新输入';
+		             }
+				},
+				standardsLong:function(value){ 
+					if(value.length > 128){
+		                 return '划分标准长度大于128！请重新输入';
+		             }
+				}
+			});
+		  
+			  form.on('submit(formSubmit)', function(data){ 
+			  	  if(data.field.id !=null && data.field.id !=""){
+			  		 	var o = $(".layui-form-switch");
+			  		 	if(o.find("em").text() =="OFF"){
+				  			data.field.status = "0";
+				  	    }else {
+				  			data.field.status = "1";
+				  	    }
+			  		    $.ajax({   
+	   		                  url: prefix + '/update',       
+	   		                  method:'post',       
+	   		                  data:data.field,
+	   		  				  async: false,       
+	   		                  success:function(data){      
+	   		                       if(data.code =='0'){       
+	   		  							var index = parent.layer.getFrameIndex(window.name);
+	   		  							parent.reloadTable();//重载父页表格
+	   		  							parent.layer.msg(data.msg);
+	   		  							parent.layer.close(index);
+	   		                       } else {
+	   		                            var index = parent.layer.getFrameIndex(window.name);
+	   									parent.layer.msg(data.msg);
+	   									parent.layer.close(index); 
+	   		  					   }           
+	   		                  },              
+	   		                  error:function (data) {
+	   		                  		parent.layer.msg("保存失败");
+	   		  				  }           
+	   		           }) ;         
+			  	  }else{
+			  			if(data.field.status =="on"){
+				  			data.field.status = "1";
+				  	    }else {
+				  			data.field.status = "3";
+				  	    }
+			  		  	$.ajax({   
+	 		                  url: prefix + '/save',       
+	 		                  method:'post',       
+	 		                  data:data.field,
+	 		  				  async: false,       
+	 		                  success:function(data){      
+	 		                       if(data.code =='0'){       
+	 		  							var index = parent.layer.getFrameIndex(window.name);
+	 		 							parent.reloadTable();//重载父页表格
+	 		  							parent.layer.msg(data.msg);
+	 		  							parent.layer.close(index);
+	 		                       } else {
+	 		                            var index = parent.layer.getFrameIndex(window.name);
+	 									parent.layer.msg(data.msg);
+	 									parent.layer.close(index); 
+	 		  					   }           
+	 		                  },              
+	 		                  error:function (data) {
+	 		                  		parent.layer.msg("保存失败");
+	 		  				  }           
+	 		           }) ;         
+			  	  }
+	                 
+	          });   
+			  
+			  $("#closeForm").click(function() {
+				  var index = parent.layer.getFrameIndex(window.name);
+				  parent.layer.close(index);
+			  });
+			        
+		  })
+		</script>
+	</body>
+</html>

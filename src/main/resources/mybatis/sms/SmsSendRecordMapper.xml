@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.sms.dao.SmsSendRecordDao">
+
+	<select id="get" resultType="com.bootdo.sms.domain.SmsSendRecordDO">
+		select `id`,`sms_id`,`time`,`content`,`mobile`,`status`,`code`,`status_time`,`association_table_name`,`association_table_id`,`actionprogram_id` from sms_send_record where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.sms.domain.SmsSendRecordDO">
+		select `id`,`sms_id`,`time`,`content`,`mobile`,`status`,`code`,`status_time`,`association_table_name`,`association_table_id`,`actionprogram_id` from sms_send_record
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="smsId != null and smsId != ''"> and sms_id = #{smsId} </if>
+		  		  <if test="time != null and time != ''"> and time = #{time} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="statusTime != null and statusTime != ''"> and status_time = #{statusTime} </if>
+		  		  <if test="associationTableName != null and associationTableName != ''"> and association_table_name = #{associationTableName} </if>
+		  		  <if test="associationTableId != null and associationTableId != ''"> and association_table_id = #{associationTableId} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sms_send_record
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="smsId != null and smsId != ''"> and sms_id = #{smsId} </if>
+		  		  <if test="time != null and time != ''"> and time = #{time} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="statusTime != null and statusTime != ''"> and status_time = #{statusTime} </if>
+		  		  <if test="associationTableName != null and associationTableName != ''"> and association_table_name = #{associationTableName} </if>
+		  		  <if test="associationTableId != null and associationTableId != ''"> and association_table_id = #{associationTableId} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.sms.domain.SmsSendRecordDO">
+		insert into sms_send_record
+		(
+			`id`, 
+			`sms_id`, 
+			`time`, 
+			`content`, 
+			`mobile`, 
+			`status`, 
+			`code`, 
+			`status_time`, 
+			`association_table_name`, 
+			`association_table_id`, 
+			`actionprogram_id`
+		)
+		values
+		(
+			#{id}, 
+			#{smsId}, 
+			#{time}, 
+			#{content}, 
+			#{mobile}, 
+			#{status}, 
+			#{code}, 
+			#{statusTime}, 
+			#{associationTableName}, 
+			#{associationTableId}, 
+			#{actionprogramId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.sms.domain.SmsSendRecordDO">
+		update sms_send_record 
+		<set>
+			<if test="smsId != null">`sms_id` = #{smsId}, </if>
+			<if test="time != null">`time` = #{time}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="statusTime != null">`status_time` = #{statusTime}, </if>
+			<if test="associationTableName != null">`association_table_name` = #{associationTableName}, </if>
+			<if test="associationTableId != null">`association_table_id` = #{associationTableId}, </if>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sms_send_record where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sms_send_record where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

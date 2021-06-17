@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.actionprogramManage.dao.DispatchEarlywarnDao">
+
+	<select id="get" resultType="com.bootdo.actionprogramManage.domain.DispatchEarlywarnDO">
+		select `id`,`actionprogram_id`,`repname`,`repphone`,`sex`,`eventaddr`,`eventdesc`,`repdate`,`source_type`,`dept_name`,`accident_type_name`,`eventlevel_name`,`remarks`,`deptperson_id`,`create_by`,`create_date`,`update_by`,`update_date`,`lat_lon`,`ispush`,`earlywarn_type_name`,`is_acceptance`,`acceptance_time`,`acceptance_type`,`examine_type`,`examine_opinion`,`examine_time`,`examiner_type` from dispatch_earlywarn where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.actionprogramManage.domain.DispatchEarlywarnDO">
+		select `id`,`actionprogram_id`,`repname`,`repphone`,`sex`,`eventaddr`,`eventdesc`,`repdate`,`source_type`,`dept_name`,`accident_type_name`,`eventlevel_name`,`remarks`,`deptperson_id`,`create_by`,`create_date`,`update_by`,`update_date`,`lat_lon`,`ispush`,`earlywarn_type_name`,`is_acceptance`,`acceptance_time`,`acceptance_type`,`examine_type`,`examine_opinion`,`examine_time`,`examiner_type` from dispatch_earlywarn
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="repname != null and repname != ''"> and repname = #{repname} </if>
+		  		  <if test="repphone != null and repphone != ''"> and repphone = #{repphone} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="eventaddr != null and eventaddr != ''"> and eventaddr = #{eventaddr} </if>
+		  		  <if test="eventdesc != null and eventdesc != ''"> and eventdesc = #{eventdesc} </if>
+		  		  <if test="repdate != null and repdate != ''"> and repdate = #{repdate} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="deptName != null and deptName != ''"> and dept_name = #{deptName} </if>
+		  		  <if test="accidentTypeName != null and accidentTypeName != ''"> and accident_type_name = #{accidentTypeName} </if>
+		  		  <if test="eventlevelName != null and eventlevelName != ''"> and eventlevel_name = #{eventlevelName} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="latLon != null and latLon != ''"> and lat_lon = #{latLon} </if>
+		  		  <if test="ispush != null and ispush != ''"> and ispush = #{ispush} </if>
+		  		  <if test="earlywarnTypeName != null and earlywarnTypeName != ''"> and earlywarn_type_name = #{earlywarnTypeName} </if>
+		  		  <if test="isAcceptance != null and isAcceptance != ''"> and is_acceptance = #{isAcceptance} </if>
+		  		  <if test="acceptanceTime != null and acceptanceTime != ''"> and acceptance_time = #{acceptanceTime} </if>
+		  		  <if test="acceptanceType != null and acceptanceType != ''"> and acceptance_type = #{acceptanceType} </if>
+		  		  <if test="examineType != null and examineType != ''"> and examine_type = #{examineType} </if>
+		  		  <if test="examineOpinion != null and examineOpinion != ''"> and examine_opinion = #{examineOpinion} </if>
+		  		  <if test="examineTime != null and examineTime != ''"> and examine_time = #{examineTime} </if>
+		  		  <if test="examinerType != null and examinerType != ''"> and examiner_type = #{examinerType} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dispatch_earlywarn
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="repname != null and repname != ''"> and repname = #{repname} </if>
+		  		  <if test="repphone != null and repphone != ''"> and repphone = #{repphone} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="eventaddr != null and eventaddr != ''"> and eventaddr = #{eventaddr} </if>
+		  		  <if test="eventdesc != null and eventdesc != ''"> and eventdesc = #{eventdesc} </if>
+		  		  <if test="repdate != null and repdate != ''"> and repdate = #{repdate} </if>
+		  		  <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="deptName != null and deptName != ''"> and dept_name = #{deptName} </if>
+		  		  <if test="accidentTypeName != null and accidentTypeName != ''"> and accident_type_name = #{accidentTypeName} </if>
+		  		  <if test="eventlevelName != null and eventlevelName != ''"> and eventlevel_name = #{eventlevelName} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="latLon != null and latLon != ''"> and lat_lon = #{latLon} </if>
+		  		  <if test="ispush != null and ispush != ''"> and ispush = #{ispush} </if>
+		  		  <if test="earlywarnTypeName != null and earlywarnTypeName != ''"> and earlywarn_type_name = #{earlywarnTypeName} </if>
+		  		  <if test="isAcceptance != null and isAcceptance != ''"> and is_acceptance = #{isAcceptance} </if>
+		  		  <if test="acceptanceTime != null and acceptanceTime != ''"> and acceptance_time = #{acceptanceTime} </if>
+		  		  <if test="acceptanceType != null and acceptanceType != ''"> and acceptance_type = #{acceptanceType} </if>
+		  		  <if test="examineType != null and examineType != ''"> and examine_type = #{examineType} </if>
+		  		  <if test="examineOpinion != null and examineOpinion != ''"> and examine_opinion = #{examineOpinion} </if>
+		  		  <if test="examineTime != null and examineTime != ''"> and examine_time = #{examineTime} </if>
+		  		  <if test="examinerType != null and examinerType != ''"> and examiner_type = #{examinerType} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.actionprogramManage.domain.DispatchEarlywarnDO">
+		insert into dispatch_earlywarn
+		(
+			`id`, 
+			`actionprogram_id`, 
+			`repname`, 
+			`repphone`, 
+			`sex`, 
+			`eventaddr`, 
+			`eventdesc`, 
+			`repdate`, 
+			`source_type`, 
+			`dept_name`, 
+			`accident_type_name`, 
+			`eventlevel_name`, 
+			`remarks`, 
+			`deptperson_id`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`, 
+			`lat_lon`, 
+			`ispush`, 
+			`earlywarn_type_name`, 
+			`is_acceptance`, 
+			`acceptance_time`, 
+			`acceptance_type`, 
+			`examine_type`, 
+			`examine_opinion`, 
+			`examine_time`, 
+			`examiner_type`
+		)
+		values
+		(
+			#{id}, 
+			#{actionprogramId}, 
+			#{repname}, 
+			#{repphone}, 
+			#{sex}, 
+			#{eventaddr}, 
+			#{eventdesc}, 
+			#{repdate}, 
+			#{sourceType}, 
+			#{deptName}, 
+			#{accidentTypeName}, 
+			#{eventlevelName}, 
+			#{remarks}, 
+			#{deptpersonId}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{latLon}, 
+			#{ispush}, 
+			#{earlywarnTypeName}, 
+			#{isAcceptance}, 
+			#{acceptanceTime}, 
+			#{acceptanceType}, 
+			#{examineType}, 
+			#{examineOpinion}, 
+			#{examineTime}, 
+			#{examinerType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.actionprogramManage.domain.DispatchEarlywarnDO">
+		update dispatch_earlywarn 
+		<set>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}, </if>
+			<if test="repname != null">`repname` = #{repname}, </if>
+			<if test="repphone != null">`repphone` = #{repphone}, </if>
+			<if test="sex != null">`sex` = #{sex}, </if>
+			<if test="eventaddr != null">`eventaddr` = #{eventaddr}, </if>
+			<if test="eventdesc != null">`eventdesc` = #{eventdesc}, </if>
+			<if test="repdate != null">`repdate` = #{repdate}, </if>
+			<if test="sourceType != null">`source_type` = #{sourceType}, </if>
+			<if test="deptName != null">`dept_name` = #{deptName}, </if>
+			<if test="accidentTypeName != null">`accident_type_name` = #{accidentTypeName}, </if>
+			<if test="eventlevelName != null">`eventlevel_name` = #{eventlevelName}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="latLon != null">`lat_lon` = #{latLon}, </if>
+			<if test="ispush != null">`ispush` = #{ispush}, </if>
+			<if test="earlywarnTypeName != null">`earlywarn_type_name` = #{earlywarnTypeName}, </if>
+			<if test="isAcceptance != null">`is_acceptance` = #{isAcceptance}, </if>
+			<if test="acceptanceTime != null">`acceptance_time` = #{acceptanceTime}, </if>
+			<if test="acceptanceType != null">`acceptance_type` = #{acceptanceType}, </if>
+			<if test="examineType != null">`examine_type` = #{examineType}, </if>
+			<if test="examineOpinion != null">`examine_opinion` = #{examineOpinion}, </if>
+			<if test="examineTime != null">`examine_time` = #{examineTime}, </if>
+			<if test="examinerType != null">`examiner_type` = #{examinerType}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from dispatch_earlywarn where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from dispatch_earlywarn where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<delete id="removeByActionprogramId" >
+    DELETE from dispatch_earlywarn  WHERE actionprogram_id=#{actionprogramId} ;
+	</delete>
+
+</mapper>

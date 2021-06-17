@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.TwoviolationsdailyDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.TwoviolationsdailyDO">
+		select `id`,`dept_id`,`deptperson_id`,`scheduling_date`,`time`,`number`,`address`,`direction`,`goods`,`is_notify`,`track_situation`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date` from safeguard_twoviolationsdaily where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.TwoviolationsdailyDO">
+		select `id`,`dept_id`,`deptperson_id`,`scheduling_date`,`time`,`number`,`address`,`direction`,`goods`,`is_notify`,`track_situation`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date` from safeguard_twoviolationsdaily
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="schedulingDate != null and schedulingDate != ''"> and scheduling_date = #{schedulingDate} </if>
+		  		  <if test="time != null and time != ''"> and time = #{time} </if>
+		  		  <if test="number != null and number != ''"> and number = #{number} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="direction != null and direction != ''"> and direction = #{direction} </if>
+		  		  <if test="goods != null and goods != ''"> and goods = #{goods} </if>
+		  		  <if test="isNotify != null and isNotify != ''"> and is_notify = #{isNotify} </if>
+		  		  <if test="trackSituation != null and trackSituation != ''"> and track_situation = #{trackSituation} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_twoviolationsdaily
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+		  		  <if test="deptpersonId != null and deptpersonId != ''"> and deptperson_id = #{deptpersonId} </if>
+		  		  <if test="schedulingDate != null and schedulingDate != ''"> and scheduling_date = #{schedulingDate} </if>
+		  		  <if test="time != null and time != ''"> and time = #{time} </if>
+		  		  <if test="number != null and number != ''"> and number = #{number} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="direction != null and direction != ''"> and direction = #{direction} </if>
+		  		  <if test="goods != null and goods != ''"> and goods = #{goods} </if>
+		  		  <if test="isNotify != null and isNotify != ''"> and is_notify = #{isNotify} </if>
+		  		  <if test="trackSituation != null and trackSituation != ''"> and track_situation = #{trackSituation} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+	</select>
+
+
+	<select id="getUser" resultType="java.util.Map" >
+		SELECT p.name,d.id AS deptId,t.`id`,t.`dept_id`,t.`deptperson_id`,DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') date,t.`time`,t.`number`,t.`address`,t.`direction`,t.`goods`,t.`is_notify` as isNotify,t.`track_situation` as trackSituation,t.`remarks`,t.`create_by`,t.`create_date`,t.`update_by`,t.`update_date`,
+		(	CASE p.`user_id`
+			WHEN #{userId} THEN '1'
+			ELSE '0'
+			END
+		)AS isOwner
+		FROM safeguard_twoviolationsdaily t
+		INNER JOIN safeguard_scheduling s ON s.`deptperson_id` = t.`deptperson_id` AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(s.scheduling_date,'%Y-%m-%d')
+		LEFT JOIN safeguard_deptperson p ON p.`id` = t.`deptperson_id`
+		LEFT JOIN safeguard_dept d ON d.`id` = t.`dept_id`
+		<where>
+			1=1
+			<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			<if test="deptPersonName != null and deptPersonName != ''  ">
+				and p.name like concat('%',#{deptPersonName},'%')
+			</if>
+			<if test="address != null and address != ''  ">
+				and t.address like concat('%',#{address},'%')
+			</if>
+			<if test="number != null and number != ''">
+			 	and t.number like concat('%',#{number},'%')
+			</if>
+			<if test="direction != null and direction != ''">
+				and t.direction like concat('%',#{direction},'%')
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList !=null and deptIdsList.size()>0 ">
+				and ( p.`user_id` = #{userId} OR t.`dept_id` IN
+				<foreach item="deptId" collection="deptIdsList" open="(" separator="," close=")">
+					#{deptId}
+				</foreach>
+				)
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList ==null ">
+				and p.`user_id` = #{userId}
+			</if>
+		</where>
+		order by t.scheduling_date desc,t.time desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="getUserCount" resultType="int" >
+		SELECT COUNT(*)
+		FROM safeguard_twoviolationsdaily t
+		INNER JOIN safeguard_scheduling s ON s.`deptperson_id` = t.`deptperson_id` AND  DATE_FORMAT(t.scheduling_date,'%Y-%m-%d')=DATE_FORMAT(s.scheduling_date,'%Y-%m-%d')
+		LEFT JOIN safeguard_deptperson p ON p.`id` = t.`deptperson_id`
+		LEFT JOIN safeguard_dept d ON d.`id` = t.`dept_id`
+		<where>
+			1=1
+			<if test="start_schedulingDate != null and start_schedulingDate != '' ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{start_schedulingDate}
+			</if>
+			<if test="end_schedulingDate != null and end_schedulingDate != ''  ">
+				and DATE_FORMAT(t.scheduling_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{end_schedulingDate}
+			</if>
+			<if test="deptPersonName != null and deptPersonName != ''  ">
+				and p.name like concat('%',#{deptPersonName},'%')
+			</if>
+			<if test="address != null and address != ''  ">
+				and t.address like concat('%',#{address},'%')
+			</if>
+			<if test="number != null and number != ''">
+				and t.number like concat('%',#{number},'%')
+			</if>
+			<if test="direction != null and direction != ''">
+				and t.direction like concat('%',#{direction},'%')
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList !=null and deptIdsList.size()>0 ">
+				and ( p.`user_id` = #{userId} OR t.`dept_id` IN
+				<foreach item="deptId" collection="deptIdsList" open="(" separator="," close=")">
+					#{deptId}
+				</foreach>
+				)
+			</if>
+			<if test="userId != null and userId != '' and deptIdsList ==null ">
+				and p.`user_id` = #{userId}
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.TwoviolationsdailyDO">
+		insert into safeguard_twoviolationsdaily
+		(
+			`id`, 
+			`dept_id`, 
+			`deptperson_id`, 
+			`scheduling_date`, 
+			`time`, 
+			`number`, 
+			`address`, 
+			`direction`, 
+			`goods`, 
+			`is_notify`, 
+			`track_situation`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{deptId}, 
+			#{deptpersonId}, 
+			#{schedulingDate}, 
+			#{time}, 
+			#{number}, 
+			#{address}, 
+			#{direction}, 
+			#{goods}, 
+			#{isNotify}, 
+			#{trackSituation}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.TwoviolationsdailyDO">
+		update safeguard_twoviolationsdaily 
+		<set>
+			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="deptpersonId != null">`deptperson_id` = #{deptpersonId}, </if>
+			<if test="schedulingDate != null">`scheduling_date` = #{schedulingDate}, </if>
+			<if test="time != null">`time` = #{time}, </if>
+			<if test="number != null">`number` = #{number}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="direction != null">`direction` = #{direction}, </if>
+			<if test="goods != null">`goods` = #{goods}, </if>
+			<if test="isNotify != null">`is_notify` = #{isNotify}, </if>
+			<if test="trackSituation != null">`track_situation` = #{trackSituation}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_twoviolationsdaily where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_twoviolationsdaily where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

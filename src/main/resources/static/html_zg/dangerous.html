@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果重点隐患分析</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="plugin/zui/zui.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+	<script type="text/javascript" src="plugin/form_check.js"></script>
+	<script type="text/javascript" src="plugin/jquery.ztree.all-3.5.js"></script>
+	<script type="text/javascript" src="plugin/zui/zui.min.js"></script>
+	<script type="text/javascript" src="plugin/zui/common.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=0899be88b02ec76a1a499252d285c5f4"></script>
+</head>
+<script>
+var map, markerList = new Array(), markerNameList = new Array();
+
+$(function(){
+	initMap();
+	//初始化地图
+	map.on('complete', function() {
+		//初始化折叠控件
+		initExpanded();
+		var _h = $(window).height();
+		if(_h<1000){
+            $("#ztb,#ytb,#htb").css("height","640px");
+		}else{
+		    $("#ztb,#ytb,#htb").css("height","780px");
+		}
+
+		$(".querymain").show();
+	});
+	//绑定tabs点击事件
+  	$('#tabs').on('click', 'li', function() {
+        var $item = $(this);
+        $item.parent().children('.active').removeClass('active');
+        $item.addClass('active');
+        var text = $item.find("a").first().html();
+ 		if(text=="正果企业"){
+        	$("#ztab").show(),$("#ytab").hide();$("#htab").hide();
+        }else if(text=="水上交通"){
+        	$("#ztab").hide(),$("#ytab").show();$("#htab").hide();
+        }else if(text=="路口交通"){
+        	$("#ztab").hide(),$("#ytab").hide();$("#htab").show();
+        }
+    });
+
+	//查询数据
+  	queryData();
+	//初始化事件
+	initEvent();
+
+});
+
+
+
+//查询数据
+function queryData(h){
+		var type= getCheckValuesForName("zcheck");
+//	var url = "/info/danger/list.do?page=1&pageSize=99999999";
+//	$.post(url, $("#queryForm").serialize(), function callback(txt) {
+//		var json = $.parseJSON(txt);
+		var json = {"code":0,"info":[{"id":"1","name":"广东广州增城正果加油站","placeIds":"4028c88151df0bb40151df1252b40011","placeNames":"加油站","lon":113.892149,"lat":23.411544,"type":"易燃易爆","address":"","situation":"广州市增城正果大道152号","contacts":"周凯","contactNumber":"82811321","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+		,{"id":"2","name":"广州市正果田寮加油站有限公司","placeIds":"4028c88151df0bb40151df1252b40011","placeNames":"加油站","lon":113.91187,"lat":23.475695,"type":"易燃易爆","address":"","situation":"广州市增城正果镇浪拨村（无门牌）","contacts":"黎家明","contactNumber":"13751713619","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+		,{"id":"3","name":"广东广州增城畅原加油站","placeIds":"4028c88151df0bb40151df1252b40011","placeNames":"加油站","lon":113.865875,"lat":23.373178,"type":"易燃易爆","address":"","situation":"广州市增城区正果镇中西村谢屋社田背横圳（加油亭）","contacts":"周凯","contactNumber":"82811663","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+
+		,{"id":"4","name":"广州市增城直营烟花爆竹经营部","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"烟花爆竹","lon":113.892065,"lat":23.410062,"type":"易燃易爆","address":"","situation":"广州市增城正果镇池田村池田路七号","contacts":"王旭升","contactNumber":"13430342378","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+		,{"id":"5","name":"广州市增城叔记商店","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"烟花爆竹","lon":113.866416,"lat":23.379123,"type":"易燃易爆","address":"","situation":"广州市增城正果镇中西村上社合作社","contacts":"张桂平","contactNumber":"13729864585","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+		,{"id":"6","name":"增城市正果供销社爆竹第一销售部","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"烟花爆竹","lon":113.892697,"lat":23.413098,"type":"易燃易爆","address":"","situation":"广州市增城正果镇正果上晒布村4号","contacts":"王小铁","contactNumber":"13711052868","industry":"零售业","reason":"危险源","remark":"未出现历史安全事故。"}
+
+		,{"id":"7","name":"广州市东华文体实业有限公司","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"安全生产","lon":113.890695,"lat":23.406409,"type":"安全生产","address":"","situation":"广州市增城正果镇池田工业区（无门牌）","contacts":"梁天瑞","contactNumber":"13416316979","industry":"体育用品制造业","reason":"安全生产","remark":"未出现历史安全事故。"}
+		,{"id":"8","name":"广州市增城正果圣峰木业制品厂","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"安全生产","lon":113.89025,"lat":23.402243,"type":"安全生产","address":"","situation":"广州市增城正果镇池田开发区（无门牌）","contacts":"张颂凡","contactNumber":"13509283298","industry":"木材业","reason":"安全生产","remark":"未出现历史安全事故。"}
+		,{"id":"9","name":"广州市雅道食品有限公司","placeIds":"4028c88151df0bb40151df11336f000c","placeNames":"安全生产","lon":113.89055,"lat":23.401705,"type":"安全生产","address":"","situation":"广州市增城正果镇池田工业开发区（无门牌）","contacts":"陈敏红","contactNumber":"18820036668","industry":"食品制造业","reason":"安全生产","remark":"未出现历史安全事故。"}
+
+		,{"id":"10","name":"麦村渡口","placeIds":"4028c88151df0bb40151df1226e30010","placeNames":"水上交通","lon":113.837759,"lat":23.379765,"type":"水上交通","address":"","situation":"麦村渡口","contacts":"邓晓思","contactNumber":"13711052868","industry":"渡口","reason":"水上交通","remark":"未出现历史安全事故。"}
+		,{"id":"11","name":"圭湖村渡口","placeIds":"4028c88151df0bb40151df1226e30010","placeNames":"水上交通","lon":113.878467,"lat":23.418663,"type":"水上交通","address":"","situation":"圭湖村渡口","contacts":"李强","contactNumber":"13711052965","industry":"渡口","reason":"水上交通","remark":"未出现历史安全事故。"}
+		,{"id":"12","name":"西湖滩村渡口","placeIds":"4028c88151df0bb40151df1226e30010","placeNames":"水上交通","lon":113.927024,"lat":23.459157,"type":"水上交通","address":"","situation":"西湖滩村渡口","contacts":"王大庆","contactNumber":"13711059652","industry":"渡口","reason":"水上交通","remark":"未出现历史安全事故。"}
+		,{"id":"13","name":"兰溪路口","placeIds":"4028c88151df0bb40151df0e9e5d0007","placeNames":"路口交通","lon":113.888908,"lat":23.400894,"type":"路口交通点","address":"","situation":"兰溪路口","contacts":"黎明","contactNumber":"13711059652","industry":"交通","reason":"路口交通点","remark":"未出现历史安全事故。"}
+		,{"id":"14","name":"汀塘路段","placeIds":"4028c88151df0bb40151df0e9e5d0007","placeNames":"路口交通","lon":113.913549,"lat":23.446513,"type":"路口交通点","address":"","situation":"汀塘路段","contacts":"李志强","contactNumber":"1371105956","industry":"交通","reason":"路口交通点","remark":"未出现历史安全事故。"}
+		,{"id":"15","name":"正果中学路段","placeIds":"4028c88151df0bb40151df0e9e5d0007","placeNames":"路口交通","lon":113.890278,"lat":23.411052,"type":"路口交通点","address":"","situation":"正果中学路段","contacts":"艾昂","contactNumber":"13711059652","industry":"交通","reason":"路口交通点","remark":"未出现历史安全事故。"}
+		,{"id":"16","name":"兰溪到畲族路段","placeIds":"4028c88151df0bb40151df0e9e5d0007","placeNames":"路口交通","lon":113.953268,"lat":23.361871,"type":"路口交通点","address":"","situation":"兰溪到畲族路段","contacts":"吴江明","contactNumber":"13711096542","industry":"交通","reason":"路口交通点","remark":"未出现历史安全事故。"}
+
+		,{"id":"17","name":"兰溪林场","placeIds":"0001","placeNames":"地质灾害","lon":113.5653,"lat":23.2213,"type":"地质灾害点","address":"正果镇兰溪村林场宿舍后山","situation":"兰溪林场","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"18","name":"兰溪楼地","placeIds":"0002","placeNames":"地质灾害","lon":113.5649,"lat":23.2155,"type":"地质灾害点","address":"正果镇兰溪村楼地社","situation":"兰溪楼地","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"19","name":"兰溪长冚","placeIds":"0003","placeNames":"地质灾害","lon":113.5133,"lat":23.2215,"type":"地质灾害点","address":"正果镇中西村老上社","situation":"兰溪长冚","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"20","name":"麻冚白石","placeIds":"0004","placeNames":"地质灾害","lon":113.5451,"lat":23.2754,"type":"地质灾害点","address":"正果镇西湖滩村西湖坳村道边坡","situation":"麻冚白石","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"21","name":"麻冚欧冚","placeIds":"0005","placeNames":"地质灾害","lon":113.5611,"lat":23.2233,"type":"地质灾害点","address":"正果镇兰溪村长冚村路口村道边坡","situation":"麻冚欧冚","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"22","name":"石溪","placeIds":"0006","placeNames":"地质灾害","lon":113.5341,"lat":23.2847,"type":"地质灾害点","address":"正果镇麻冚村欧冚合作社东侧山体","situation":"石溪","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"23","name":"水口上屋","placeIds":"0007","placeNames":"地质灾害","lon":113.5325,"lat":23.2823,"type":"地质灾害点","address":"正果镇麻冚村白石社陈屋路1号东南侧边坡","situation":"水口上屋","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"24","name":"屋头石","placeIds":"0008","placeNames":"地质灾害","lon":113.5151,"lat":23.2332,"type":"地质灾害点","address":"正果镇石溪村老屋社石溪东路1~4号后山边坡","situation":"乌石头","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"25","name":"西湖滩","placeIds":"0009","placeNames":"地质灾害","lon":113.5547,"lat":23.2702,"type":"地质灾害点","address":"正果镇乌头石村高排社3、4、6号后山边坡","situation":"西湖滩","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"26","name":"正果广场","placeIds":"0010","placeNames":"地质灾害","lon":113.5448,"lat":23.2244,"type":"地质灾害点","address":"正果镇水口村上屋社8号后山边坡","situation":"正果广场","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"27","name":"中西老上","placeIds":"0011","placeNames":"地质灾害","lon":113.5215,"lat":23.2221,"type":"地质灾害点","address":"增城区正果镇中西村老珠冚路3号、4号、1号、36号东侧边坡","situation":"中西老上","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		,{"id":"28","name":"中西老珠冚","placeIds":"0012","placeNames":"地质灾害","lon":113.5328,"lat":23.2516,"type":"地质灾害点","address":"增城区正果镇正果广场北东侧边坡","situation":"中西老珠冚","contacts":"吴江明","contactNumber":"13711096542","industry":"地质灾害","reason":"地质灾害点","remark":"未出现历史安全事故。"}
+		]};
+
+		if (json.code == 0) {
+			var arr = json.info;
+			var s = "";
+			clearMarker();//清除地图标志
+			if(arr.length>0){
+				for (var i = 0; i < arr.length; i++) {
+					var o = arr[i];
+					if(!type || type.indexOf(o.name)==-1){
+						continue;
+					}
+					var cls = i==0?"class='active'":"";
+					s += "<tr id='"+o.id+"' "+cls+">";
+					s += "<td width='28%'>" + o.name + "</td>";
+					s += "<td width='12%'>" + o.placeNames + "</td>";
+					s += "</tr>";
+					if(o.lon&&o.lat){
+						if(h==o.name){
+							addDanger(o,h);
+						}else{
+							addDanger(o);
+						}
+
+					}
+
+				}
+			}else{
+			}
+		} else {
+			showError("隐患点数据获取失败！");
+		}
+
+
+//	});
+}
+
+//添加隐患点
+function addDanger(obj,h){
+	//处理隐患场所类别编号，只截取第一个
+	var categoryId = obj.placeIds;
+	var indexOf = categoryId.indexOf(",");
+	if(indexOf>-1){
+		var splitStr = categoryId.split(",");
+		categoryId = splitStr[0];
+	}
+	if(!categoryId){
+		return;
+	}
+	var currentLevel = getLevel(1);
+	var iconUrl = "ui/hiddenPoints/marker/"+categoryId+"/"+currentLevel+".png";
+	var picture =  "ui/hiddenPoints/14537772583890503604.jpg";
+	var type = obj.type;
+	var name = obj.name;
+	if(obj.type=="地质灾害点"){
+		picture="ui/hiddenPoints/"+obj.placeIds+".jpg";
+	}
+	var pointsId = obj.id;
+	var html = "";
+
+	var labelType = "";
+		var lv4Str, lv3Str, lv2Str, lv1Str;
+		if(type == '大风'){
+			labelType = "最大风速m/s";
+			lv4Str = obj.windLevel4;
+			lv3Str = obj.windLevel3;
+			lv2Str = obj.windLevel2;
+			lv1Str = obj.windLevel1;
+		}else{
+			labelType = "降雪量mm";
+			lv4Str = obj.snowLevel4;
+			lv3Str = obj.snowLevel3;
+			lv2Str = obj.snowLevel2;
+			lv1Str = obj.snowLevel1;
+		}
+
+		html = "<div style=\"margin:0;line-height:20px;padding:2px;overflow:auto;width:400px;height:300px;padding-left: 10px;\">" +
+        "<div class=\"myFormDiv\" style=\"width:150px;height:200px;font-size:13px;border:0px #1874ff solid;float:right;overflow:hidden;margin-left:3px;margin-right:0px;\">"+
+		"<img src=\""+picture+"\" width=\"150px\" height=\"200px\" style=\"float:right;zoom:1;overflow:hidden;margin-left:3px;\"/><\/div>" +
+        "<b>隐患点名称：</b>"+name+"<br/>" +
+        "<b>隐患点类型：</b>"+type+"<br/>" +
+        "<b>隐患场所类别：</b>"+obj.placeNames+"<br/>" +
+        "<b>地理位置：</b>"+obj.address+"<br/>" +
+        "<b>基本情况：</b>"+obj.situation+"<br/>" +
+        "<b>联系人：</b>"+obj.contacts+"<br/>" +
+        "<b>联系电话：</b>"+obj.contactNumber+"<br/>" +
+        "<b>所属行业：</b>"+obj.industry+"<br/>" +
+        "<b>监测原因：</b>"+obj.reason+"<br/>" +
+        "<b>历史情况：</b><br/>" +
+		"<textarea rows='2' style='resize: none;width: 100%;' readonly>"+obj.remark+"</textarea>"
+        "</div>";
+
+
+	addMarkerPoints(obj.lon, obj.lat, obj.id, iconUrl, name, html,h);
+}
+
+
+function initEvent(){
+	$("#ztb,#ytb,#htb tr").find("td:nth-child(2)").click(function(){
+		$(this).parent().parent().children('.active').removeClass('active');
+		$(this).parent().addClass("active");
+		if($(this).parent().find(":checkbox").first()){
+			var check = $(this).parent().find(":checkbox").first();
+			if(check.is(":checked")){
+				check.prop({checked:false});
+			}else{
+				check.prop({checked:true});
+			}
+	 		queryData($(this).html());
+		}
+	});
+
+ 	$("input[name='zcheck']").change(function(){
+ 		queryData();
+    });
+
+
+}
+
+//全选|全否
+function checkAll(o){
+	var t = $(o).val();
+	var check = $(o).is(":checked");
+	var id = "";
+	if(t==1){
+		id = "ztb";
+	}else if(t==2){
+		id = "ytb";
+	}else if(t==3){
+		id = "htb";
+	}
+
+	$("#"+id+" tr").find(":checkbox").each(function(){
+		//执行全选
+		if(check){
+			$(this).prop({checked:true});
+		}else{//执行全否
+			$(this).prop({checked:false});
+		}
+	});
+
+	queryData();
+}
+
+function getLevel(value){
+	//设置当前级别所对应的字母
+	var currentLevel;
+	switch(value){
+	case 1:
+		currentLevel = "r";
+		break;
+	case 2:
+		currentLevel = "o";
+		break;
+	case 3:
+		currentLevel = "y";
+		break;
+	case 4:
+		currentLevel = "b";
+		break;
+	default:
+		currentLevel = "g";
+	}
+	return currentLevel;
+}
+
+var expanded = true;
+function initExpanded(){
+	var left_w = -300;
+	$('.bar').css({"left":left_w,"width":"25px"});
+	$('.bar').click(function(){
+		setExpanded();
+	});
+
+	//默认展开
+	setExpanded();
+}
+
+function setExpanded(){
+	var left_w = 370;
+	var c_w = $("#container").width();
+	var c_h=$("#container").height();
+	if (expanded) {
+		/*$('.querymain').animate({left:'0',top:'0'});*/
+		$('.querymain').css({'border':"1px solid #ccc",'background-color':"white","width":left_w+10});
+		$('.bar').css({'background-position':'-25px 0px',"left":left_w+10});
+		$("#container").css({"width":c_w,"left":0});
+	}else {
+		$('.querymain').animate({left:-left_w-10});
+		$('.querymain').css({'border':"0px solid #ccc",'background-color':null});
+		$('.bar').css('background-position','-0px 0px');
+		$("#container").css({"width":c_w+left_w,"left":0});
+	}
+	expanded = !expanded;
+}
+
+
+
+//初始化地图
+function initMap(level,lon,lat){
+	map = new AMap.Map('container', {
+		resizeEnable: true,
+		rotateEnable:true,
+		pitchEnable:true,
+		zoom: 17,
+		pitch:0, //80
+		rotation:0,//-15
+		viewMode:'3D',//开启3D视图,默认为关闭
+		buildingAnimation:true,//楼块出现是否带动画
+		expandZoomRange:true,
+		zooms:[3,20],
+		center:[113.894383,23.415929],
+		layers:[
+			new AMap.TileLayer.Satellite(),
+			new AMap.TileLayer.RoadNet()
+		]
+		//center:[113.893297,23.417168]
+	});
+
+	//附加地图工具条控件
+	map.plugin(["AMap.ToolBar"], function() {
+		var option = {"position":"RT"};
+		map.addControl(new AMap.ToolBar(option));
+	});
+
+	addProvince("district","正果镇");
+}
+
+//渲染区域
+function addProvince(level,address) {
+	//加载云图层插件
+	AMap.service('AMap.DistrictSearch', function() {
+		var opts = {
+			subdistrict: 1,   //返回下一级行政区
+			extensions: 'all',  //返回行政区边界坐标组等具体信息
+			level: level  //查询行政级别为 市
+		};
+
+		//实例化DistrictSearch
+		var district = new AMap.DistrictSearch(opts);
+		district.setLevel(level);
+		//行政区查询
+		district.search(address, function(status, result) {
+			var bounds = result.districtList[0].boundaries;
+			var polygons = [];
+			if (bounds) {
+				for (var i = 0, l = bounds.length; i < l; i++) {
+					//生成行政区划polygon
+					var polygon = new AMap.Polygon({
+						map: map,
+						strokeWeight: 1,
+						path: bounds[i],
+						fillOpacity: 0.3,
+						fillColor: '#CCF3FF',
+						strokeColor: '#CC66CC'
+					});
+					polygons.push(polygon);
+				}
+			}
+		});
+	});
+}
+
+/**
+ * 窗口form表单点击确定
+ */
+function buttonSubmit() {
+	var val4 = $("#levelId4").val();
+	var val3 = $("#levelId3").val();
+	var val2 = $("#levelId2").val();
+	var val1 = $("#levelId1").val();
+	var pointsType = $("#pointsType").val();
+	var pointsId = $("#pointsId").val();
+	if(pointsType=="大风"){
+		var jsonData = {"windLevel4":val4,"windLevel3":val3,"windLevel2":val2,"windLevel1":val1,"type":pointsType,"id":pointsId};
+		toSubmit(jsonData);
+	}else if(pointsType=="暴雪"){
+		var jsonData = {"snowLevel4":val4,"snowLevel3":val3,"snowLevel2":val2,"snowLevel1":val1,"type":pointsType,"id":pointsId};
+		toSubmit(jsonData);
+	}
+
+}
+function buttonSubmitRain() {
+	var flag = true;
+	var id = $("#myForm input[id='pointsId']").val();
+	var input = $("#myForm input[type='number']");
+	var jsonStr = "{\"type\":\"暴雨\",\"id\":\""+id+"\",";
+	$.each(input, function(i, val){
+		var name = $(val).attr("name");
+		var value = $(val).val();
+		if(value){
+			if(i == (input.length-1)){
+				jsonStr += "\""+name+"\":"+value;
+			}else{
+				jsonStr += "\""+name+"\":"+value+",";
+			}
+		}else{
+			flag = false;
+			return false;
+		}
+	});
+	jsonStr += "}";
+	if(flag){
+		//字符串转换为JSON
+		var jsonData = JSON.parse(jsonStr);
+		toSubmit(jsonData);
+	}else{
+		showError("阀值不能为空！");
+	}
+}
+
+function toSubmit(jsonData){
+	var url = "/before/danger/updateLevelData.do";
+	$.post(url, jsonData, function callback(txt) {
+		var json = $.parseJSON(txt);
+		if (json.code == 0) {
+			showSuccess("阀值更新成功!");
+		} else{
+			showSuccess("阀值更新失败!");
+		}
+	});
+}
+
+/**
+ * 激活地图事件
+ */
+function trigger(currentMarker, event){
+	AMap.event.trigger(currentMarker, event);
+}
+/**
+ * 修改标注的图标
+ * @param marker  	标注
+ * @param iconUrl  	标注地址
+ */
+function modifyIcon(marker, iconUrl){
+	var icon = new AMap.Icon({
+		image: iconUrl,
+		size: new AMap.Size(20, 25),
+	});
+	marker.setIcon(icon);
+}
+/**
+ * 添加加带检索功能的信息窗体
+ * @param x  			lon经度
+ * @param y    			lat纬度
+ * @param markerName 	标注名称(查找标注使用)
+ * @param iconUrl 		Icon的地址
+ * @param title 		窗口标题
+ * @param html 			窗口内容
+ */
+function addMarkerPoints(x, y, markerName, iconUrl, title, html,h){
+	var marker = new AMap.Marker({
+		map: map,
+		//复杂图标
+		icon: new AMap.Icon({
+			image: iconUrl,
+			size: new AMap.Size(20, 25),
+		}),
+		position: [x, y]
+	});
+	marker.setMap(map);
+	markerList.push(marker);
+	markerNameList.push(markerName);
+
+	var content = '<div class="info-title" style="padding-left: 15px;">'+title+'</div>' +
+		'<div class="info-content">'+html+'</div>';
+	var infowindow = "";
+	map.plugin('AMap.AdvancedInfoWindow', function() {
+		infowindow = new AMap.AdvancedInfoWindow({
+			panel: 'panel',
+			content: content,
+			closeWhenClickMap: true,
+			asOrigin: false,
+			placeSearch: false,
+			asDestination: false,
+			offset: new AMap.Pixel(0, -30)
+		});
+	});
+
+	//实例化信息窗体
+	AMap.event.addListener(marker, "click", function() {
+		map.setZoomAndCenter(17, [x, y+0.0015]);
+		infowindow.open(map, [x, y]);
+	});
+
+	if(h!=null){
+		trigger(marker, "click");
+	}
+}
+/**
+ * 关闭窗口,清除所有标注标注
+ */
+function clearMarker(){
+	map.clearInfoWindow();
+	for(var i =0;i<markerList.length;i++){
+		markerList[i].setMap(null);
+		if(i==(markerList.length-1)){
+			markerList = new Array();
+			markerNameList = new Array();
+		}
+	}
+}
+/**
+ * 添加图片覆盖物
+ */
+function addBoundaryImage() {
+	//西南角和东北角
+	var bounds = new AMap.Bounds(new AMap.LngLat(116.75040026679008,39.10598648446756),
+			new AMap.LngLat(117.3759860404264,39.71221477238741));
+	var groundImageOpts = {
+		opacity: 1,   //图片透明度
+		clickable: true,//图片相应鼠标点击事件，默认：false
+		map: map     //图片叠加的地图对象
+	}
+	//实例化一个图片覆盖物对象
+	new AMap.GroundImage('${basePath }/caiyun/images/wqMapColor.png', bounds, groundImageOpts);
+	map.setBounds(bounds);
+}
+$(window).on('resize',function(){
+    var _h = $(window).height();
+    if(_h<1000){
+            $("#ztb,#ytb,#htb").css("height","640px");
+		}else{
+		    $("#ztb,#ytb,#htb").css("height","780px");
+		}
+})
+	$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+</script>
+
+<style type="text/css">
+html,body{position:absolute;margin:0;width:100%;height:100%;font-size:12px;}
+#container{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}
+.querymain{ height:100%; position:fixed; border:0px solid #ccc;z-index: 9999999}
+.bar{height:105px; position:absolute; background:url(ui/images/cxtj.png) no-repeat; display:block;}
+.querymain .form-control[readonly] {
+    background-color: #e5e5e5;
+    border: 1px solid #ccc;
+}
+.nav-primary>li.active>a, .nav-primary>li.active>a:focus, .nav-primary>li.active>a:hover
+{
+	color: #fff;
+	background-color: #3280fc;
+	border-color: #3280fc
+}
+
+#queryTab .table td, .table th {
+    padding: 5px;
+    line-height: 1.53846154;
+    vertical-align:middle;
+}
+#queryTab .table thead tr { display:block; }
+#queryTab .table tbody { display: block; overflow-y: auto; }
+#queryTab .table {
+    width:100%;
+    margin-bottom: 0px;
+}
+.amap-info {width: 390px;}
+.info-title {
+	color: #0CFEFB;
+	text-shadow: 0 0 10px #04b7b4;
+    font-size: 15px;
+//    background-color:#f9f9f9;
+    background-color:rgb(6,26,71);
+    line-height: 26px;
+    padding: 0px 0 0 6px;
+    font-weight: lighter;
+    letter-spacing: 1px
+}
+.info-content {
+    font: 13px Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;
+    padding: 4px;
+    color: #0CFEFB;
+	text-shadow: 0 0 10px #04b7b4;
+    line-height: 23px;
+}
+.info-content img {
+    float: left;
+    margin: 3px;
+}
+.table-hover tbody tr:hover{
+	color:rgb(0,0,0);
+}
+.querymain,.querymain th{
+	background-color: rgba(0,0,0,0)!important;
+	color:white;
+}
+.table tr.active>td, .table tr.active>th, .table tr>td.active, .table tr>th.active{
+	color: black;
+}
+.amap-logo{right:0!important;left:auto!important;display:none}
+.amap-copyright{right:0!important;left:auto!important;display:none}
+/*滚动条整体*/
+::-webkit-scrollbar{width: 8px; /*滚动条宽度*/}
+/*滚动条按钮*/
+::-webkit-scrollbar-track{background-color: #e9f1d2; /*滑道全部*/}
+::-webkit-scrollbar-track-piece{background-color: #e9f1d2; /*滑道*/-webkit-border-radius: 2px; /*滑道圆角宽度*/}
+::-webkit-scrollbar-thumb{background: #2162a9; /*滑动条表面*/border-radius: 8px; /*滑动条圆角宽度*/}
+/*横竖滚动条交角*/
+::-webkit-scrollbar-corner{background-color: #0380f5;}
+/*横竖滚动条交角图案*/
+::-webkit-resizer{background-repeat: no-repeat;background-position: bottom right;}
+/*鼠标滑过滑动条*/
+::-webkit-scrollbar-thumb:hover{background: #0187bf;}
+	.content *{
+		border:0!important;
+	}
+	.amap-adcontent-body{
+		background-color: rgb(6,26,71);
+		color:white;
+	}
+</style>
+</head>
+<body>
+<div id="container"></div>
+<div class="content content-left flex flex-v" style="margin-left: 20px;">
+	<div class="item">
+		<div class="querymain" style="display: none;"><a href="javascript:" class="bar"></a>
+			<div id="queryTab">
+				<!-- 正果企业 -->
+				<table class="table table-bordered table-hover" id='ztab' >
+					<thead>
+					<tr>
+						<th width="1%"><input type="checkbox" onchange="checkAll(this)" value="1" title="全选|全否" ></th>
+						<th width="65%">隐患点名称</th>
+						<th>隐患点类型</th>
+					</tr>
+					</thead>
+					<tbody id='ztb'>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="麦村渡口" ></td>
+						<td>麦村渡口</td>
+						<td>易发溺水事故</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="圭湖村渡口" ></td>
+						<td>圭湖村渡口</td>
+						<td>易发溺水事故</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="西湖滩村渡口" ></td>
+						<td>西湖滩村渡口</td>
+						<td>易发溺水事故</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广州市增城直营烟花爆竹经营部"> </td>
+						<td>广州市增城直营烟花爆竹经营部</td>
+						<td>易涉毒场所</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广州市增城正果圣峰木业制品厂" ></td>
+						<td>广州市增城正果圣峰木业制品厂</td>
+						<td>森林火灾</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="兰溪路口" ></td>
+						<td>兰溪路口</td>
+						<td>道路交通</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="汀塘路段" ></td>
+						<td>汀塘路段</td>
+						<td>道路交通</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="正果中学路段" ></td>
+						<td>正果中学路段</td>
+						<td>道路交通</td>
+					</tr>
+					<td><input type="checkbox" name="zcheck" value="兰溪到畲族路段" ></td>
+					<td>兰溪到畲族路段</td>
+					<td>道路交通</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广东广州增城正果加油站" ></td>
+						<td>广东广州增城正果加油站</td>
+						<td>加油站</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广州市正果田寮加油站有限公司" ></td>
+						<td>广州市正果田寮加油站有限公司</td>
+						<td>加油站</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广东广州增城畅原加油站" ></td>
+						<td>广东广州增城畅原加油站</td>
+						<td>加油站</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广州市增城直营烟花爆竹经营部" ></td>
+						<td>广州市增城直营烟花爆竹经营部</td>
+						<td>烟花爆竹</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="广州市增城叔记商店" ></td>
+						<td>广州市增城叔记商店</td>
+						<td>烟花爆竹</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="增城市正果供销社爆竹第一销售部" ></td>
+						<td>增城市正果供销社爆竹第一销售部</td>
+						<td>烟花爆竹</td>
+					</tr>
+					<tr class="active">
+						<td width="1%"><input type="checkbox" name="zcheck" value="广州市雅道食品有限公司" ></td>
+						<td width="65%">广州市雅道食品有限公司</td>
+						<td>安全生产</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="麦村渡口" ></td>
+						<td>麦村渡口</td>
+						<td>易水浸点</td>
+					</tr>
+
+
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="兰溪林场" ></td>
+						<td>兰溪林场</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="兰溪楼地" ></td>
+						<td>兰溪楼地</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="兰溪长冚" ></td>
+						<td>兰溪长冚</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="麻冚白石" ></td>
+						<td>麻冚白石</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="麻冚欧冚" ></td>
+						<td>麻冚欧冚</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="石溪" ></td>
+						<td>石溪</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="水口上屋" ></td>
+						<td>水口上屋</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="乌头石" ></td>
+						<td>乌头石</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="西湖滩" ></td>
+						<td>西湖滩</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="正果广场" ></td>
+						<td>正果广场</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="中西老上" ></td>
+						<td>中西老上</td>
+						<td>地质灾害点</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="zcheck" value="中西老珠冚" ></td>
+						<td>中西老珠冚</td>
+						<td>地质灾害点</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="header flex flex-m">
+	<div class="title PangMen">正果重点隐患分析</div>
+</div>
+
+<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+<div id='panel'></div>
+</body>
+</html>

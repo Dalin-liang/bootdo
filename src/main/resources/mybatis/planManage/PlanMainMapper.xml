@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.planManage.dao.PlanMainDao">
+
+	<sql id="planMainColumns">
+		IFNULL(a.`id`, '') As id,
+		IFNULL(a.`accident_type_id`, '') As accidentTypeId,
+		IFNULL(a.`earlywarn_type_id`, '') As earlywarnTypeId,
+		IFNULL(a.`earlywarn_level_id`, '') As earlywarnLevelId,
+		IFNULL(a.`duty_dept_id`, '') As dutyDeptId,
+		IFNULL(a.`name` , '') As name,
+		IFNULL(a.`code`, '') As code,
+		IFNULL(a.`start_condition`, '') As startCondition,
+		IFNULL(a.`reprot_dept_id`, '') As reprotDeptId,
+		IFNULL(a.`start_dept_id`, '') As startDeptId,
+		IFNULL(a.`enabled`, '') As enabled,
+		IFNULL(a.`use_time`, '') As useTime,
+		IFNULL(a.`remarks`, '') As remarks,
+		IFNULL(a.`create_by`, '') As createBy,
+		a.`create_date` As createDate,
+		IFNULL(a.`update_by`, '') As updateBy,
+		a.`update_date` As updateDate,
+		
+		IFNULL(accidentType.name, '') As accidentTypeName,
+		IFNULL(earlywarnType.name, '') As earlywarnTypeName,
+		IFNULL(earlywarnLevel.name, '') As earlywarnLevelName,
+		IFNULL(dutyDept.name, '') As dutyDeptName,
+		IFNULL(reprotDept.name, '') As reprotDeptName,
+		IFNULL(startDept.name, '') As startDeptName
+	</sql>
+
+	<sql id="planMainJoins">
+		LEFT JOIN plan_accident_type  accidentType ON accidentType.id = a.accident_type_id
+		LEFT JOIN plan_earlywarn_type  earlywarnType ON earlywarnType.id = a.earlywarn_type_id
+		LEFT JOIN plan_earlywarn_level  earlywarnLevel ON earlywarnLevel.id = a.earlywarn_level_id
+		LEFT JOIN safeguard_dept  dutyDept ON dutyDept.id = a.duty_dept_id
+		LEFT JOIN safeguard_dept  reprotDept ON reprotDept.id = a.reprot_dept_id
+		LEFT JOIN safeguard_dept  startDept ON startDept.id = a.start_dept_id
+	</sql>
+
+	<select id="get" resultType="com.bootdo.planManage.domain.PlanMainDO">
+		select 
+			<include refid="planMainColumns"/>
+ 		from plan_main a
+ 		<include refid="planMainJoins"/>
+ 		where a.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.planManage.domain.PlanMainDO">
+		select 
+			<include refid="planMainColumns"/>
+		from plan_main a
+		<include refid="planMainJoins"/>
+        <where>  
+		  		  <if test="id != null and id != ''"> and a.id = #{id} </if>
+		  		  <if test="accidentTypeId != null and accidentTypeId != ''"> and a.accident_type_id = #{accidentTypeId} </if>
+		  		  <if test="earlywarnTypeId != null and earlywarnTypeId != ''"> and a.earlywarn_type_id = #{earlywarnTypeId} </if>
+		  		  <if test="earlywarnLevelId != null and earlywarnLevelId != ''"> and a.earlywarn_level_id = #{earlywarnLevelId} </if>
+		  		  <if test="dutyDeptId != null and dutyDeptId != ''"> and a.duty_dept_id = #{dutyDeptId} </if>
+		  		  <if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+		  		  <if test="code != null and code != ''"> and a.code like concat('%',#{code},'%') </if>
+		  		  <if test="startCondition != null and startCondition != ''"> and a.start_condition = #{startCondition} </if>
+		  		  <if test="reprotDeptId != null and reprotDeptId != ''"> and a.reprot_dept_id = #{reprotDeptId} </if>
+		  		  <if test="startDeptId != null and startDeptId != ''"> and a.start_dept_id = #{startDeptId} </if>
+		  		  <if test="enabled != null and enabled != ''"> and a.enabled = #{enabled} </if>
+		  		  <if test="useTime != null and useTime != ''"> and a.use_time = #{useTime} </if>
+		  		  <if test="remarks != null and remarks != ''"> and a.remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by  a.create_date desc, a.update_date desc , ${sort} ${order}
+            </when>
+			<otherwise>
+                order by  a.create_date desc, a.update_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*)
+		from plan_main a
+		<include refid="planMainJoins"/>
+		<where>
+			<if test="id != null and id != ''"> and a.id = #{id} </if>
+			<if test="accidentTypeId != null and accidentTypeId != ''"> and a.accident_type_id = #{accidentTypeId} </if>
+			<if test="earlywarnTypeId != null and earlywarnTypeId != ''"> and a.earlywarn_type_id = #{earlywarnTypeId} </if>
+			<if test="earlywarnLevelId != null and earlywarnLevelId != ''"> and a.earlywarn_level_id = #{earlywarnLevelId} </if>
+			<if test="dutyDeptId != null and dutyDeptId != ''"> and a.duty_dept_id = #{dutyDeptId} </if>
+			<if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+			<if test="code != null and code != ''"> and a.code like concat('%',#{code},'%') </if>
+			<if test="startCondition != null and startCondition != ''"> and a.start_condition = #{startCondition} </if>
+			<if test="reprotDeptId != null and reprotDeptId != ''"> and a.reprot_dept_id = #{reprotDeptId} </if>
+			<if test="startDeptId != null and startDeptId != ''"> and a.start_dept_id = #{startDeptId} </if>
+			<if test="enabled != null and enabled != ''"> and a.enabled = #{enabled} </if>
+			<if test="useTime != null and useTime != ''"> and a.use_time = #{useTime} </if>
+			<if test="remarks != null and remarks != ''"> and a.remarks = #{remarks} </if>
+			<if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+		</where>
+	</select>
+
+	<select id="getByLevelId" resultType="com.bootdo.planManage.domain.PlanMainDO">
+		select 
+			<include refid="planMainColumns"/>
+ 		from plan_main a
+ 		<include refid="planMainJoins"/>
+ 		where a.earlywarn_level_id = #{levelId}
+	</select>
+
+	<select id="getAllName" resultType="java.util.Map">
+		select a.id,a.name,a.code
+		from plan_main a
+		where a.enabled = '1'
+	</select>
+
+	<select id="getLastNameForSms" resultType="java.util.Map">
+		SELECT a.id,a.name,a.code
+		FROM plan_main a
+		WHERE a.enabled = '1' AND a.id NOT IN (
+			SELECT t.id
+			FROM plan_main t
+			INNER JOIN sms_send_config c ON c.`type`= '1' AND t.`id` = c.`targetId`
+		)
+	</select>
+	
+	<select id="getByParamName" resultType="com.bootdo.planManage.domain.PlanMainDO">
+		select 
+			<include refid="planMainColumns"/>
+ 		from plan_main a
+ 		<include refid="planMainJoins"/>
+ 		<where>  
+	  		  <if test="accidentName != null and accidentName != ''"> and accidentType.name like concat('%',#{accidentName},'%') </if>
+	  		  <if test="warnTypeName != null and warnTypeName != ''"> and earlywarnType.name like concat('%',#{warnTypeName},'%') </if>
+	  		  <if test="warnLevelName != null and warnLevelName != ''"> and earlywarnLevel.name like concat('%',#{warnLevelName},'%') </if>
+		  </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.planManage.domain.PlanMainDO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into plan_main
+		(
+			`id`, 
+			`accident_type_id`, 
+			`earlywarn_type_id`, 
+			`earlywarn_level_id`, 
+			`duty_dept_id`, 
+			`name`, 
+			`code`, 
+			`start_condition`, 
+			`reprot_dept_id`, 
+			`start_dept_id`, 
+			`enabled`, 
+			`use_time`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{accidentTypeId}, 
+			#{earlywarnTypeId}, 
+			#{earlywarnLevelId}, 
+			#{dutyDeptId}, 
+			#{name}, 
+			#{code}, 
+			#{startCondition}, 
+			#{reprotDeptId}, 
+			#{startDeptId}, 
+			#{enabled}, 
+			#{useTime}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update plan_main set `enabled` = #{enabled}
+		where id = #{id}
+	</update>
+
+	<update id="updatePlanMainUseTime" >
+		update plan_main set `use_time` = #{planMainUseTime}
+		where id = #{planMainId}
+	</update>
+	 
+	<update id="update" parameterType="com.bootdo.planManage.domain.PlanMainDO">
+		update plan_main 
+		<set>
+			<if test="accidentTypeId != null">`accident_type_id` = #{accidentTypeId}, </if>
+			<if test="earlywarnTypeId != null">`earlywarn_type_id` = #{earlywarnTypeId}, </if>
+			<if test="earlywarnLevelId != null">`earlywarn_level_id` = #{earlywarnLevelId}, </if>
+			<if test="dutyDeptId != null">`duty_dept_id` = #{dutyDeptId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="startCondition != null">`start_condition` = #{startCondition}, </if>
+			<if test="reprotDeptId != null">`reprot_dept_id` = #{reprotDeptId}, </if>
+			<if test="startDeptId != null">`start_dept_id` = #{startDeptId}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="useTime != null">`use_time` = #{useTime}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from plan_main where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from plan_main where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<sql id="planMainActionRecordColumns">
+		IFNULL(a.`id`, '') As id,
+		IFNULL(a.`accident_type_id`, '') As accidentTypeId,
+		IFNULL(a.`earlywarn_type_id`, '') As earlywarnTypeId,
+		IFNULL(a.`earlywarn_level_id`, '') As earlywarnLevelId,
+		IFNULL(a.`duty_dept_id`, '') As dutyDeptId,
+		IFNULL(a.`name` , '') As name,
+		IFNULL(a.`code`, '') As code,
+		IFNULL(a.`start_condition`, '') As startCondition,
+		IFNULL(a.`reprot_dept_id`, '') As reprotDeptId,
+		IFNULL(a.`start_dept_id`, '') As startDeptId,
+		IFNULL(a.`enabled`, '') As enabled,
+		IFNULL(a.`use_time`, '') As useTime,
+		IFNULL(a.`remarks`, '') As remarks,
+		IFNULL(a.`create_by`, '') As createBy,
+		a.`create_date` As createDate,
+		IFNULL(a.`update_by`, '') As updateBy,
+		a.`update_date` As updateDate,
+
+		IFNULL(accidentType.name, '') As accidentTypeName,
+		IFNULL(earlywarnType.name, '') As earlywarnTypeName,
+		IFNULL(earlywarnLevel.name, '') As earlywarnLevelName,
+		IFNULL(dutyDept.name, '') As dutyDeptName,
+		IFNULL(reprotDept.name, '') As reprotDeptName,
+		IFNULL(startDept.name, '') As startDeptName,
+		IFNULL(dam.action_date, aam.action_date) As actionDate
+	</sql>
+
+	<sql id="planMainActionRecordJoins">
+		LEFT JOIN plan_accident_type  accidentType ON accidentType.id = a.accident_type_id
+		LEFT JOIN plan_earlywarn_type  earlywarnType ON earlywarnType.id = a.earlywarn_type_id
+		LEFT JOIN plan_earlywarn_level  earlywarnLevel ON earlywarnLevel.id = a.earlywarn_level_id
+		LEFT JOIN safeguard_dept  dutyDept ON dutyDept.id = a.duty_dept_id
+		LEFT JOIN safeguard_dept  reprotDept ON reprotDept.id = a.reprot_dept_id
+		LEFT JOIN safeguard_dept  startDept ON startDept.id = a.start_dept_id
+		LEFT JOIN dispatch_plan_main  dpm ON dpm.planmain_id = a.id
+		LEFT JOIN dispatch_actionprogram_main  dam ON dam.id = dpm.actionprogram_id
+		LEFT JOIN archive_planmain  apm ON apm.planmain_id = a.id
+		LEFT JOIN archive_actionprogram_main  aam ON aam.id = apm.actionprogram_id
+	</sql>
+
+	<select id="actionRecordlist" resultType="com.bootdo.planManage.domain.PlanMainDO">
+		select
+		<include refid="planMainActionRecordColumns"/>
+		from plan_main a
+		<include refid="planMainActionRecordJoins"/>
+		<where>
+			and a.id IN (
+				SELECT planmain_id
+				FROM dispatch_plan_main
+				GROUP BY planmain_id
+				UNION
+				SELECT planmain_id
+				FROM archive_planmain
+				GROUP BY planmain_id
+			)
+			<if test="id != null and id != ''"> and a.id = #{id} </if>
+			<if test="accidentTypeId != null and accidentTypeId != ''"> and a.accident_type_id = #{accidentTypeId} </if>
+			<if test="earlywarnTypeId != null and earlywarnTypeId != ''"> and a.earlywarn_type_id = #{earlywarnTypeId} </if>
+			<if test="earlywarnLevelId != null and earlywarnLevelId != ''"> and a.earlywarn_level_id = #{earlywarnLevelId} </if>
+			<if test="dutyDeptId != null and dutyDeptId != ''"> and a.duty_dept_id = #{dutyDeptId} </if>
+			<if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+			<if test="code != null and code != ''"> and a.code like concat('%',#{code},'%') </if>
+			<if test="startCondition != null and startCondition != ''"> and a.start_condition = #{startCondition} </if>
+			<if test="reprotDeptId != null and reprotDeptId != ''"> and a.reprot_dept_id = #{reprotDeptId} </if>
+			<if test="startDeptId != null and startDeptId != ''"> and a.start_dept_id = #{startDeptId} </if>
+			<if test="enabled != null and enabled != ''"> and a.enabled = #{enabled} </if>
+			<if test="useTime != null and useTime != ''"> and a.use_time = #{useTime} </if>
+			<if test="remarks != null and remarks != ''"> and a.remarks = #{remarks} </if>
+			<if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+			<if test="actionDateBegin != null and actionDateBegin != ''">
+				<![CDATA[
+						  and DATE_FORMAT(IFNULL(dam.action_date, aam.action_date), '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{actionDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			<if test="actionDateEnd != null and actionDateEnd != ''">
+				<![CDATA[
+						  and DATE_FORMAT(IFNULL(dam.action_date, aam.action_date), '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{actionDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by  actionDate desc,a.create_date desc, a.update_date desc , ${sort} ${order}
+			</when>
+			<otherwise>
+				order by  actionDate desc,a.create_date desc, a.update_date desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="actionRecordlistCount" resultType="int">
+		select count(*)
+		from plan_main a
+		<include refid="planMainActionRecordJoins"/>
+		<where>
+			and a.id IN (
+				SELECT planmain_id
+				FROM dispatch_plan_main
+				GROUP BY planmain_id
+				UNION
+				SELECT planmain_id
+				FROM archive_planmain
+				GROUP BY planmain_id
+			)
+			<if test="id != null and id != ''"> and a.id = #{id} </if>
+			<if test="accidentTypeId != null and accidentTypeId != ''"> and a.accident_type_id = #{accidentTypeId} </if>
+			<if test="earlywarnTypeId != null and earlywarnTypeId != ''"> and a.earlywarn_type_id = #{earlywarnTypeId} </if>
+			<if test="earlywarnLevelId != null and earlywarnLevelId != ''"> and a.earlywarn_level_id = #{earlywarnLevelId} </if>
+			<if test="dutyDeptId != null and dutyDeptId != ''"> and a.duty_dept_id = #{dutyDeptId} </if>
+			<if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+			<if test="code != null and code != ''"> and a.code like concat('%',#{code},'%') </if>
+			<if test="startCondition != null and startCondition != ''"> and a.start_condition = #{startCondition} </if>
+			<if test="reprotDeptId != null and reprotDeptId != ''"> and a.reprot_dept_id = #{reprotDeptId} </if>
+			<if test="startDeptId != null and startDeptId != ''"> and a.start_dept_id = #{startDeptId} </if>
+			<if test="enabled != null and enabled != ''"> and a.enabled = #{enabled} </if>
+			<if test="useTime != null and useTime != ''"> and a.use_time = #{useTime} </if>
+			<if test="remarks != null and remarks != ''"> and a.remarks = #{remarks} </if>
+			<if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+			<if test="actionDateBegin != null and actionDateBegin != ''">
+				<![CDATA[
+						  and DATE_FORMAT(IFNULL(dam.action_date, aam.action_date), '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{actionDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			<if test="actionDateEnd != null and actionDateEnd != ''">
+				<![CDATA[
+						  and DATE_FORMAT(IFNULL(dam.action_date, aam.action_date), '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{actionDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+		</where>
+	</select>
+</mapper>

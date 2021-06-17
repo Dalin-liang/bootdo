@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.EquipmentMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportEquipment">
+        insert into safeguard_equipment(
+            id,
+            name,
+            equiptype_id,
+            equipstatus_id,
+            code,
+            team_id,
+            equipstorehouse_id,
+            contact,
+            mobile,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{equiptype_id,jdbcType=VARCHAR},
+            #{equipstatus_id,jdbcType=VARCHAR},
+            #{code,jdbcType=VARCHAR},
+            #{team_id,jdbcType=VARCHAR},
+            #{equipstorehouse_id,jdbcType=VARCHAR},
+            #{contact,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=DATE}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportEquipmentDTO">
+		select hc.*,t.`name` teamName,t1.`name`houseName from safeguard_equipment hc LEFT JOIN safeguard_team t on hc.team_id=t.id LEFT JOIN safeguard_equipstorehouse t1 on hc.equipstorehouse_id =t1.id          
+		<where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="name != null  and name != '' ">
+	            AND HC.name like concat('%',#{name},'%')
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="code != null and code != '' ">
+	            AND  HC.code = #{code}
+	        </if>
+		
+			<if test="equiptype_id != null and equiptype_id != '' ">
+	            AND  HC.equiptype_id = #{equiptype_id}
+	        </if>
+              <if test="equipstatus_id != null and equipstatus_id != '' ">
+	            AND  HC.equipstatus_id = #{equipstatus_id}
+	        </if>
+              <if test="code != null and code != '' ">
+	            AND  HC.code = #{code}
+	        </if>
+              <if test="team_id != null and team_id != '' ">
+	            AND  HC.team_id = #{team_id}
+	        </if>
+              <if test="equipstorehouse_id != null and equipstorehouse_id != '' ">
+	            AND  HC.equipstorehouse_id = #{equipstorehouse_id}
+	        </if>
+              <if test="contact != null and contact != '' ">
+	            AND  HC.contact = #{contact}
+	        </if>
+              <if test="mobile != null and mobile != '' ">
+	            AND  HC.mobile = #{mobile}
+	        </if>
+              <if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+              <if test="update_by != null and update_by != '' ">
+	            AND  HC.update_by like concat('%',#{update_by},'%')
+	        </if>
+              <if test="update_date != null and update_date != '' ">
+	            AND  HC.update_date = #{update_date}
+	        </if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportEquipment">
+        update safeguard_equipment set
+            name=#{name,jdbcType=VARCHAR},
+            equiptype_id=#{equiptype_id,jdbcType=VARCHAR},
+            equipstatus_id=#{equipstatus_id,jdbcType=VARCHAR},
+            code=#{code,jdbcType=VARCHAR},
+            team_id=#{team_id,jdbcType=VARCHAR},
+            equipstorehouse_id=#{equipstorehouse_id,jdbcType=VARCHAR},
+            contact=#{contact,jdbcType=VARCHAR},
+            mobile=#{mobile,jdbcType=VARCHAR},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=DATE}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_equipment where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_equipment set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_equipment where id=#{id}
+    </select>
+    <select id="getAllEmergencyEquipment" resultType="com.bootdo.dispatch.center.res.EmergencyEquipment">
+        select
+        se.id as 'res_id',
+        se.name,
+        se.code,
+        se.team_id,
+        t.name as 'team_name',
+        se.equiptype_id as 'equip_type_id',
+        et.name as 'equip_type_name',
+        se.contact,
+        se.mobile,
+        eh.lat_lon,
+        eh.addr
+        from safeguard_equipment se
+        left join safeguard_equipstorehouse eh on se.equipstorehouse_id = eh.id
+        left join safeguard_team t on se.team_id = t.id
+        left join safeguard_equiptype et on se.equiptype_id=et.id
+        where 1=1
+        <if test="type==1">
+            and et.name != '应急车辆'
+        </if>
+        <if test="type==2">
+            and et.name = '应急车辆'
+        </if>
+        order by se.create_date
+    </select>
+
+</mapper>

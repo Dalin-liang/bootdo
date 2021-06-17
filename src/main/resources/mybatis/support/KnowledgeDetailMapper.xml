@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgeDetailDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgeDetailDO">
+		select `id`,`knowledge_info_Id`,`code`,`name`,`other_name`,`english_name`,`molecular_formula`,`molecular_weight`,`chemical_type`,`main_ingredient`,`appearance_traits`,`intrusion_way`,`special_warning`,`Storage_transportation_methods`,`discard_methods`,`image`,`use`,`toxicological_info`,`environmental_info`,`pack`,`avoid_contact`,`incompatibility`,`combustion_product`,`create_date` from safeguard_knowledge_detail where id = #{value}
+	</select>
+	
+	<select id="getByKnowledgeInfoId" resultType="com.bootdo.support.dto.KnowledgeDetailDO">
+		select `id`,`knowledge_info_Id`,`code`,`name`,`other_name`,`english_name`,`molecular_formula`,`molecular_weight`,`chemical_type`,`main_ingredient`,`appearance_traits`,`intrusion_way`,`special_warning`,`Storage_transportation_methods`,`discard_methods`,`image`,`use`,`toxicological_info`,`environmental_info`,`pack`,`avoid_contact`,`incompatibility`,`combustion_product`,`create_date` from safeguard_knowledge_detail where knowledge_info_Id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.KnowledgeDetailDO">
+		select `id`,`knowledge_info_Id`,`code`,`name`,`other_name`,`english_name`,`molecular_formula`,`molecular_weight`,`chemical_type`,`main_ingredient`,`appearance_traits`,`intrusion_way`,`special_warning`,`Storage_transportation_methods`,`discard_methods`,`image`,`use`,`toxicological_info`,`environmental_info`,`pack`,`avoid_contact`,`incompatibility`,`combustion_product`,`create_date` from safeguard_knowledge_detail
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="otherName != null and otherName != ''"> and other_name = #{otherName} </if>
+		  		  <if test="englishName != null and englishName != ''"> and english_name = #{englishName} </if>
+		  		  <if test="molecularFormula != null and molecularFormula != ''"> and molecular_formula = #{molecularFormula} </if>
+		  		  <if test="molecularWeight != null and molecularWeight != ''"> and molecular_weight = #{molecularWeight} </if>
+		  		  <if test="chemicalType != null and chemicalType != ''"> and chemical_type = #{chemicalType} </if>
+		  		  <if test="mainIngredient != null and mainIngredient != ''"> and main_ingredient = #{mainIngredient} </if>
+		  		  <if test="appearanceTraits != null and appearanceTraits != ''"> and appearance_traits = #{appearanceTraits} </if>
+		  		  <if test="intrusionWay != null and intrusionWay != ''"> and intrusion_way = #{intrusionWay} </if>
+		  		  <if test="specialWarning != null and specialWarning != ''"> and special_warning = #{specialWarning} </if>
+		  		  <if test="storageTransportationMethods != null and storageTransportationMethods != ''"> and Storage_transportation_methods = #{storageTransportationMethods} </if>
+		  		  <if test="discardMethods != null and discardMethods != ''"> and discard_methods = #{discardMethods} </if>
+		  		  <if test="image != null and image != ''"> and image = #{image} </if>
+		  		  <if test="use != null and use != ''"> and use = #{use} </if>
+		  		  <if test="toxicologicalInfo != null and toxicologicalInfo != ''"> and toxicological_info = #{toxicologicalInfo} </if>
+		  		  <if test="environmentalInfo != null and environmentalInfo != ''"> and environmental_info = #{environmentalInfo} </if>
+		  		  <if test="pack != null and pack != ''"> and pack = #{pack} </if>
+		  		  <if test="avoidContact != null and avoidContact != ''"> and avoid_contact = #{avoidContact} </if>
+		  		  <if test="incompatibility != null and incompatibility != ''"> and incompatibility = #{incompatibility} </if>
+		  		  <if test="combustionProduct != null and combustionProduct != ''"> and combustion_product = #{combustionProduct} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_knowledge_detail
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="otherName != null and otherName != ''"> and other_name = #{otherName} </if>
+		  		  <if test="englishName != null and englishName != ''"> and english_name = #{englishName} </if>
+		  		  <if test="molecularFormula != null and molecularFormula != ''"> and molecular_formula = #{molecularFormula} </if>
+		  		  <if test="molecularWeight != null and molecularWeight != ''"> and molecular_weight = #{molecularWeight} </if>
+		  		  <if test="chemicalType != null and chemicalType != ''"> and chemical_type = #{chemicalType} </if>
+		  		  <if test="mainIngredient != null and mainIngredient != ''"> and main_ingredient = #{mainIngredient} </if>
+		  		  <if test="appearanceTraits != null and appearanceTraits != ''"> and appearance_traits = #{appearanceTraits} </if>
+		  		  <if test="intrusionWay != null and intrusionWay != ''"> and intrusion_way = #{intrusionWay} </if>
+		  		  <if test="specialWarning != null and specialWarning != ''"> and special_warning = #{specialWarning} </if>
+		  		  <if test="storageTransportationMethods != null and storageTransportationMethods != ''"> and Storage_transportation_methods = #{storageTransportationMethods} </if>
+		  		  <if test="discardMethods != null and discardMethods != ''"> and discard_methods = #{discardMethods} </if>
+		  		  <if test="image != null and image != ''"> and image = #{image} </if>
+		  		  <if test="use != null and use != ''"> and use = #{use} </if>
+		  		  <if test="toxicologicalInfo != null and toxicologicalInfo != ''"> and toxicological_info = #{toxicologicalInfo} </if>
+		  		  <if test="environmentalInfo != null and environmentalInfo != ''"> and environmental_info = #{environmentalInfo} </if>
+		  		  <if test="pack != null and pack != ''"> and pack = #{pack} </if>
+		  		  <if test="avoidContact != null and avoidContact != ''"> and avoid_contact = #{avoidContact} </if>
+		  		  <if test="incompatibility != null and incompatibility != ''"> and incompatibility = #{incompatibility} </if>
+		  		  <if test="combustionProduct != null and combustionProduct != ''"> and combustion_product = #{combustionProduct} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgeDetailDO">
+		insert into safeguard_knowledge_detail
+		(
+			`id`, 
+			`knowledge_info_Id`, 
+			`code`, 
+			`name`, 
+			`other_name`, 
+			`english_name`, 
+			`molecular_formula`, 
+			`molecular_weight`, 
+			`chemical_type`, 
+			`main_ingredient`, 
+			`appearance_traits`, 
+			`intrusion_way`, 
+			`special_warning`, 
+			`Storage_transportation_methods`, 
+			`discard_methods`, 
+			`image`, 
+			`use`, 
+			`toxicological_info`, 
+			`environmental_info`, 
+			`pack`, 
+			`avoid_contact`, 
+			`incompatibility`, 
+			`combustion_product`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{knowledgeInfoId}, 
+			#{code}, 
+			#{name}, 
+			#{otherName}, 
+			#{englishName}, 
+			#{molecularFormula}, 
+			#{molecularWeight}, 
+			#{chemicalType}, 
+			#{mainIngredient}, 
+			#{appearanceTraits}, 
+			#{intrusionWay}, 
+			#{specialWarning}, 
+			#{storageTransportationMethods}, 
+			#{discardMethods}, 
+			#{image}, 
+			#{use}, 
+			#{toxicologicalInfo}, 
+			#{environmentalInfo}, 
+			#{pack}, 
+			#{avoidContact}, 
+			#{incompatibility}, 
+			#{combustionProduct}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgeDetailDO">
+		update safeguard_knowledge_detail 
+		<set>
+			<if test="knowledgeInfoId != null">`knowledge_info_Id` = #{knowledgeInfoId}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="otherName != null">`other_name` = #{otherName}, </if>
+			<if test="englishName != null">`english_name` = #{englishName}, </if>
+			<if test="molecularFormula != null">`molecular_formula` = #{molecularFormula}, </if>
+			<if test="molecularWeight != null">`molecular_weight` = #{molecularWeight}, </if>
+			<if test="chemicalType != null">`chemical_type` = #{chemicalType}, </if>
+			<if test="mainIngredient != null">`main_ingredient` = #{mainIngredient}, </if>
+			<if test="appearanceTraits != null">`appearance_traits` = #{appearanceTraits}, </if>
+			<if test="intrusionWay != null">`intrusion_way` = #{intrusionWay}, </if>
+			<if test="specialWarning != null">`special_warning` = #{specialWarning}, </if>
+			<if test="storageTransportationMethods != null">`Storage_transportation_methods` = #{storageTransportationMethods}, </if>
+			<if test="discardMethods != null">`discard_methods` = #{discardMethods}, </if>
+			<if test="image != null">`image` = #{image}, </if>
+			<if test="use != null">`use` = #{use}, </if>
+			<if test="toxicologicalInfo != null">`toxicological_info` = #{toxicologicalInfo}, </if>
+			<if test="environmentalInfo != null">`environmental_info` = #{environmentalInfo}, </if>
+			<if test="pack != null">`pack` = #{pack}, </if>
+			<if test="avoidContact != null">`avoid_contact` = #{avoidContact}, </if>
+			<if test="incompatibility != null">`incompatibility` = #{incompatibility}, </if>
+			<if test="combustionProduct != null">`combustion_product` = #{combustionProduct}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge_detail where id = #{value}
+	</delete>
+	
+	<delete id="deleteByKnowledgeInfoId">
+		delete from safeguard_knowledge_detail where knowledge_info_Id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge_detail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

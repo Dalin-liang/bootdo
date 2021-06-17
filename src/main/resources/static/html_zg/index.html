@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果镇综合态势运行监控平台</title>
+		<link rel="stylesheet" href="bootstrap.min.css" />
+		<!--<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />-->
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/iconfont2.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/table.css" />
+		<link rel="stylesheet" href="plugin/layui/css/layui.css" media="all">
+        
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="plugin/echarts.js"></script>-->
+		<!--<script type="text/javascript" src="plugin/bootstrap4/bootstrap.min.js" ></script>-->
+
+		<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+		<!--高德-->
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+		<script type="text/javascript" src="plugin/index.js"></script>
+		<script type="text/javascript" src="plugin/otherData.js"></script>
+		<script type="text/javascript" src="plugin/ws/sockjs.min.js" ></script>
+		<script type="text/javascript" src="plugin/ws/stomp.min.js" ></script>
+		
+		<script type="text/javascript" src="plugin/scroll.js" ></script>
+		<script type="text/javascript" src="bootstrap.min.js" ></script>
+		<script type="text/javascript" src="plugin/laydate/laydate.js" ></script>
+		<script type="text/javascript" src="plugin/layui/layui.js" ></script>
+		<link rel="stylesheet" href="plugin/select2.css" />
+		<script type="text/javascript" src="plugin/select2.js" ></script>
+		
+		<script src="plugin/clipboard.min.js"></script>
+		
+		<style>
+			.bottom-center .amap-info-sharp{
+				border-top-color: #03A9F4;
+			}
+			.select2{
+				width: 100% !important;
+				/*height: 34px;*/
+			}
+			.select2-container .select2-selection--single{
+				height: 34px;
+				background: rgba(255, 255, 255, 0.7);
+			}
+			.select2-container--default .select2-selection--single .select2-selection__rendered{
+				height: 34px;
+				line-height: 34px;
+			}
+			.select2-results__option[aria-selected]{
+				color: #000;
+			}
+			.cont_l .ind_num{
+				position: relative;
+				/*padding-right: 100px !important;*/
+				padding-left: 0;
+				padding-right: 0;
+			}
+			.cont_l .ind_num .time{
+				position: absolute;
+				right: 5px;
+				bottom: -1px;
+				height: 20px;
+				line-height: 20px;
+				display: inline-block;
+				/*top: 50%;*/
+				/*margin-top: -6px;*/
+				/*margin-left: 10px;*/
+				font-size: 12px;
+				color: #d2f0ff;
+				overflow: hidden;
+				opacity: 0;
+				transition: opacity .8s;
+				-moz-transition: opacity .8s;
+				-webkit-transition: opacity .8s;
+				-o-transition: opacity .8s;
+			}
+			.cont_l .ind_num:hover .time{
+				opacity: 1;
+				overflow: visible;
+			}
+		</style>
+	</head>
+
+	<body class="indexbody" style="background-color: #091220;">
+		<script>
+			var userAgent = navigator.userAgent;//取得浏览器的userAgent字符串
+			var isOpera = userAgent.indexOf("Opera") > -1;
+			
+			//判断是否IE浏览器
+			if (!!window.ActiveXObject || "ActiveXObject" in window) {
+			    richclient.ready(function() {
+			    	richclient.setAuthDomain("*");
+			    	richclient.setAuthorityId("caripower_@cnzc");
+			    	richclient.setDefaultCity("CN");
+			    	richclient.setAuthorityPath("http://cn.richtalk.cn/");
+			    	richclient.setUserName("xtzzf");
+			    	richclient.setUserPassword("123456");
+			    	richclient.setClientServer("cn.richtalk.cn/richclient");
+			    	richclient.init();
+			    });
+			}else{
+				var strUrl=window.location.href;
+				strUrl=strUrl.replace("index.html","talkback.html")
+			    var clipboard = new Clipboard('#talkbtn', {
+			        text: function() {
+			        	//alert("请用IE浏览器打开该页面，链接已复制粘贴板")
+                        alert("请用IE浏览器开启，链接到区级平台")
+			            return strUrl;
+			        }
+			    });
+			}
+		</script>
+		<!--<video controls="controls"  id="audio" hidden="hidden" preload="auto" >
+		  <source src="css/8773.mp3" type="audio/mpeg">
+		您的浏览器不支持 audio 元素。
+		</video>-->
+		<iframe id="audio" marginwidth="0" marginheight="0"  frameborder="0" src="" allowfullscreen>
+			
+		</iframe>
+			
+		<!--<a target="_blank"></a>-->
+		<div class="header flex flex-m" style="z-index: 100;">
+			<div class="title PangMen">正果镇综合态势运行监控平台</div>
+			<a class="exit_bt" href="/logout">
+				<img src="img/exit.png"/>退出
+			</a>
+		</div>
+		<div class="map_c" id="map-cont" style="padding-top: 110px;">
+
+		</div>
+		
+		<!--<div class="test22" style="">
+			<p class='pop_tl'>监控视频："+data.id+"</p>
+			<div class='pop_box'>
+				<table>					
+					</tbody class>		
+						<tr><td style='width:60px;'>地址：</td><td>"+data.passageNmae+"</td></tr>
+						<tr><td style='width:60px;'>ip地址：</td><td>"+data.ip+"</td></tr>
+					</tbody>
+				</table>
+				<table class="table-bordered">					
+					</tbody class>		
+						<tr>
+							<td style='width:60px;' rowspan="6">警戒线</td>
+						</tr>
+						<tr>
+							<td width="120px">警戒线事件</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>检测到的物体个数</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>规则检测区域</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>物体运动轨迹</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>事件触发累计</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>-->
+		<div class="">
+			<div class="map_icon text-center">
+				<a>
+					<div class="map_icon_li active" title="告警信息" id="event_btn">
+						<img src="images/1_00.png"/>
+						<p>告警信息</p>
+					</div>
+				</a>
+				<!--<li class="map_icon_li active" title="水雨情杆" id="rain_btn">
+					<img src="images/1_08.png"/>
+					<p>水雨情杆</p>
+				</li>
+				<li class="map_icon_li mt10 active" title="大气" id="air_btn">
+					<img src="images/1_02.png"/>
+					<p>大气</p>
+				</li>
+				<li class="map_icon_li mt10 active" title="水质" id="water_btn">
+					<img src="images/1_03.png"/>
+					<p>水质</p>
+				</li>
+				<li class="map_icon_li mt10 active" title="路灯" id="lamp_btn">
+					<img src="images/1_05.png"/>
+					<p>路灯</p>
+				</li>
+				<li class="map_icon_li mt10 active" title="消防栓" id="fire_btn">
+					<img src="images/1_09.png"/>
+					<p>消防栓</p>
+				</li>-->
+				
+				<!--<li class="map_icon_li mt10" title="无线烟感" id="smoke_btn">
+					<img src="images/1_10.png"/>
+					<p>无线烟感</p>
+				</li>
+				<li class="map_icon_li mt10" title="用电终端室外" id="outdoor_btn">
+					<img src="images/1_07.png"/>
+					<p>用电终端室外</p>
+				</li>
+				<li class="map_icon_li mt10" title="用电终端室内" id="indoor_btn">
+					<img src="images/1_06.png"/>
+					<p>用电终端室内</p>
+				</li>
+				<li class="map_icon_li mt10" title="宣教大屏" id="screen_btn">
+					<img src="images/1_01.png"/>
+					<p>宣教大屏</p>
+				</li>
+				<li class="map_icon_li mt10" title="宣教改造" id="remould_btn">
+					<img src="images/1_04.png"/>
+					<p>宣教改造</p>
+				</li>-->
+				<a>
+					<div class="map_icon_li active" id="em_car" title="应急指挥车">
+						<img src="img/7_08.png"/>
+						<p>应急指挥车</p>
+					</div>				
+				</a>
+				<a>
+					<div class="map_icon_li active" id="camera" title="摄像头">
+						<img src="img/7_03.png"/>
+						<p>摄像头</p>
+					</div>				
+				</a>
+				<a>
+					<div class="map_icon_li active" id="fire_btn" title="消防栓">
+						<img src="img/7_28.png"/>
+						<p>消防栓</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="hut" title="健康小屋">
+						<img src="img/7_23.png"/>
+						<p>健康小屋</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="sGroup" title="特殊人群">
+						<img src="img/7_29.png"/>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="lamp_btn" title="智慧路灯">
+						<img src="img/7_25.png"/>
+						<p>智慧路灯</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="water_btn" title="水质监测">
+						<img src="img/7_26.png"/>
+						<p>水质监测</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="rain_btn" title="水雨情">
+						<img src="img/7_27.png"/>
+						<p>水雨情</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="air_btn" title="aqi">
+						<img src="img/7_20.png"/>
+						<p>空气质量</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="behavior" title="行为识别">
+						<img src="img/7_30.png"/>
+						<p>行为识别</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="illegal" title="两违监测">
+						<img src="img/7_21.png"/>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="passenger" title="客流量">
+						<img src="img/7_24.png"/>
+						<p>客流量</p>
+					</div>
+				</a>
+				<a >
+					<div class="map_icon_li active" id="face" title="人脸识别">
+						<img src="img/7_22.png"/>
+						<p>人脸识别</p>
+					</div>
+				</a>
+				<a >
+					<div class="map_icon_li active" id="eliminate" title="一键清除">
+						<img src="img/7_31.png"/>
+						<p>一键清除</p>
+					</div>
+				</a>
+				<a>
+					<div class="map_icon_li active" id="guiji_btn" title="特殊人群轨迹">
+						<img src="img/7_32.png"/>
+						<p>特殊人群轨迹</p>
+					</div>
+				</a>
+				<!--<div class="map_icon_li active" id="out_btn" title="室外用电预警">
+					<img src="images/1_06.png"/>
+					<p>室外用电预警</p>
+				</div>
+				<div class="map_icon_li active" id="in_btn" title="室内用电预警">
+					<img src="images/1_07.png"/>
+					<p>室内用电预警</p>
+				</div>-->
+			</div>
+			
+			
+			
+			
+			<div class="cont_l active col-xs-3 cont index_l" style="padding: 80px 15px 100px 15px;margin-top:-100px;width: 25%;margin-top: -160px;">
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="population.html" target="_blank">人口态势</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb1 text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="poputime">2020-06-10</span></div>-->
+							<div class="popudata clearfix">
+								<div class="ind_num pull-left">
+									诉求类型：<span class="Digital font20 colornum">6</span> 个
+								</div>
+							</div>
+							<div class="ind_num pull-left mt10" style="height: 35px;overflow: hidden;padding-right: 0 !important;" id="s1">
+								<ul class="ind_auto">
+									<li>
+										7月出生人口：<span class="Digital font20 colornum">89</span> 人
+									</li>
+									<li>
+										8月出生人口：<span class="Digital font20 colornum">95</span> 人
+									</li>
+									<li>
+										9月出生人口：<span class="Digital font20 colornum">97</span> 人
+									</li>
+								</ul>
+							</div>
+							
+							<div class="ind_num pull-left mt10"  style="height: 35px;overflow: hidden;padding-right: 0 !important;" id="s2">
+								<ul class="ind_auto">
+									<li>
+										7月死亡人口：<span class="Digital font20 colornum">29</span> 人
+									</li>
+									<li>
+										8月死亡人口：<span class="Digital font20 colornum">20</span> 人
+									</li>
+									<li>
+										9月死亡人口：<span class="Digital font20 colornum">37</span> 人
+									</li>
+								</ul>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="legalAnalysis.html" target="_blank">法人态势</a>
+					</div>
+					<div class="border">
+						<div class="pad10 tb2 srcollcom text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="lawtime">2020-06-10</span></div>-->
+							<div class="lawdata">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="party.html" target="_blank">党建动态</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb3 text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="partytime">2020-06-10</span></div>-->
+							
+							<div class="ind_num index_data mt6 pull-left">
+								党员：<span class="Digital font20 colornum" id="member">2287</span> 人 <span class="time">更新至：<span class="txt"></span></span>
+							</div>
+							<div class="ind_num index_data mt6 pull-left">
+								党组织：<span class="Digital font20 colornum" id="org">110</span> 个<span class="time">更新至：<span class="txt"></span></span>
+							</div>
+							<div class="ind_num index_data mt6 pull-left">
+								党群服务中心：<span class="Digital font20 colornum" id="masses">33</span> 个<span class="time">更新至：<span class="txt"></span></span>
+							</div>
+							<div class="ind_num index_data mt6 pull-left">
+								发表心得：<span class="Digital font20 colornum" id="team">54</span> 篇<span class="time">更新至：<span class="txt2"></span></span>
+							</div>
+							<div class="ind_num index_data mt6 pull-left">
+								组织讲课：<span class="Digital font20 colornum" id="organization">53</span> 次<span class="time">更新至：<span class="txt2"></span></span>
+							</div>
+							<div class="ind_num index_data mt6 pull-left">
+								资金投资：<span class="Digital font20 colornum" id="investment">1900</span> 万元<span class="time">更新至：<span id="investment_time"></span></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="travel.html" target="_blank">旅游动态</a>
+					</div>
+					<div class="border">
+						<div class="pad10 text-center srcollcom tb1" id="chart3" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="traveltime">2020-06-10</span></div>-->
+							<div class="traveldata">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cont_l col-xs-3 cont index_l" style="padding: 80px 15px 100px 15px;width: 25%;margin-top: -160px">
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="administration.html" target="_blank">政务分析</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb1 text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="affairtime">2020-06-10</span></div>-->
+							<div class="affairdata">								
+								<div class="ind_num pull-left">
+									诉求类型：<span class="Digital font20 colornum">6</span> 个
+								</div>							
+								<div class="ind_num mt6 pull-left">
+									处理总数：<span class="Digital font20 colornum">1622</span> 起
+								</div>
+								<div class="ind_num mt6 pull-left">
+									最多发生诉求：<span class="font20 colornum">计生</span>
+								</div>
+								<div class="ind_num mt6 pull-left">
+									最近发生诉求：<span class="font20 colornum">农办</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="fireFighting.html" target="_blank">消防安全</a>
+					</div>
+					<div class="border">
+						<div class="pad10 tb1 srcollcom text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="firetime">2020-06-10</span></div>-->
+							<div class="firedata">								
+								<div class="ind_num pull-left">
+									接警出动次数：<span class="Digital font20 colornum">38</span> 次
+								</div>							
+								<div class="ind_num mt6 pull-left">
+									出动警力：<span class="Digital font20 colornum">149</span> 人次
+								</div>
+								<div class="ind_num mt6 pull-left">
+									火灾扑救：<span class="Digital font20 colornum">8</span>起
+								</div>
+								<div class="ind_num mt6 pull-left">
+									最近发生诉求：<span class="Digital font20 colornum">30</span>起
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="violation.html" target="_blank">两违监测</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb2 text-center" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="monitortime">2020-06-10</span></div>-->
+							<div class="monitordata">								
+								<div class="ind_num pull-left">
+									拆除违法建设：<span class="Digital font20 colornum">450</span> 宗
+								</div>							
+								<div class="ind_num mt6 pull-left">
+									拆除面积：<span class="Digital font20 colornum">181300</span> 平方米
+								</div>
+								<div class="ind_num mt6 pull-left">
+									目标任务完成率：<span class="Digital font20 colornum">100.72</span>%
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 25%;">
+					<div class="title">
+						<a href="specialPop.html" target="_blank">特殊人群</a>
+					</div>
+					<div class="border">
+						<div class="pad10 text-center srcollcom tb2" id="chart3" style="height: 100%;width: 100%;">
+							<!--<div class="text-right font12">数据更新至：<span id="specialtime">2020-06-10</span></div>-->
+							<div class="specialdata">
+								<div class="ind_num pull-left">
+									吸毒人员：<span class="Digital font20 colornum">433</span> 人
+								</div>							
+								<div class="ind_num mt6 pull-left">
+									孤寡老人：<span class="Digital font20 colornum">244</span> 人
+								</div>
+								<div class="ind_num mt6 pull-left">
+									严重精神障碍患者：<span class="Digital font20 colornum">416</span> 人
+								</div>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="cont_r col-xs-3 cont" style="right: 0;margin: -60px 15px 100px 15px;padding:0;z-index: 100;width: 23%;">
+				<div class="comborder1 index_tl" style="height: 32%;">
+					<div class="title">
+						<a >设备监测</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb2 text-center" style="height: 100%;width: 100%;">
+							<div class="device_list">
+								<div class="tl colorblue">空气质量</div>
+								<table class="table table-bordered font12" id="aqi_data">
+									<thead>
+										<tr>
+											<td width="100px">地址</td>
+											<td>CO</td>
+											<td>NO2</td>
+											<td>SO2</td>
+											<td>PM10</td>
+										</tr>
+									</thead>
+									<tbody>
+										
+									</tbody>
+								</table>								
+							</div>
+							<div class="device_list">
+								<div class="tl colorblue">特殊人群</div>
+								<table class="table table-bordered font12" id="group_data">
+									<thead>
+										<tr>
+											<td width="80px">姓名</td>
+											<td>电话</td>
+											<td>心率</td>
+											<td>高血压</td>
+											<td>低血压</td>
+											<td>步行步数</td>
+										</tr>
+									</thead>
+									<tbody>
+										
+									</tbody>
+								</table>								
+							</div>
+							<div class="device_list">
+								<div class="tl colorblue">消防栓</div>
+								<table class="table table-bordered font12" id="fire_data">
+									<thead>
+										<tr>
+											<td width="100px">地址</td>
+											<td>通道1压力(kPa)</td>
+											<td>通道2压力(kPa)</td>
+											<!--<td>通道1液位(cm)</td>
+											<td>通道2液位(cm)</td>-->
+											<td>电压(mV)</td>
+											<td>信号强度</td>
+										</tr>
+									</thead>
+									<tbody>
+										
+									</tbody>
+								</table>								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<div class="comborder1 index_tl" style="height: 22%;">
+					<div class="title">
+						<a href="" target="_blank">物联设备</a>
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb2 text-center" style="height: 100%;width: 100%;">
+							<div class="ind_num col-xs-6 pull-left">
+								水雨情杆：<span class="Digital font20 colornum">5</span> 个
+							</div>							
+							<div class="ind_num col-xs-6 pull-left">
+								AQI：<span class="Digital font20 colornum">3</span> 个
+							</div>							
+							<div class="ind_num mt6 col-xs-6 pull-left">
+								水质监测：<span class="Digital font20 colornum">2</span> 个
+							</div>							
+							<div class="ind_num mt6 col-xs-6 pull-left">
+								智慧路灯：<span class="Digital font20 colornum">6</span> 个
+							</div>							
+							<div class="ind_num mt6 col-xs-6 pull-left">
+								无线烟感：<span class="Digital font20 colornum">30</span> 个
+							</div>							
+							<div class="ind_num mt6 col-xs-6 pull-left">
+								消防栓压力传感器：<span class="Digital font20 colornum">20</span> 个
+							</div>
+							<div class="ind_num pull-left">
+								室外用电预警终端：<span class="Digital font20 colornum">30</span> 个
+							</div>							
+							<div class="ind_num pull-left">
+								室内用电预警终端：<span class="Digital font20 colornum">30</span> 个
+							</div>							
+							
+						</div>
+					</div>
+				</div>
+				<!--<div class="comborder1 index_tl" style="height: 26%;">
+					<div class="title">
+						应急资源
+					</div>
+					<div class="border">
+						<div class="pad10 srcollcom tb2" style="height: 100%;width: 100%;">
+							<div class="resource_c text-center clearfix">
+								<div class="tl colorblue">应急物质:</div>
+								<div class="resource_li">
+									<div class="inblock col-xs-6 resource_num">
+										<p class="font12">村级应急仓库</p>
+										<span class="Digital font20 colornum">2</span>
+									</div>
+									<div class="inblock col-xs-6 resource_num">
+										<p class="font12">镇级应急仓库</p>
+										<span class="Digital font20 colornum">16</span>
+									</div>
+								</div>
+							</div>
+							<div class="resource_c mt6 text-center clearfix">
+								<div class="tl colorblue">应急队伍:</div>
+								<div class="resource_li">
+									<div class="inblock col-xs-4 resource_num">
+										<p class="font12">公安</p>
+										<span class="Digital font20 colornum">0</span>
+									</div>
+									<div class="inblock col-xs-4 resource_num">
+										<p class="font12"> 三防</p>
+										<span class="Digital font20 colornum">0</span>
+									</div>
+									<div class="inblock col-xs-4 resource_num">
+										<p class="font12">其他</p>
+										<span class="Digital font20 colornum">9</span>
+									</div>
+								</div>
+							</div>
+							<div class="resource_c mt6 text-center clearfix">
+								<div class="tl colorblue">应急设备:</div>
+								<div class="resource_li">
+									<div class="inblock col-xs-6 resource_num">
+										<p class="font12">车辆</p>
+										<span class="Digital font20 colornum" id="car_num" >0</span>
+									</div>
+									<div class="inblock col-xs-6 resource_num">
+										<p class="font12"> 其他</p>
+										<span class="Digital font20 colornum" id="other_num">0</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>-->
+				<div class="comborder1 index_tl" style="height: 28%;">
+					<div class="title">
+						<a id="event_href" target="_blank">事件</a>
+					</div>
+					<div class="border">
+						<div class="pad10 text-center tb2 srcollcom" id="c_table" style="height: 100%;width: 100%;">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer flex flex-m" style="z-index: 100;">
+			<li class="icon-box" data-toggle='modal' data-target='#eventModal' id="nonlink_btn">
+				<div class="ico iconfont2 iconshebei"></div>
+				<div class="msg small">接报事件</div>
+			</li>
+			<li class="icon-box ">
+				<div class="ico iconfont icon-fangxunyingjizhihui"></div>
+				<div class="msg">天翼对讲</div>
+				<div class="second_nav2" >
+					<span class="caret"></span>
+					<a class="second_li2"  id="talkbtn">
+						<div class="ico iconfont2 iconwangluoduijiang"></div>
+						<div class="msg">天翼对讲</div>
+					</a>
+					<a class="second_li2" href="http://admin.belter.com.cn" target="_blank"  id="jiankangxiaowu">
+						<div class="ico iconfont icon-weibiaoti--"></div>
+						<div class="msg">健康小屋</div>
+					</a>
+
+				</div>
+			</li>
+			<!--
+			<li class="icon-box" id="talkbtn" >
+				<div class="ico iconfont2 iconwangluoduijiang"></div>
+				<div class="msg">天翼对讲</div>
+			</li>
+			<li class="icon-box" dataUrl="http://admin.belter.com.cn?username=admin&password=123456">
+				<div class="ico iconfont icon-weibiaoti--"></div>
+				<div class="msg">健康小屋</div>
+			</li>
+			-->
+			<li class="icon-box ">
+				<div class="ico iconfont icon-fangxunyingjizhihui"></div>
+				<div class="msg">指挥调度</div>
+				<div class="second_nav">
+					<span class="caret"></span>
+					<a class="second_li" href="http://172.27.162.39:666/Emergency/web/client/pages/industry.html" target="_blank"  id="zhihui">
+						<div class="ico iconfont icon-fangxunyingjizhihui"></div>
+						<div class="msg">指挥调度</div>
+					</a>
+					<a class="second_li" href="http://172.27.162.39:666/Emergency/web/backend/pages/index_duty.html" target="_blank" id="zhiban">
+						<div class="ico iconfont2 iconzhibanjilu"></div>
+						<div class="msg">值班值守</div>
+					</a>
+					<a class="second_li" href="index_contacts.html" target="_blank">
+						<div class="ico iconfont2 icontongxunlu"></div>
+						<div class="msg">通讯录</div>
+					</a>
+					<a class="second_li" href="http://172.27.162.38:9094/emergency/carSelect" target="_blank">
+						<div class="ico iconfont2 iconcar"></div>
+						<div class="msg">寻车查询</div>
+					</a>
+				</div>
+			</li>
+			<li class="icon-box" dataUrl="http://172.27.162.55:8080/smartbi?username=admin&password=123456&op=1">
+				<div class="ico iconfont icon-danao"></div>
+				<div class="msg">安全大脑</div>
+			</li>
+			<li class="icon-box" dataUrl="http://172.27.162.36:8080/project/login_toLogin.view?username=admin&password=123456&op=1">
+				<div class="ico iconfont icon-xuanchuan"></div>
+				<div class="msg">宣教系统</div>
+			</li>
+			<li class="icon-box" dataUrl="http://172.27.162.43:3142/login?username=admin&password=123456&op=auto&identity_code=000002">
+				<div class="ico iconfont icon-xiaofang"></div>
+				<div class="msg">消防系统</div>
+			</li>
+			<li class="icon-box active" dataUrl="party.html?username=admin&password=123456">
+				<div class="ico iconfont icon-dashuju"></div>
+				<div class="msg">大数据平台</div>
+			</li>
+			<!-- <li class="icon-box" dataUrl="http://admin.belter.com.cn?username=admin&password=123456">
+				<div class="ico iconfont icon-weibiaoti--"></div>
+				<div class="msg">健康小屋</div>
+			</li>-->
+			<li class="icon-box" dataUrl="http://172.27.162.37:8011/zgrms/Pages/login/login.jsp?username=admin&password=123456&op=1">
+				<div class="ico iconfont icon-lkingbolvsehuanbao"></div>
+				<div class="msg">水务环保</div>
+			</li>
+			<li class="icon-box" dataUrl="http://172.27.162.47/" temp="http://172.27.162.43:8281/StreetLightApp?username=admin&password=123456&op=1">
+				<div class="ico iconfont icon-deng"></div>
+				<div class="msg">智慧路灯</div>
+			</li>
+			<!-- dataUrl="http://172.27.162.18:8080?username=admin&password=123456&op=1"-->
+			<li class="icon-box" dataUrl="http://172.27.162.18:8080/admin/web/">
+				<div class="ico iconfont icon-renlianshibie" id="face12"></div>
+				<div class="msg">人脸识别</div>
+			</li>
+			<li class="icon-box" dataUrl="http://113.108.176.67:8480/zhengguo?username=admin&password=123456&op=1">
+				<div class="ico iconfont icon-huiyuan1"></div>
+				<div class="msg">特殊人群</div>
+			</li>
+		</div>
+		
+		
+		
+		
+		<!--上报告警事件-->
+		<div class="modal modal_c fade " id="eventModal"  role="dialog" aria-hidden="true" >
+			<div class="modal-dialog" style="top: 20%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="">编辑告警信息：</p>
+					</div>
+					<div class="modal-body " style="height: 350px;">
+						<div class="">
+							<div class="col-xs-4 pull-left input-group modal_input" id="name_cont">
+								<span class="lable">上报人 <span class="colorred">*</span></span>
+								<select class="form-control" id="event_re2"  name="repname" style="display: none;"tabindex="-1">
+								</select>
+								<!--<input class="form-control" id="event_re" />-->
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">联系电话<span class="colorred">*</span></span>
+								<input class="form-control" id="event_phone" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">性别<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="event_sex">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt">其他</span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="groupstype" style="max-height: 220px;">
+								    	<li>
+								    		<a>其他</a>
+								    	</li>
+								        <li>
+								            <a>男</a>
+								        </li>
+								        <li>
+								            <a>女</a>
+								        </li>
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-10 pull-left input-group modal_input mt10">
+								<span class="lable">事件地址<span class="colorred">*</span></span>
+								<input class="form-control" id="event_addr" />
+								<input type="hidden" id="lat_lon" name="lat_lon">
+							</div>
+							<div class="col-col-xs2 pull-left input-group modal_input mt10">
+                    			<button id="selectPos" type="button" class="btn btn-primary"  >选择地址</button>
+                			</div>
+							<div class="col-xs-12 pull-left input-group modal_input mt10">
+								<span class="lable">事件描述<span class="colorred">*</span></span>
+								<input class="form-control" id="event_des" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">上报时间<span class="colorred">*</span></span>
+								<input class="form-control" id="event_repdate" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">接报途径<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="soure_drop">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="soure_ul" style="max-height: 220px;">
+								    	
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">主管单位<span class="colorred">*</span></span>
+								<!--<div class="dropdown com_dropdown form-control" id="event_dapart">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="dapart_ul" style="max-height: 220px;">
+																       
+								    </ul>
+								</div>-->
+								<select class="form-control" id="event_dapart2"  name="repname" style="display: none;" tabindex="-1">
+								</select>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">事故类型<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="event_class">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="class_ul" style="max-height: 220px;">
+								       							       
+								    </ul>
+								</div>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警类型<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control"  id="event_type">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="type_ul" style="max-height: 220px;">
+								        							       
+								    </ul>
+								</div>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警级别<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="event_level">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="level_ul" style="max-height: 220px;">
+								        							       
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">受理时间<span class="colorred">*</span></span>
+								<input class="form-control" id="event_accdata" />
+							</div>
+							<!--<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span>处理方式</span>
+								<div class="dropdown com_dropdown form-control" id="event_way">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt"></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="groupstype" style="max-height: 220px;">
+							        	<li>
+								            <a>推送</a>
+								        </li>
+								        <li>
+								            <a>终结</a>
+								        </li>					       
+								    </ul>
+								</div>
+							</div>-->
+							<div class="clearfix"></div>
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">备注</span>
+								<textarea class="form-control"  id="event_remark"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer text-center">						
+						<button type="button" class="btn btn-primary" id="push_btn"  onclick="pushEvent()">
+							确定
+						</button>
+						<button type="button" class="btn btn-default"  data-dismiss="modal">
+							关闭
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--通讯录-->
+		<div class="modal modal_c fade " id="contModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" style="width: 700px;max-width: inherit;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="">终结告警：</p>
+					</div>
+					<div class="modal-body" style="height: 200px;">
+						<div class="clearfix">
+							<!--<div class="col-xs-2 pad5 ">
+								收信人 :
+							</div>
+							<div class="col-xs-10 dropdown modal_input com_dropdown" style="padding: 0;">
+								<div class="form-control" style="height: auto;">
+									<div id="inputkey" class="srcollcom" style="max-height: 80px;">
+										
+									</div>
+									<span class="input_cont">
+										<input id="inputtxt" placeholder="请输入电话号码" autocomplete="off" />										
+									</span>
+								</div>
+								
+								<ul class="srcollcom dropdown-menu btn-block" id="searchul" style="max-height: 120px;">
+							        						       
+							   </ul>
+							</div>-->
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">结论 </span>
+								<div id="end_class">
+									<a class="btn btn-default">已完结</a>
+									<a class="btn btn-default btn-success">误报</a>
+									<span class="colorred font12">
+										*请选择结论
+									</span>
+								</div>								
+							</div>
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">说明 </span>
+								<textarea class="form-control" id="remark_resp"></textarea>
+							</div>
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">操作人 </span>
+								<input class="form-control" id="event_operator" />
+								<!-- <div class="dropdown com_dropdown form-control">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown" style="width: 100%;">
+								    	<span class="txt" id="end_operator"></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" style="max-height: 300px;">
+								        <li><a>ceshi</a></li>
+								    </ul>
+								</div> -->
+							</div>
+							
+						</div>
+						
+						<!--<div class="clearfix srcollcom mt10" style="height: 520px;">
+							<ul class="cd-accordion-menu animated" id="treemenu">
+						
+							</ul>
+						</div>-->
+					</div>
+					<div class="modal-footer text-center">						
+						<button type="button" class="btn btn-success" id="end_btn" onclick="endEvent2()">
+							发送
+						</button>
+						<button type="button" class="btn btn-default"  data-dismiss="modal">
+							关闭
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!--事件详情-->
+		<div class="modal modal_c fade " id="infoModal"  role="dialog" aria-hidden="true" >
+			<div class="modal-dialog" style="top: 20%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="">事件详情</p>
+					</div>
+					<div class="modal-body " style="height: 350px;">
+						<div class="">
+							<div class="col-xs-4 pull-left input-group modal_input" id="name_cont">
+								<span class="lable">上报人</span>
+								<input class="form-control" id="info_name" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">联系电话</span>
+								<input class="form-control" id="info_phone" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">性别</span>							
+								<input class="form-control" id="info_sex" readonly="readonly" />
+							</div>
+							<div class="col-xs-12 pull-left input-group modal_input mt10">
+								<span class="lable">事件地址</span>
+								<input class="form-control" id="info_addr" readonly="readonly" />
+							</div>
+							<div class="col-xs-12 pull-left input-group modal_input mt10">
+								<span class="lable">事件描述</span>
+								<input class="form-control" id="info_desc" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">上报时间</span>
+								<input class="form-control" id="info_time" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">接报途径</span>
+								<input class="form-control" id="info_way" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">主管单位</span>
+								<input class="form-control" id="info_depart" readonly="readonly" />
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">事故类型</span>
+								<input class="form-control" id="info_type" readonly="readonly" />
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警类型</span>
+								<input class="form-control" id="info_class" readonly="readonly" />
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警级别</span>
+								<input class="form-control" id="info_level" readonly="readonly" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">受理时间</span>
+								<input class="form-control" id="info_date" readonly="readonly" />
+							</div>
+							<div class="clearfix"></div>
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">备注</span>
+								<textarea class="form-control" id="info_remark" readonly="readonly"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-default"  data-dismiss="modal">
+							关闭
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--推送非物联设备告警事件-->
+		<!--<div class="modal modal_c fade " id="nonlinkModal"  role="dialog" aria-hidden="true" >
+			<div class="modal-dialog" style="top: 20%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="">编辑非物联设备告警信息：</p>
+					</div>
+					<div class="modal-body " style="height: 350px;">
+						<div class="">
+							<div class="col-xs-4 pull-left input-group modal_input" id="name_cont">
+								<span class="lable">上报人 <span class="colorred">*</span></span>
+								<select class="form-control" id="nonlink_re"  name="repname" style="display: none;"tabindex="-1">
+								</select>
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">联系电话<span class="colorred">*</span></span>
+								<input class="form-control" id="nonlink_phone" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input">
+								<span class="lable">性别<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="nonlink_sex">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt">其他</span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" style="max-height: 220px;">
+								    	<li>
+								    		<a>其他</a>
+								    	</li>
+								        <li>
+								            <a>男</a>
+								        </li>
+								        <li>
+								            <a>女</a>
+								        </li>
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-12 pull-left input-group modal_input mt10">
+								<span class="lable">事件地址<span class="colorred">*</span></span>
+								<input class="form-control" id="nonlink_addr" />
+							</div>
+							<div class="col-xs-12 pull-left input-group modal_input mt10">
+								<span class="lable">事件描述<span class="colorred">*</span></span>
+								<input class="form-control" id="nonlink_des" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">上报时间<span class="colorred">*</span></span>
+								<input class="form-control" id="nonlink_repdate" />
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">接报途径<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="soure_drop">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="nonlink_soure_ul" style="max-height: 220px;">
+								    	
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">主管单位<span class="colorred">*</span></span>
+								<select class="form-control" id="nonlink_dapart"  name="repname" style="display: none;" tabindex="-1">
+								</select>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">事故类型<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="event_class">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="class_ul" style="max-height: 220px;">
+								       							       
+								    </ul>
+								</div>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警类型<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control"  id="event_type">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="type_ul" style="max-height: 220px;">
+								        							       
+								    </ul>
+								</div>
+							</div>
+							
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">预警级别<span class="colorred">*</span></span>
+								<div class="dropdown com_dropdown form-control" id="event_level">
+								    <button type="button" class="btn btn-block btn_down" data-toggle="dropdown">
+								    	<span class="txt" id=""></span>
+								        <span class="caret pull-right"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="level_ul" style="max-height: 220px;">
+								        							       
+								    </ul>
+								</div>
+							</div>
+							<div class="col-xs-4 pull-left input-group modal_input mt10">
+								<span class="lable">受理时间<span class="colorred">*</span></span>
+								<input class="form-control" id="event_accdata" />
+							</div>
+							<div class="clearfix"></div>
+							<div class="col-xs-12 input-group modal_input mt10">
+								<span class="lable">备注</span>
+								<textarea class="form-control"  id="event_remark"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer text-center">						
+						<button type="button" class="btn btn-primary" id="push_btn"  onclick="pushEvent()">
+							确定
+						</button>
+						<button type="button" class="btn btn-default"  data-dismiss="modal">
+							关闭
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>-->
+	</body>
+	
+	<script>
+		$(document).ready(function() {
+			$(".toggle_nav_btn").click(function() {
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+		$(".icon-box").on("click", function() {
+			if(!$(this).hasClass("active")){
+				$(".icon-box").removeClass("active")
+				$(this).addClass("active");				
+			}
+			if($(this).attr("dataUrl")) {
+				window.open($(this).attr("dataUrl"));
+			}
+			var index=parseInt($(this).index());
+			var audio
+			audio="sounds/introduce"+(index+1)+".mp3";
+			audio = new Audio(audio);
+			audio.play();
+
+		})
+		$(".second_li").on("click", function() {
+			if(!$(this).hasClass("active")){
+				$(".second_li").removeClass("active")
+				$(this).addClass("active");				
+			}
+			
+			if($(this).attr("dataUrl")) {
+				window.open($(this).attr("dataUrl"));
+			}
+		})
+		
+		function AutoScroll(obj) {
+			$(obj).find("ul:first").animate({
+				marginTop: "-29px"
+			}, 500, function() {
+				$(this).css({
+					marginTop: "0px"
+				}).find("li:first").appendTo(this);
+			});
+		}
+		$("#face1").on("click",function(){
+		    $.ajax({
+				url:'http://172.27.162.18:8080/webapi/login',
+				type:'post',
+				data:{
+				    username:'admin',
+					password:'123456'
+				},
+				dataType:'json',
+				success:function(data){
+				    if(!!data.token){
+				        window.open("http://172.27.162.18:8080");
+					}
+				}
+			})
+		})
+		$(document).ready(function() {
+			setInterval('AutoScroll("#s1")', 3000);
+			setInterval('AutoScroll("#s2")', 3000);
+			setInterval(function(){
+				$(".cont_l").toggleClass("active")
+			}, 10000);
+			
+			laydate.render({
+			  elem: '#event_repdate', //指定元素
+			  type: 'datetime'
+			});
+			
+			laydate.render({
+			  elem: '#event_accdata', //指定元素
+			  type: 'datetime',
+			  value: new Date()
+			});
+			
+			laydate.render({
+			  elem: '#nonlink_repdate', //指定元素
+			  type: 'datetime'
+			});
+			
+			$("#zhihui").attr("href","http://"+window.location.host+"/Emergency/web/client/pages/industry.html?username=admin&password=123456&op=1")
+			$("#zhiban").attr("href","http://"+window.location.host+"/Emergency/web/backend/pages/index_duty.html?username=admin&password=123456&op=1")
+            $("#jiankangxiaowu").attr("href","http://admin.belter.com.cn?username=admin&password=123456")
+
+			$("#exit_bt").attr("href","http://"+window.location.host+"/logout")
+			$("#event_href").attr("href","http://"+window.location.host+"/Emergency/web/backend/pages/support/receiveInfoTable.html")
+			
+//			alert(document.getElementById('audio').innerHTML)
+//			document.getElementById('audio').play();
+			
+		});
+		 layui.use(['layer'], function(){
+			  var layer = layui.layer;
+				//地理位置选择
+			    $("#selectPos").on('click', function () {
+			        var lat_lon = $("#lat_lon").val();
+			        layer.open({
+			            title: "定位",
+			            type: 2,
+			            content: 'getposition.html?lat_lon=' + lat_lon,
+			            area: ['700px', '400px'],
+			            btn: ['确定', '取消'],
+			            yes: function (index, layero) {
+			                var res = window["layui-layer-iframe" + index].callbackdata();
+			                $("#lat_lon").val(res.latitude_longitude);
+			                $("#event_addr").val(res.address);
+			                layer.closeAll();
+			            },
+			            btn2: function () {
+			                layer.closeAll();
+			            },
+			            cancel: function (index, layero) {
+			                layer.close(index);
+			            }
+			        });
+			    });
+		 });
+
+        //特殊人群列表弹出框
+        $("#guiji_btn").on("click", function() {
+            // if($(this).hasClass("active")){
+            //     $(this).removeClass("active")
+            //     //layer.close(pane2);
+            //     return
+            // }
+            // $(".btn_cont .ind_btn").removeClass("active")
+            // $(this).addClass("active")
+            // $("#operat_dia").hide();
+            // layer.close(pane1);layer.close(pane3);
+            // layer.close(pane4);layer.close(pane5);layer.close(pane6);
+			layer.open({
+                type: 2,
+                id:"repository1",
+                offset: 'auto',
+                shade: false,
+                closeBtn: 2,
+                fixed:false,
+                title:false,
+                moveType:1,
+                area: ['580px', '540px'],
+                skin: '',
+                content: 'ind_specialList.html'
+            })
+
+			// $.each(groupmarkergg,function(idx,item){
+            // 	item.setMap(null);
+            // })
+			if(infoWindow){
+				infoWindow.close();
+			}
+
+        })
+
+
+
+
+
+	</script>
+
+</html>

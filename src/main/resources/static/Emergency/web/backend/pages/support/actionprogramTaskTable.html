@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+    <link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="../../js/popper.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    <div class="layui-pad10">
+        <!--<div class="layui-mt10" id="LAY-component-layer-special-demo">-->
+			<!--<div class="layadmin-layer-demo">-->
+                <!--<button type="button" data-method="add" data-type="auto"  id="add" class="layui-btn layui-btn-normal">新增</button>-->
+			<!--</div>-->
+		<!--</div>-->
+        <div class="layui-mt10">
+            <table id="taskTable"></table>
+        </div>
+
+
+    </div>
+
+    <script>
+        var prefix = "/actionprogramManage/dispatchActionprogramMain";
+        loadTaskTable();
+        $(function() {
+            var programId = sessionStorage.getItem("actionId");
+            getProgramDetails(programId)
+        });
+        function loadTaskTable() {
+            $('#taskTable').bootstrapTable({
+                method : 'get', // 服务器数据的请求方式 get or post
+                //	url : prefix + "/list", // 服务器数据的加载地址
+                //	showRefresh : true,
+                //	showToggle : true,
+                //	showColumns : true,
+                iconSize : 'outline',
+                toolbar : '#exampleToolbar',
+                striped : true, // 设置为true会有隔行变色效果
+                dataType : "json", // 服务器返回的数据类型
+                pagination : true, // 设置为true会在底部显示分页条
+                // queryParamsType : "limit",
+                // //设置为limit则会发送符合RESTFull格式的参数
+                singleSelect : false, // 设置为true将禁止多选
+                // contentType : "application/x-www-form-urlencoded",
+                // //发送到服务器的数据编码类型
+                pageSize : 10, // 如果设置了分页，每页数据条数
+                pageNumber : 1, // 如果设置了分布，首页页码
+                pageList: [10, 25, 50, 100],
+                //search : true, // 是否显示搜索框
+                showColumns : false, // 是否显示内容下拉框（选择显示的列）
+                sidePagination : "client", // 设置在哪里进行分页，可选值为"client" 或者 "server"
+                uniqueId : "id",
+                sortName : "sortNo",
+                sortOrder : "asc",
+                queryParams : function(params) {
+                    return {
+                        //说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+                        limit : params.limit,
+                        offset : params.offset,
+                    };
+                },
+                // //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+                // queryParamsType = 'limit' ,返回参数必须包含
+                // limit, offset, search, sort, order 否则, 需要包含:
+                // pageSize, pageNumber, searchText, sortName,
+                // sortOrder.
+                // 返回false将会终止请求
+                columns : [
+                    {
+                        field : 'id',
+                        title : 'ID',
+                        visible : false
+                    },
+                    {
+                        field : 'sortNo',
+                        title : '序号',
+                        width : 40,
+                        align : "center",
+                        sortable:true,
+                    },
+                    {
+                        field : 'name',
+                        title : '任务名称',
+                        width : 100,
+                        align : "center",
+                        formatter:paramsMatter,
+                    },
+                    {
+                        field : 'content',
+                        title : '任务内容',
+                        width : 150,
+                        align : "center",
+                        formatter:paramsMatter,
+                    },
+                    {
+                        field : 'type',
+                        title : '接收对象类型',
+                        width : 100,
+                        align : "center",
+                        formatter : function(value, row,index) {
+                            if(value =="1"){
+                                return "个人";
+                            }else if(value =="2"){
+                                return "应急队伍";
+                            }else if(value =="3"){
+                                return "部门";
+                            }else if(value =="4"){
+                                return "专家";
+                            }else{
+                                return "";
+                            }
+                        }
+                    },{
+                        field : 'liabilityObject',
+                        title : '责任对象',
+                        width : 100,
+                        align : "center",
+                        formatter:paramsMatter,
+                    } ,
+                    {
+                        field : 'mobile',
+                        title : '联系电话',
+                        width : 100,
+                        align : "center",
+                        formatter:paramsMatter,
+                    },
+                    {
+                        field : 'isArrange',
+                        title : '任务是否安排',
+                        width : 100,
+                        align : "center",
+                        formatter : function(value, row,index) {
+                            if(value =="0"){
+                                return "未安排";
+                            }else if(value =="1"){
+                                return "已安排";
+                            }else{
+                                return "";
+                            }
+                        }
+                    },
+                    {
+                        field : 'action_status',
+                        title : '现场的任务状态',
+                        width : 100,
+                        align : "center",
+                        formatter : function(value, row,index) {
+                            if(value =="1"){
+                                return "<span title='已接收到任务'>已接收到任务</span>";
+                            }else if(value =="2"){
+                                return "<span title='开始执行中'>开始执行中</span>";
+                            }else if(value =="3"){
+                                return "<span title='执行遇到困难'>执行遇到困难</span>";
+                            }else if(value =="4"){
+                                return "<span title='执行完成'>执行完成</span>";
+                            }else{
+                                return "";
+                            }
+                        }
+                    },
+                    {
+                        title : '操作',
+                        field : 'id',
+                        align : 'center',
+                        width : 80,
+                        formatter : function(value, row,index) {
+                            var html = "";
+                            html += '<a class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="taskFeedbackDetails(\'' + row.id + '\')">反馈详情</a>';
+                            return html;
+                        }
+                    } ]
+            });
+        }
+
+
+        function getProgramDetails(ProgramId){
+            $.ajax({
+                url : prefix + '/getProgramDetails',
+                method : 'post',
+                data : {
+                    "actionprogramId" : ProgramId
+                },
+                async : false,
+                success : function(data) {
+                    if (data.msg == 'true') {
+                        if(data.dispatchPlanMain !=null && data.dispatchPlanMain !=""){
+                            planMainData = data.dispatchPlanMain;
+                            // form.val('planMainForm', {
+                            //     "id": planMainData.id,
+                            //     "accidentTypeName": planMainData.accidentTypeName,
+                            //     "earlywarnTypeName": planMainData.earlywarnTypeName,
+                            //     "earlywarnLevelName": planMainData.earlywarnLevelName,
+                            //     "dutyDeptName": planMainData.dutyDeptName,
+                            //     "name": planMainData.name,
+                            //     "code": planMainData.code,
+                            //     "startCondition": planMainData.startCondition,
+                            //     "reprotDeptName": planMainData.reprotDeptName,
+                            //     "startDeptName": planMainData.startDeptName,
+                            //     "enabled": planMainData.enabled==1?true:false,
+                            //     "useTime": planMainData.useTime,
+                            //     "remarks": planMainData.remarks
+                            // });
+                        }
+                        // if(data.dispatchRespDept !=null && data.dispatchRespDept !=""){
+                        //     var respDeptData = data.dispatchRespDept;
+                        //     $('#respDeptTable').bootstrapTable('load', respDeptData);
+                        // }
+                        if(data.dispatchTask !=null && data.dispatchTask !=""){
+                            var taskData = data.dispatchTask;
+                            $('#taskTable').bootstrapTable('load', taskData);
+                        }
+                    } else {
+                        layer.msg("获取方案详情信息失败");
+                    }
+                },
+                error : function(data) {
+                    layer.msg("获取方案详情信息失败");
+                }
+            });
+        }
+        var contactLayer;
+        function taskFeedbackDetails(id) {
+           // var taskData = $('#taskTable').bootstrapTable('getData');
+            var taskData = $("#taskTable").bootstrapTable('getRowByUniqueId', id);
+            console.log("~~~~~~~~~~~~~~`")
+            console.log(taskData)
+            // flag:JSON.parse(sessionStorage.getItem("contactData")).flag,
+            //     liabilityId:JSON.parse(sessionStorage.getItem("contactData")).liability_id,
+            //     type:JSON.parse(sessionStorage.getItem("contactData")).type,
+            //     deptName:JSON.parse(sessionStorage.getItem("contactData")).dept_name,
+            //     actionprogramId:JSON.parse(sessionStorage.getItem("contactData")).actionprogram_id
+
+            sessionStorage.setItem("contactData",JSON.stringify(taskData));
+            if(!!contactLayer){
+                layerReload(contactLayer)
+            }else {
+                contactLayer = parent.layer.open({
+                    type: 2,
+                    id: "contactlist",
+                    offset: '100px',
+                    shade: false,
+                    closeBtn: 2,
+                    fixed: false,
+                    title: false,
+                    moveType: 1,
+                    move: '.layui-layer-title',
+                    area: ['1000px', '600px'],
+                    skin: '',
+                    content: '/Emergency/web/client/pages/ind_contactlist.html',
+                    end: function () {
+                        contactLayer = null;
+                    }
+                })
+            }
+        }
+        //表格数据样式
+        function paramsMatter(value, row, index) {
+            if(value !=null && value!=""){
+                var values = value;//获取当前字段的值
+                //替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
+                //&nbsp;代替
+                values = values.replace(/\s+/g,'&nbsp;');
+                return "<span title="+values+">"+value+"</span>";
+            }
+        }
+    </script>
+</body>
+</html>

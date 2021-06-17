@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.device.dao.DeviceDao">
+
+	<select id="get" resultType="com.bootdo.device.domain.DeviceDO">
+		select `de_id`,`st_id`,`de_name`,`de_terminology`,`de_code`,`de_interface`,`de_port`,`de_login`,`de_password`,`de_channel`,`de_typesof`,`de_unit`,`de_maintain`,`de_mobilephone`,`de_description`,`de_remark` from st_device where de_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.device.domain.DeviceDO">
+		select `de_id`,`st_id`,`de_name`,`de_terminology`,`de_code`,`de_interface`,`de_port`,`de_login`,`de_password`,`de_channel`,`de_typesof`,`de_unit`,`de_maintain`,`de_mobilephone`,`de_description`,`de_remark` from st_device
+        <where>  
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="stId != null and stId != ''"> and st_id = #{stId} </if>
+		  		  <if test="deName != null and deName != ''"> and de_name = #{deName} </if>
+		  		  <if test="deTerminology != null and deTerminology != ''"> and de_terminology = #{deTerminology} </if>
+		  		  <if test="deCode != null and deCode != ''"> and de_code = #{deCode} </if>
+		  		  <if test="deInterface != null and deInterface != ''"> and de_interface = #{deInterface} </if>
+		  		  <if test="dePort != null and dePort != ''"> and de_port = #{dePort} </if>
+		  		  <if test="deLogin != null and deLogin != ''"> and de_login = #{deLogin} </if>
+		  		  <if test="dePassword != null and dePassword != ''"> and de_password = #{dePassword} </if>
+		  		  <if test="deChannel != null and deChannel != ''"> and de_channel = #{deChannel} </if>
+		  		  <if test="deTypesof != null and deTypesof != ''"> and de_typesof = #{deTypesof} </if>
+		  		  <if test="deUnit != null and deUnit != ''"> and de_unit = #{deUnit} </if>
+		  		  <if test="deMaintain != null and deMaintain != ''"> and de_maintain = #{deMaintain} </if>
+		  		  <if test="deMobilephone != null and deMobilephone != ''"> and de_mobilephone = #{deMobilephone} </if>
+		  		  <if test="deDescription != null and deDescription != ''"> and de_description = #{deDescription} </if>
+		  		  <if test="deRemark != null and deRemark != ''"> and de_remark = #{deRemark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by de_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from st_device
+		 <where>  
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="stId != null and stId != ''"> and st_id = #{stId} </if>
+		  		  <if test="deName != null and deName != ''"> and de_name = #{deName} </if>
+		  		  <if test="deTerminology != null and deTerminology != ''"> and de_terminology = #{deTerminology} </if>
+		  		  <if test="deCode != null and deCode != ''"> and de_code = #{deCode} </if>
+		  		  <if test="deInterface != null and deInterface != ''"> and de_interface = #{deInterface} </if>
+		  		  <if test="dePort != null and dePort != ''"> and de_port = #{dePort} </if>
+		  		  <if test="deLogin != null and deLogin != ''"> and de_login = #{deLogin} </if>
+		  		  <if test="dePassword != null and dePassword != ''"> and de_password = #{dePassword} </if>
+		  		  <if test="deChannel != null and deChannel != ''"> and de_channel = #{deChannel} </if>
+		  		  <if test="deTypesof != null and deTypesof != ''"> and de_typesof = #{deTypesof} </if>
+		  		  <if test="deUnit != null and deUnit != ''"> and de_unit = #{deUnit} </if>
+		  		  <if test="deMaintain != null and deMaintain != ''"> and de_maintain = #{deMaintain} </if>
+		  		  <if test="deMobilephone != null and deMobilephone != ''"> and de_mobilephone = #{deMobilephone} </if>
+		  		  <if test="deDescription != null and deDescription != ''"> and de_description = #{deDescription} </if>
+		  		  <if test="deRemark != null and deRemark != ''"> and de_remark = #{deRemark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.device.domain.DeviceDO">
+		insert into st_device
+		(
+			`de_id`, 
+			`st_id`, 
+			`de_name`, 
+			`de_terminology`, 
+			`de_code`, 
+			`de_interface`, 
+			`de_port`, 
+			`de_login`, 
+			`de_password`, 
+			`de_channel`, 
+			`de_typesof`, 
+			`de_unit`, 
+			`de_maintain`, 
+			`de_mobilephone`, 
+			`de_description`, 
+			`de_remark`
+		)
+		values
+		(
+			#{deId}, 
+			#{stId}, 
+			#{deName}, 
+			#{deTerminology}, 
+			#{deCode}, 
+			#{deInterface}, 
+			#{dePort}, 
+			#{deLogin}, 
+			#{dePassword}, 
+			#{deChannel}, 
+			#{deTypesof}, 
+			#{deUnit}, 
+			#{deMaintain}, 
+			#{deMobilephone}, 
+			#{deDescription}, 
+			#{deRemark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.device.domain.DeviceDO">
+		update st_device 
+		<set>
+			<if test="stId != null">`st_id` = #{stId}, </if>
+			<if test="deName != null">`de_name` = #{deName}, </if>
+			<if test="deTerminology != null">`de_terminology` = #{deTerminology}, </if>
+			<if test="deCode != null">`de_code` = #{deCode}, </if>
+			<if test="deInterface != null">`de_interface` = #{deInterface}, </if>
+			<if test="dePort != null">`de_port` = #{dePort}, </if>
+			<if test="deLogin != null">`de_login` = #{deLogin}, </if>
+			<if test="dePassword != null">`de_password` = #{dePassword}, </if>
+			<if test="deChannel != null">`de_channel` = #{deChannel}, </if>
+			<if test="deTypesof != null">`de_typesof` = #{deTypesof}, </if>
+			<if test="deUnit != null">`de_unit` = #{deUnit}, </if>
+			<if test="deMaintain != null">`de_maintain` = #{deMaintain}, </if>
+			<if test="deMobilephone != null">`de_mobilephone` = #{deMobilephone}, </if>
+			<if test="deDescription != null">`de_description` = #{deDescription}, </if>
+			<if test="deRemark != null">`de_remark` = #{deRemark}</if>
+		</set>
+		where de_id = #{deId}
+	</update>
+	
+	<delete id="remove">
+		delete from st_device where de_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from st_device where de_id in 
+		<foreach item="deId" collection="array" open="(" separator="," close=")">
+			#{deId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果特殊人口分析</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+	<script type="text/javascript" src="plugin/mapPlugin.js"></script>
+	<style>
+		.content-b{
+			background-color:rgba(0, 41, 133, 0.7)!important;
+			width: calc(100% - 920px);
+			bottom: 0;
+			left: 460px;
+		}
+		#map-cont{
+			height: 100%;
+		}
+		.amap-info-close{
+			font-size: 18px;
+			top:10px;
+		}
+		.amap-info-content{
+			color: white;
+		}
+		.amap-info-content table th{
+			text-align: center;
+			font-weight: 500;
+		}
+		.amap-info-content table tr{
+			height: 40px;
+		}
+		.amap-info-content table td{
+			line-height: 40px ;
+		}
+		.amap-info-content table .warn{
+			background-color: red;
+		}
+		#planList{
+			position: relative;
+		}
+		.pop_box{
+			width: 400px;
+			padding:5px 10px;
+		}
+		.pop_tl{
+			line-height: 35px;
+			background: #1d90c5;
+			padding: 0 10px;
+		}
+
+		.pop_box table{
+			width: 100%;
+		}
+		.pop_box table tbody tr td{
+			vertical-align: top;
+		}
+		.amap-info-content{
+			border: #03A9F4 thin solid;
+			background: rgba(37,88,139,0.8);
+			padding: 0;
+			font-size: 14px;
+			line-height: 24px;
+		}
+		.bottom-center .amap-info-sharp{
+			border-top-color: #03A9F4;
+		}
+		.amap-info-content table.table-bordered tr{
+			height: auto!important;
+		}
+		.content{
+			top: 80px;
+			bottom: 0;
+		}
+		#map-cont{
+			width: calc(100% - 920px);
+			height: calc(100% - 440px);
+			top:80px;
+			left: 460px;
+		}
+		.topTitle,.header{
+			z-index: 99;
+		}
+
+	</style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+<div class="header flex flex-m">
+	<div class="title PangMen">正果特殊人口分析</div>
+</div>
+<div class="content content-left flex flex-v" style="width: 450px">
+	<div class="item">
+		<div class="hd"><span>特殊人员趋势</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart">
+
+		</div>
+	</div>
+	<div class="item">
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart3">
+
+		</div>
+	</div>
+</div>
+<div id="map-cont"></div>
+<div class="content content-right flex flex-v" style="width: 450px;">
+	<div class="item">
+		<div class="hd"><span>正果镇2018年特殊人群种类分布</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart1">
+
+		</div>
+	</div>
+</div>
+<div class="content-b content-left flex" style="height: auto;">
+	<div class="item" style="width: 100%;">
+		<div class="hd"><span>特殊人群种类分布</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;margin-top: -40px;" id="chart2">
+
+		</div>
+	</div>
+</div>
+</body>
+<script>
+	var mapComp;
+	var map;
+	mapComp = new MapComp();
+    mapComp.init();
+	var dom = document.getElementById("chart");
+	var myChart = echarts.init(dom);
+	option = null;
+	option = {
+		tooltip: {
+			trigger: 'axis'
+		},
+		legend: {
+			data:['吸毒人员','精神病人','孤寡老人','矫正司法'],
+			textStyle:{
+			    color:'white'
+			}
+		},
+		grid: {
+			left: '3%',
+			right: '4%',
+			bottom: '3%',
+			containLabel: true
+		},
+		xAxis: {
+			type: 'category',
+			boundaryGap: false,
+			data: ['2012','2013','2014','2015','2016','2017','2018'],
+			axisLabel: {
+            	color: 'white'
+        	}
+		},
+		yAxis: {
+			type: 'value',
+			axisLabel: {
+            	color: 'white'
+        	},
+			nameTextStyle:{
+             	color:'white'
+			},
+			formatter:function(s){
+			    return s;
+			}
+		},
+		series: [
+			{
+				name:'吸毒人员',
+				type:'line',
+				data:[399, 428, 433, 441, 422, 410, 400]
+			},
+			{
+				name:'精神病人',
+				type:'line',
+				data:[220, 182, 191, 234, 290, 330, 310]
+			},
+			{
+				name:'孤寡老人',
+				type:'line',
+				data:[150, 232, 201, 154, 190, 330, 410]
+			},
+			{
+				name:'矫正司法',
+				type:'line',
+				data:[320, 332, 301, 334, 390, 330, 320]
+			}
+		]
+	};
+	if (option && typeof option === "object") {
+		myChart.setOption(option, true);
+	}
+
+	var dom1 = document.getElementById("chart1");
+	var myChart1 = echarts.init(dom1);
+	option1 = null;
+	option1 = {
+		tooltip : {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			left: 'left',
+			data: ['吸毒人员','精神病人','孤寡老人'],
+			textStyle:{
+			    color: 'white'
+			}
+		},
+		series : [
+			{
+				name: '特殊人群',
+				type: 'pie',
+				radius : '55%',
+				center: ['60%', '60%'],
+				data:[
+					{value:400, name:'吸毒人员'},
+					{value:310, name:'精神病人'},
+					{value:412, name:'孤寡老人'}
+				],
+				itemStyle: {
+					emphasis: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(0, 0, 0, 0.5)'
+					}
+				}
+			}
+		]
+	};
+	if (option1 && typeof option1 === "object") {
+		myChart1.setOption(option1, true);
+	}
+
+	var dom2 = document.getElementById("chart2");
+	var myChart2 = echarts.init(dom2);
+	option2 = null;
+		var dataMap = {};
+		function dataFormatter(obj) {
+			var pList = ['白面石','池田','大冚','到蔚','东汾','番丰',
+			'圭湖','河水店','何屋','和平村','花园','黄塘','黄屋','兰溪',
+			'浪拔','亮星村','麻冚','麦村','蒙花步','庙尾','石溪','水口',
+			'水围','汀塘','乌头石','西湖滩','银场','岳村','正果社区','正果洋','中西'];
+			var temp;
+			for (var year = 2009; year <= 2018; year++) {
+				var max = 0;
+				var sum = 0;
+				temp = obj[year];
+				for (var i = 0, l = temp.length; i < l; i++) {
+					max = Math.max(max, temp[i]);
+					sum += temp[i];
+					obj[year][i] = {
+						name : pList[i],
+						value : temp[i]
+					}
+				}
+				obj[year + 'max'] = Math.floor(max / 100) * 100;
+				obj[year + 'sum'] = sum;
+			}
+			return obj;
+		}
+
+		dataMap.dataSF = dataFormatter({
+			2009:[136,159,290,641,13,191,127,170,124,223,653,842,291,722,141,74,12,678,155,184,113,306,158,201,164,137,395,354,256,276,266],
+			2010:[170,124,306,158,201,164,137,136,159,290,64,130,191,127,395,354,256,276,141,74,122,678,155,184,113,266,223,653,842,291,722],
+			2011:[170,124,306,158,201,136,159,290,641,130,191,127,164,137,395,354,256,291,722,14,74,122,678,155,276,266,223,653,842,184,113],
+			2012:[130,191,127,170,136,159,20,64,124,306,158,201,164,137,653,842,291,722,395,354,256,276,266,223,141,74,122,678,155,184,113],
+			2013:[136,159,290,64,130,191,127,170,124,306,158,201,164,137,395,354,256,276,26,223,653,842,291,722,141,74,122,678,155,184,113],
+			2014:[136,159,290,64,130,191,127,170,124,306,158,201,164,137,395,354,256,276,266,223,653,842,291,722,141,74,122,678,155,184,113],
+			2015:[136,159,290,64,130,223,653,842,291,722,141,191,127,170,124,395,354,256,276,266,74,122,678,155,184,306,158,201,164,137,113],
+			2016:[136,159,290,64,306,158,201,130,191,127,170,124,164,137,395,354,256,276,266,155,18,113,223,653,842,291,722,141,74,122,678],
+			2017:[130,191,136,159,290,641,127,170,164,137,395,354,256,124,306,158,201,276,122,678,15,184,113,266,223,653,842,291,722,141,74],
+			2018:[130,191,136,159,290,641,127,170,164,137,395,35,256,124,306,158,201,276,122,678,15,184,113,266,22,653,842,291,722,141,74]
+		});
+
+		dataMap.dataPI = dataFormatter({
+			2009:[136,159,290,64,130,191,127,170,124,306,158,201,164,137,395,354,256,276,266,223,653,842,291,722,141,74,122,678,155,184,113],
+			2010:[170,124,306,158,201,164,137,136,159,290,641,130,19,127,395,354,256,276,141,74,122,678,155,184,113,266,223,63,842,291,722],
+			2011:[136,159,290,64,130,223,653,842,291,722,141,191,127,170,124,395,354,256,276,266,74,122,678,155,184,306,158,201,164,137,113],
+			2012:[130,191,127,170,136,159,290,641,124,306,158,201,164,137,653,842,291,722,395,354,256,276,26,223,141,74,122,678,155,184,113],
+			2013:[136,159,290,64,130,191,127,170,124,306,158,201,164,137,395,354,256,276,26,223,653,842,291,722,141,74,122,678,155,184,113],
+			2014:[136,159,290,64,130,191,127,170,124,223,653,842,291,722,141,74,122,678,155,184,113,306,158,201,164,137,395,54,256,276,266],
+			2015:[170,124,306,158,201,136,159,290,641,130,191,12,164,137,395,354,256,291,722,141,74,122,678,155,276,266,223,653,842,184,113],
+			2016:[130,191,136,159,290,641,127,170,164,137,395,354,256,12,306,158,201,276,12,678,155,184,113,266,223,653,842,291,722,141,74],
+			2017:[136,159,290,641,306,158,201,130,191,127,170,124,164,137,395,354,256,276,266,155,184,113,223,653,842,291,72,141,74,122,678],
+			2018:[130,191,136,15,290,641,127,170,164,137,395,354,256,124,306,158,201,27,122,678,15,184,113,266,223,653,842,291,722,141,74]
+		});
+
+		dataMap.dataSI = dataFormatter({
+			2009:[136,159,290,64,130,191,127,170,124,223,653,842,291,722,141,74,122,678,155,184,113,306,158,201,164,137,35,354,256,276,266],
+			2010:[170,124,306,158,201,164,137,136,159,290,641,130,191,127,395,354,256,276,141,74,122,678,155,184,113,266,23,653,842,291,722],
+			2011:[170,124,306,158,201,136,159,290,641,130,191,127,14,137,395,354,256,291,722,141,74,122,678,155,276,266,23,653,842,184,113],
+			2012:[130,191,127,170,136,159,290,641,124,306,18,201,164,13,653,842,291,722,395,354,256,276,266,223,141,74,122,678,155,184,113],
+			2013:[136,159,290,641,306,158,201,130,191,127,170,124,164,137,395,354,256,276,266,155,184,113,223,653,842,291,22,141,74,122,678],
+			2014:[136,159,290,641,130,191,127,170,124,306,158,201,164,137,395,354,256,276,266,223,653,842,291,722,141,74,122,678,155,184,113],
+			2015:[136,159,290,641,130,223,653,842,291,722,141,191,127,170,124,395,354,256,276,26,74,122,678,155,184,306,158,201,164,137,113],
+			2016:[136,159,290,641,130,191,127,170,124,306,158,201,164,137,395,354,256,276,266,223,653,842,291,722,141,74,12,678,155,184,113],
+			2017:[136,159,170,124,306,158,201,290,641,130,191,127,164,137,395,354,722,141,74,122,678,155,184,256,276,266,23,653,842,291,113],
+			2018:[130,191,136,159,29,641,127,170,164,137,395,354,256,124,306,158,201,276,122,678,15,184,113,266,223,653,84,29,722,141,74]
+		});
+
+		dataMap.dataTI = dataFormatter({
+			2009:[136,159,290,641,130,23,653,842,291,722,141,191,127,170,124,395,354,256,27,266,74,122,678,155,184,306,15,201,164,137,113],
+			2010:[170,12,306,158,201,164,137,136,159,290,641,130,191,127,395,354,256,276,14,74,122,678,155,14,113,266,223,653,842,29,722],
+			2011:[170,124,306,158,201,136,159,290,641,130,191,127,164,137,395,354,256,291,722,141,74,122,678,155,276,266,223,653,842,184,113],
+			2012:[136,159,290,641,130,191,127,170,124,223,653,842,291,722,141,74,122,678,155,184,113,306,158,21,164,137,395,354,256,276,266],
+			2013:[136,159,290,641,306,158,201,13,191,127,170,124,164,137,395,354,256,276,266,55,184,113,223,653,842,291,722,141,74,122,678],
+			2014:[136,159,290,641,13,191,127,170,124,306,158,201,164,137,395,354,25,276,266,223,653,842,291,72,141,74,122,678,15,184,113],
+			2015:[136,159,170,124,306,158,201,290,641,130,191,127,164,137,395,354,722,141,74,122,678,155,184,256,276,266,223,653,842,291,113],
+			2016:[136,159,290,641,130,191,127,170,124,30,158,201,164,137,395,354,256,276,26,223,653,842,291,722,141,74,122,678,155,184,113],
+			2017:[130,191,136,159,290,64,127,170,164,137,395,354,256,124,306,158,21,276,122,678,155,184,113,266,223,653,842,291,722,141,74],
+			2018:[130,191,13,159,290,641,127,170,164,137,39,354,256,124,306,15,201,276,122,678,15,184,113,266,223,653,84,291,722,141,74]
+		});
+
+
+		option2 = {
+			baseOption: {
+				timeline: {
+					// y: 0,
+					axisType: 'category',
+					// realtime: false,
+					// loop: false,
+					autoPlay: true,
+					// currentIndex: 2,
+					playInterval: 1000,
+					// controlStyle: {
+					//     position: 'left'
+					// },
+					data: [
+						'2009-01-01','2010-01-01','2011-01-01',
+						{
+							value: '2012-01-01',
+							tooltip: {
+								formatter: '{b} 人数达到一个高度'
+							},
+							symbol: 'diamond',
+							symbolSize: 16
+						},
+						'2013-01-01', '2014-01-01','2015-01-01','2016-01-01','2017-01-01',
+						{
+							value: '2018-01-01',
+							tooltip: {
+								formatter: function (params) {
+									return params.name + '人数达到又一个高度';
+								}
+							},
+							symbol: 'diamond',
+							symbolSize: 18
+						},
+					],
+					label: {
+						formatter : function(s) {
+							return (new Date(s)).getFullYear();
+						},
+						textStyle:{
+						    color:'white'
+						}
+					}
+				},
+				title:{
+				  	textStyle:{
+				      color:'white'
+				  	}
+				},
+				legend: {
+					x: 'right',
+					data: ['吸毒人员', '精神病人', '孤寡老人', '矫正司法'],
+					selected: {
+						'吸毒人员': true, '精神病人': true, '孤寡老人': true, '矫正司法': true
+					},
+					textStyle:{
+					    color:'white'
+					}
+				},
+				calculable : true,
+				grid: {
+					top: 80,
+					bottom: 100,
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'shadow',
+							label: {
+								show: true,
+								formatter: function (params) {
+									return params.value.replace('\n', '');
+								}
+							}
+						}
+					}
+				},
+				xAxis: [
+					{
+						'type':'category',
+						'data':[
+							'白面石','\n池田','大冚','\n到蔚','东汾','\n番丰','圭湖','\n河水店',
+							'何屋','\n和平村','花园','\n黄塘','黄屋','\n兰溪','浪拔','\n亮星村',
+							'麻冚','\n麦村','蒙花步','\n庙尾','石溪','\n水口','水围','\n汀塘',
+							'乌头石','\n西湖滩','银场','\n岳村','正果社区','\n正果洋','中西'
+						],
+						splitLine: {show: false},
+						axisLabel: {
+							color: 'white',
+							interval:0
+						}
+					}
+				],
+				yAxis: [
+					{
+						type: 'value',
+						name: '人数（位）',
+						axisLabel: {
+							color: 'white'
+						},
+						nameTextStyle:{
+							color:'white'
+						}
+					}
+				],
+				series: [
+					{name: '吸毒人员', type: 'bar'},
+					{name: '精神病人', type: 'bar'},
+					{name: '孤寡老人', type: 'bar'},
+					{name: '矫正司法', type: 'bar'},
+					{
+						name: '占比',
+						type: 'pie',
+						center: ['75%', '20%'],
+						radius: '28%',
+						z: 100
+					}
+				]
+			},
+			options: [
+				{
+					title : {text: '2009年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2009']},
+						{data: dataMap.dataSI['2009']},
+						{data: dataMap.dataTI['2009']},
+						{data: dataMap.dataSF['2009']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2009sum']},
+							{name: '精神病人', value: dataMap.dataSI['2009sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2009sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2009sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2010年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2010']},
+						{data: dataMap.dataSI['2010']},
+						{data: dataMap.dataTI['2010']},
+						{data: dataMap.dataSF['2010']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2010sum']},
+							{name: '精神病人', value: dataMap.dataSI['2010sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2010sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2010sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2011年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2011']},
+						{data: dataMap.dataSI['2011']},
+						{data: dataMap.dataTI['2011']},
+						{data: dataMap.dataSF['2011']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2011sum']},
+							{name: '精神病人', value: dataMap.dataSI['2011sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2011sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2011sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2012年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2012']},
+						{data: dataMap.dataSI['2012']},
+						{data: dataMap.dataTI['2012']},
+						{data: dataMap.dataSF['2012']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2012sum']},
+							{name: '精神病人', value: dataMap.dataSI['2012sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2012sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2012sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2013年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2013']},
+						{data: dataMap.dataSI['2013']},
+						{data: dataMap.dataTI['2013']},
+						{data: dataMap.dataSF['2013']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2013sum']},
+							{name: '精神病人', value: dataMap.dataSI['2013sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2013sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2013sum']}
+						]}
+					]
+				},
+				{
+					title: {text: '2014年正果镇特殊人群分析'},
+					series: [
+						{data: dataMap.dataPI['2014']},
+						{data: dataMap.dataSI['2014']},
+						{data: dataMap.dataTI['2014']},
+						{data: dataMap.dataSF['2014']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2014sum']},
+							{name: '精神病人', value: dataMap.dataSI['2014sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2014sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2014sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2015年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2015']},
+						{data: dataMap.dataSI['2015']},
+						{data: dataMap.dataTI['2015']},
+						{data: dataMap.dataSF['2015']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2015sum']},
+							{name: '精神病人', value: dataMap.dataSI['2015sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2015sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2015sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2016年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2016']},
+						{data: dataMap.dataSI['2016']},
+						{data: dataMap.dataTI['2016']},
+						{data: dataMap.dataSF['2016']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2016sum']},
+							{name: '精神病人', value: dataMap.dataSI['2016sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2016sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2016sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2017年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2017']},
+						{data: dataMap.dataSI['2017']},
+						{data: dataMap.dataTI['2017']},
+						{data: dataMap.dataSF['2017']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2017sum']},
+							{name: '精神病人', value: dataMap.dataSI['2017sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2017sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2017sum']}
+						]}
+					]
+				},
+				{
+					title : {text: '2018年正果镇特殊人群分析'},
+					series : [
+						{data: dataMap.dataPI['2018']},
+						{data: dataMap.dataSI['2018']},
+						{data: dataMap.dataTI['2018']},
+						{data: dataMap.dataSF['2018']},
+						{data: [
+							{name: '吸毒人员', value: dataMap.dataPI['2018sum']},
+							{name: '精神病人', value: dataMap.dataSI['2018sum']},
+							{name: '孤寡老人', value: dataMap.dataTI['2018sum']},
+							{name: '矫正司法', value: dataMap.dataSF['2018sum']}
+						]}
+					]
+				}
+			]
+		};
+	if (option2 && typeof option2 === "object") {
+		myChart2.setOption(option2, true);
+	}
+
+	var dom3 = document.getElementById("chart3");
+	var myChart3 = echarts.init(dom3);
+	option3 = null;
+	option3 = {
+		tooltip : {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			left: 'left',
+			data: ['服刑人员','前科人员','犯罪人员'],
+			textStyle:{
+			    color: 'white'
+			}
+		},
+		series : [
+			{
+				name: '特殊人群',
+				type: 'pie',
+				radius : '55%',
+				center: ['60%', '60%'],
+				data:[
+					{value:235, name:'服刑人员'},
+					{value:288, name:'前科人员'},
+					{value:138, name:'犯罪人员'}
+				],
+				itemStyle: {
+					emphasis: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(0, 0, 0, 0.5)'
+					}
+				}
+			}
+		]
+	};
+	if (option3 && typeof option3 === "object") {
+		myChart3.setOption(option3, true);
+	}
+	function MapComp(){
+		var domId="map-cont";
+		var _center = [113.892436,23.416955];
+		var _map;
+		var _def_zoom=12;
+		var _curr_zoom = _def_zoom;
+		var _max_zoom=20;
+		var _min_zoom=8;
+		this.init = function(){
+			_map = new AMap.Map(domId, {
+				/*mapStyle: "amap://styles/dark"	,*/
+				zoom:_curr_zoom,//级别
+				center: _center,//中心点坐标
+				expandZoomRange:true,
+				zooms:[_min_zoom,_max_zoom],
+				layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]
+			});
+			map=_map;
+		};
+	}
+
+	$.ajax({
+        url: '/api/device/netDeviceInfo/getDeviceByParam',
+        dataType: 'json',
+        type: 'get',
+        success: function (data) {
+            for(var i in data){
+				if(data[i].lon_lat) {
+					var lonlat=GPS.WGStoGCJ(data[i].lon_lat.split(",")[0], data[i].lon_lat.split(",")[1]);
+					var marker = new AMap.Marker({
+						position: new AMap.LngLat(lonlat.lon, lonlat.lat),
+						offset: new AMap.Pixel(-10, -10),
+						icon: 'img/mapIcon/7_19.png',
+						data: data[i]
+					})
+					marker.on('click', showBData);
+					map.add(marker);
+				}
+			}
+        }
+    })
+
+	function showBData(e){
+		var id=e.target.get("data").id;
+		 $.ajax({
+			 url: '/api/device/netDeviceInfo/getDeviceDetailById',
+			 dataType: 'json',
+			 type: 'get',
+			 data: {
+				 id: id
+			 },
+			 success:function(result){
+				 var lnglat=[e.lnglat.lng,e.lnglat.lat];
+				var cameraname=result.data[0].cameraname;
+				var address=result.data[0].address;
+				var village=result.data[0].village;
+				var Rioternum,Rioterrenum;
+				var Crosslinenum,Crosslinerenum;
+				var Leftnum,Leftrenum;
+				var Parkingnum,Parkingrrenum;
+				var Wandernum,Wanderrenum;
+				if(result.detail[0].Crossline[0]){
+					Crosslinenum=result.detail[0].Crossline[0].nobjectnum;
+					Crosslinerenum=result.detail[0].Crossline[0].ndetectlinenum;
+				}else{
+					Crosslinenum=0;
+					Crosslinerenum=0;
+				}
+				if(result.detail[0].Left[0]){
+					Leftnum=result.detail[0].Left[0].nobjectnum;
+					Leftrenum=result.detail[0].Left[0].ndetectlinenum;
+				}else{
+					Leftnum=0;
+					Leftrenum=0;
+				}
+				if(result.detail[0].Parkingdete[0]){
+					Parkingnum=result.detail[0].Parkingdete[0].nobjectnum;
+					Parkingrrenum=result.detail[0].Parkingdete[0].ndetectlinenum;
+				}else{
+					Parkingnum=0;
+					Parkingrrenum=0;
+				}
+				if(result.detail[0].Rioter[0]){
+					Rioternum=result.detail[0].Rioter[0].nobjectnum;
+					Rioterrenum=result.detail[0].Rioter[0].ndetectregionnum;
+				}else{
+					Rioternum=0;
+					Rioterrenum=0;
+				}
+				if(result.detail[0].Parkingdete[0]){
+					Wandernum=result.detail[0].Parkingdete[0].nobjectnum;
+					Wanderrenum=result.detail[0].Parkingdete[0].ndetectregionnum;
+				}else{
+					Wandernum=0;
+					Wanderrenum=0;
+				}
+				if(result.data.length>0){
+					var ut=result.data[0].dataupdatetime;
+				}
+
+
+				var content=["<p class='pop_tl'>行为识别</p><div class='pop_box'><table></tbody class>"+
+					"<tr><td style='width:85px;'>摄像机名称：</td><td>"+cameraname+"</td></tr>"+
+					"<tr><td>地址：</td><td>"+(address?address:'')+"</td></tr>"+
+					"<tr><td>村庄：</td><td>"+village+"</td></tr>"+
+					"<tr><td>更新时间：</td><td>"+(ut?ut:'')+"</td></tr>"+
+				"</tbody></table>"+
+				"<table class='table-bordered'>	"+
+					"</tbody><tr><td style='width:60px;' rowspan='3'>警戒线</td></tr>"+
+						"<tr><td width='145px'>检测到的物体个数</td>"+
+						"	<td>"+Crosslinenum+"</td></tr>"+
+						"<tr><td>规则检测区域顶点数</td>"+
+						"	<td>"+Crosslinerenum+"</td></tr>"+
+					"</tbody></table>"+
+				"<table class='table-bordered'>	"+
+					"</tbody><tr><td style='width:60px;' rowspan='3'>物品遗失</td></tr>"+
+						"<tr><td width='145px'>检测到的物体个数</td>"+
+						"	<td>"+Leftnum+"</td></tr>"+
+						"<tr><td>规则检测区域顶点数</td>"+
+						"	<td>"+Leftrenum+"</td></tr>"+
+					"</tbody></table>"+
+				"<table class='table-bordered'>	"+
+						"</tbody><tr><td style='width:60px;' rowspan='3'>非法停车</td></tr>"+
+							"<tr><td width='145px'>检测到的物体个数</td>"+
+							"	<td>"+Parkingnum+"</td></tr>"+
+							"<tr><td>规则检测区域顶点数</td>"+
+							"	<td>"+Parkingrrenum+"</td></tr>"+
+						"</tbody></table>"+
+				"<table class='table-bordered'>	"+
+					"</tbody><tr><td style='width:60px;' rowspan='3'>聚众</td></tr>"+
+						"<tr><td width='145px'>检测到的物体个数</td>"+
+						"	<td>"+Rioternum+"</td></tr>"+
+						"<tr><td>规则检测区域顶点数</td>"+
+						"	<td>"+Rioterrenum+"</td></tr>"+
+					"</tbody></table>"+
+				"<table class='table-bordered'>	"+
+					"</tbody><tr><td style='width:60px;' rowspan='3'>徘徊</td></tr>"+
+						"<tr><td width='145px'>检测到的物体个数</td>"+
+						"	<td>"+Wandernum+"</td></tr>"+
+						"<tr><td>规则检测区域顶点数</td>"+
+						"	<td>"+Wanderrenum+"</td></tr>"+
+					"</tbody></table>"+
+					"</div>"];
+				console.log(content.join("<br>"));
+				var infoWindow = new AMap.InfoWindow({
+					content: content.join("<br>")
+				});
+
+				// 打开信息窗体
+				infoWindow.open(map,lnglat);
+			 }
+		 })
+	}
+	$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+</script>
+</html>

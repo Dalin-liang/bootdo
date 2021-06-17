@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果人口大数据分析</title>
+		<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/table.css" />
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/echarts.js"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+		<script type="text/javascript" src="plugin/mapPlugin.js"></script>
+		<style>
+			.content-left .item {
+				margin-bottom: 20px!important;
+			}
+			
+			.content-b {
+				background-color: rgba(0, 41, 133, 0.4)!important;
+			}
+			
+			#map-cont {
+				height: 100%;
+			}
+			
+			.amap-info-close {
+				font-size: 18px;
+				top: 10px;
+			}
+			
+			.amap-info-content table th {
+				text-align: center;
+				font-weight: 500;
+			}
+			
+			.amap-info-content table tr {
+				height: 40px;
+			}
+			
+			.amap-info-content table td {
+				line-height: 40px;
+			}
+			
+			.amap-info-content table .warn {
+				background-color: red;
+			}
+			
+			#planList {
+				position: relative;
+			}
+			
+			.pop_box {
+				width: 400px;
+				padding: 5px 10px;
+			}
+			
+			.pop_tl {
+				line-height: 35px;
+				background: #1d90c5;
+				padding: 0 10px;
+			}
+			
+			.pop_box table {
+				width: 100%;
+			}
+			
+			.pop_box table tbody tr td {
+				vertical-align: top;
+			}
+			
+			.amap-info-content {
+				border: #03A9F4 thin solid;
+				background: rgba(37, 88, 139, 0.8);
+				padding: 0;
+				font-size: 14px;
+				line-height: 24px;
+			}
+			
+			.bottom-center .amap-info-sharp {
+				border-top-color: #03A9F4;
+			}
+			
+			.amap-info-content table.table-bordered tr {
+				height: auto!important;
+			}
+			
+			.table_info{
+				position: relative;
+			}
+			.table_info:after{
+				content: "";
+				position: absolute;
+				width: 100%;
+				bottom: 0;
+				height: 1px;
+				background: -moz-linear-gradient(top, rgba(0, 255, 250, 0) 0%, rgba(0, 255, 250) 50%, rgba(0, 255, 250, 0) 100%);
+				background: -webkit-linear-gradient(top, rgba(0, 255, 250, 0) 0%, rgba(0, 255, 250) 50%, rgba(0, 255, 250, 0) 100%);
+				background: -o-linear-gradient(top, rgba(0, 255, 250, 0) 0%, rgba(0, 255, 250) 50%, rgba(0, 255, 250, 0) 100%);
+				background: linear-gradient(to right, rgba(0, 255, 250, 0) 0%, rgb(0, 255, 250) 50%, rgba(0, 255, 250, 0) 100%);
+			}
+		</style>
+	</head>
+	<style>
+
+	</style>
+
+	<body>
+		<!--<div class="map">
+		<div class="example-map" style="background-image: url(images/map.png)"></div>
+	</div>
+<div class="data-map" style="top:280px;">
+		<div class="warning_m" style="left: 250px;top:180px;">
+			<div class="warning_t">总人口数<br>65508</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<div class="warning_m warning_m2" style="left: 420px;top:120px;">
+			<div class="warning_t">死亡人口<br>37</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<div class="warning_m warning_m3" style="left: 580px;top:250px;">
+			<div class="warning_t">出生人口<br>97</div>
+			<div class="warning_b"><span class="radius1"></span><span class="radius2"></span></div>
+		</div>
+		<img src="images/3dmap.png" alt="">
+	</div>-->
+		<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/15.png" />
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/14.png" />
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/10.png" />
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/05.png" />
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/09.png" />
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/04.png" />
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/13.png" />
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/12.png" />
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/11.png" />
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/03.png" />
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png" />
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png" />
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png" />
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/16.png" />
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/02.png" />
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/06.png" />
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/07.png" />
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/02.png" />
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div id="map-cont"></div>
+		<div class="header flex flex-m">
+			<div class="title PangMen">正果优秀扶贫项目</div>
+		</div>
+
+		<div class="topTitle">
+			<div class="title pad10  mt-3">和平村与撩能蔬菜公司合作投资建立蔬菜基地</div>
+			<div class=" mt-2" style="border: #fff thin solid;">
+				<div class="math-box flex flex-m table_info">
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">200</span> <span class="small">亩</span>
+						</div>
+						<div class="msg"><span>租用地</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-danger shadow">2011-2012</span> <span class="small">年</span>
+						</div>
+						<div class="msg"><span>期限</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-primary shadow">26</span> <span class="small">万元</span>
+						</div>
+						<div class="msg"><span>合计返还</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-warning shadow">163</span> <span class="small">人</span>
+						</div>
+						<div class="msg"><span>社员</span></div>
+					</li>
+				</div>
+				<div class="math-box flex flex-m table_info">
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">300</span> <span class="small">亩</span>
+						</div>
+						<div class="msg"><span>蔬菜基地</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">300</span> <span class="small">亩</span>
+						</div>
+						<div class="msg"><span>水果基地</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">350</span> <span class="small">亩</span>
+						</div>
+						<div class="msg"><span>水稻基地</span></div>
+					</li>
+				</div>
+				<div class="math-box flex flex-m">
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">1000</span> <span class="small">亩</span>
+						</div>
+						<div class="msg"><span>特色产品</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">1600</span> <span class="small">吨</span>
+						</div>
+						<div class="msg"><span>2017年11月配送</span></div>
+					</li>
+					<li class="flex-1">
+						<div class="">
+							<span class="math Digital rfc-info shadow">1750</span> <span class="small">万</span>
+						</div>
+						<div class="msg"><span>2017年11月销售额</span></div>
+					</li>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var mapComp;
+			var map;
+			mapComp = new MapComp();
+			mapComp.init();
+
+			function MapComp() {
+				var domId = "map-cont";
+				var _center = [113.892436, 23.416955];
+				var _map;
+				var _def_zoom = 12;
+				var _curr_zoom = _def_zoom;
+				var _max_zoom = 20;
+				var _min_zoom = 8;
+				this.init = function() {
+					_map = new AMap.Map(domId, {
+						/*mapStyle: "amap://styles/dark"	,*/
+						zoom: _curr_zoom, //级别
+						center: _center, //中心点坐标
+						expandZoomRange: true,
+						zooms: [_min_zoom, _max_zoom],
+						layers: [
+							new AMap.TileLayer.Satellite(),
+							new AMap.TileLayer.RoadNet()
+						]
+					});
+					map = _map;
+				};
+			}
+
+			//更改户籍人口标签
+			$("#pop").on('change', function() {
+				var option = $("#pop option:selected").val();
+				var str = option + "自然变动情况分析";
+				$("#popText").text(str);
+			})
+			$(document).ready(function() {
+				$(".toggle_nav_btn").click(function() {
+					$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+					$(".toggle_nav_con").slideToggle()
+				})
+			})
+		</script>
+	</body>
+
+</html>

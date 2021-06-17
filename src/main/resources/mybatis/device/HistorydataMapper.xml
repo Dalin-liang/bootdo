@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.device.dao.HistorydataDao">
+
+	<select id="get" resultType="com.bootdo.device.domain.HistorydataDO">
+		select `hd_id`,`de_id`,`hd_monitorvalue`,`hd_datetime`,`hd_maxvalue`,`hd_maxtime`,`hd_minivalue`,`hd_minitime`,`hd_status`,`hd_remark` from db_historydata where hd_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.device.domain.HistorydataDO">
+		select `hd_id`,`de_id`,`hd_monitorvalue`,`hd_datetime`,`hd_maxvalue`,`hd_maxtime`,`hd_minivalue`,`hd_minitime`,`hd_status`,`hd_remark` from db_historydata
+        <where>  
+		  		  <if test="hdId != null and hdId != ''"> and hd_id = #{hdId} </if>
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="hdMonitorvalue != null and hdMonitorvalue != ''"> and hd_monitorvalue = #{hdMonitorvalue} </if>
+		  		  <if test="hdDatetime != null and hdDatetime != ''"> and hd_datetime = #{hdDatetime} </if>
+		  		  <if test="hdMaxvalue != null and hdMaxvalue != ''"> and hd_maxvalue = #{hdMaxvalue} </if>
+		  		  <if test="hdMaxtime != null and hdMaxtime != ''"> and hd_maxtime = #{hdMaxtime} </if>
+		  		  <if test="hdMinivalue != null and hdMinivalue != ''"> and hd_minivalue = #{hdMinivalue} </if>
+		  		  <if test="hdMinitime != null and hdMinitime != ''"> and hd_minitime = #{hdMinitime} </if>
+		  		  <if test="hdStatus != null and hdStatus != ''"> and hd_status = #{hdStatus} </if>
+		  		  <if test="hdRemark != null and hdRemark != ''"> and hd_remark = #{hdRemark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by hd_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from db_historydata
+		 <where>  
+		  		  <if test="hdId != null and hdId != ''"> and hd_id = #{hdId} </if>
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="hdMonitorvalue != null and hdMonitorvalue != ''"> and hd_monitorvalue = #{hdMonitorvalue} </if>
+		  		  <if test="hdDatetime != null and hdDatetime != ''"> and hd_datetime = #{hdDatetime} </if>
+		  		  <if test="hdMaxvalue != null and hdMaxvalue != ''"> and hd_maxvalue = #{hdMaxvalue} </if>
+		  		  <if test="hdMaxtime != null and hdMaxtime != ''"> and hd_maxtime = #{hdMaxtime} </if>
+		  		  <if test="hdMinivalue != null and hdMinivalue != ''"> and hd_minivalue = #{hdMinivalue} </if>
+		  		  <if test="hdMinitime != null and hdMinitime != ''"> and hd_minitime = #{hdMinitime} </if>
+		  		  <if test="hdStatus != null and hdStatus != ''"> and hd_status = #{hdStatus} </if>
+		  		  <if test="hdRemark != null and hdRemark != ''"> and hd_remark = #{hdRemark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.device.domain.HistorydataDO">
+		insert into db_historydata
+		(
+			`hd_id`, 
+			`de_id`, 
+			`hd_monitorvalue`, 
+			`hd_datetime`, 
+			`hd_maxvalue`, 
+			`hd_maxtime`, 
+			`hd_minivalue`, 
+			`hd_minitime`, 
+			`hd_status`, 
+			`hd_remark`
+		)
+		values
+		(
+			#{hdId}, 
+			#{deId}, 
+			#{hdMonitorvalue}, 
+			#{hdDatetime}, 
+			#{hdMaxvalue}, 
+			#{hdMaxtime}, 
+			#{hdMinivalue}, 
+			#{hdMinitime}, 
+			#{hdStatus}, 
+			#{hdRemark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.device.domain.HistorydataDO">
+		update db_historydata 
+		<set>
+			<if test="deId != null">`de_id` = #{deId}, </if>
+			<if test="hdMonitorvalue != null">`hd_monitorvalue` = #{hdMonitorvalue}, </if>
+			<if test="hdDatetime != null">`hd_datetime` = #{hdDatetime}, </if>
+			<if test="hdMaxvalue != null">`hd_maxvalue` = #{hdMaxvalue}, </if>
+			<if test="hdMaxtime != null">`hd_maxtime` = #{hdMaxtime}, </if>
+			<if test="hdMinivalue != null">`hd_minivalue` = #{hdMinivalue}, </if>
+			<if test="hdMinitime != null">`hd_minitime` = #{hdMinitime}, </if>
+			<if test="hdStatus != null">`hd_status` = #{hdStatus}, </if>
+			<if test="hdRemark != null">`hd_remark` = #{hdRemark}</if>
+		</set>
+		where hd_id = #{hdId}
+	</update>
+	
+	<delete id="remove">
+		delete from db_historydata where hd_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from db_historydata where hd_id in 
+		<foreach item="hdId" collection="array" open="(" separator="," close=")">
+			#{hdId}
+		</foreach>
+	</delete>
+
+</mapper>

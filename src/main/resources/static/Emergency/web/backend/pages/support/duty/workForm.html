@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../../css/main.css" />
+		<link rel="stylesheet" href="../../../css/style.css" />
+	</head>
+	<body>
+		<div class=" layui-pad10">
+			<form  class="layui-form" lay-filter="workForm"  action="">
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <input type="text" id="id" name="id"  class="layui-input" style="display:none;">
+				    <label class="layui-form-label">姓名：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="username" name="username" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input" readonly = "readonly" style="background-color: #d2d2d2;">
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">部门：</label>
+				    <div class="layui-input-block">
+						<input type="text" id="deptname" name="deptname" lay-verify="required" lay-reqtext="部门是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input" readonly = "readonly" style="background-color: #d2d2d2;">
+					</div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+					<div class="layui-form-item">
+						<label class="layui-form-label">职位：</label>
+						<div class="layui-input-block">
+							<input type="text" id="position" name="position" lay-verify="required" lay-reqtext="职位是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input" readonly = "readonly" style="background-color: #d2d2d2;">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-xs6">
+					<div class="layui-form-item">
+						<label class="layui-form-label">联系电话：</label>
+						<div class="layui-input-block">
+							<input type="text" id="mobile" name="mobile" lay-verify="required" lay-reqtext="联系电话是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input" readonly = "readonly" style="background-color: #d2d2d2;">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">工作事项：</label>
+				    <div class="layui-input-block">
+				      <textarea id="work"  name="work" rows="7" placeholder="请输入内容" lay-verify="required|workLong" lay-reqtext="工作事项是必填项，岂能为空？" class="layui-textarea"></textarea>
+				    </div>
+				  </div>					
+				</div>
+			 <div class="layui-form-item layui-mt10 layui-text-center">
+		 		<button class="layui-btn layui-btn-radius" lay-submit lay-filter="formSubmit">保 存</button>
+				<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+			 </div>
+		</form>
+	</div>
+
+
+
+
+	<script type="text/javascript" src="../../../layui/layui.js"></script>
+	<script>
+		var prefix = "/scheduling";
+		var parentData;
+		layui.use([ 'form', 'layedit' ],function() {
+			var form = layui.form
+			, layer = layui.layer
+			, $ = layui.$;
+
+
+			//回显
+			if (parent.editDate != null && parent.editDate != "") {
+				parentData = parent.editDate;
+				parent.editDate = null;
+				//form初始化赋值
+				form.val('workForm',{
+					"id" : parentData.id,
+					"username" : parentData.username,
+					"deptname" : parentData.deptname,
+					"position" : parentData.position,
+					"mobile" : parentData.mobile,
+					"work" : parentData.work
+				});
+			}
+			
+			//表单校验
+			form.verify({
+				workLong:function(value){
+					if(value.length > 2000){
+		                 return '工作事项长度大于2000！请重新输入';
+		             }
+				}
+			});
+
+			form.on('submit(formSubmit)',function(data) {
+				if (data.field.id != null && data.field.id != "") {
+					$.ajax({
+						url : prefix + '/workUpdate',
+						method : 'post',
+						data : data.field,
+						async : false,
+						success : function(data) {
+							if (data.code == '0') {
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.reLoadBootstrapTable();//重载父页表格
+								parent.layer.msg(data.msg);
+								parent.layer.close(index);
+							} else {
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.msg(data.msg);
+								parent.layer.close(index);
+							}
+						},
+						error : function(data) {
+							parent.layer.msg("保存失败");
+						}
+					});
+				}
+
+			});
+
+			$("#closeForm").click(function() {
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
+			});
+		});
+	</script>
+</body>
+</html>

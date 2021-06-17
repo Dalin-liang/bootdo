@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果智慧党建</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/layui/css/layui.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/layui/layui.js"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+    <style>
+		/*滚动条整体*/
+		::-webkit-scrollbar{width: 8px; /*滚动条宽度*/}
+		/*滚动条按钮*/
+		::-webkit-scrollbar-track{background-color: #e9f1d2; /*滑道全部*/}
+		::-webkit-scrollbar-track-piece{background-color: #e9f1d2; /*滑道*/-webkit-border-radius: 2px; /*滑道圆角宽度*/}
+		::-webkit-scrollbar-thumb{background: #2162a9; /*滑动条表面*/border-radius: 8px; /*滑动条圆角宽度*/}
+		/*横竖滚动条交角*/
+		::-webkit-scrollbar-corner{background-color: #0380f5;}
+		/*横竖滚动条交角图案*/
+		::-webkit-resizer{background-repeat: no-repeat;background-position: bottom right;}
+		/*鼠标滑过滑动条*/
+		::-webkit-scrollbar-thumb:hover{background: #0187bf;}
+        .item-left,.item-right{
+            display: inline-block;
+        }
+        .item{
+            background: linear-gradient(-135deg, transparent 15px, rgba(2,22,91,1) 0) right, linear-gradient(45deg, transparent 15px, rgba(2,22,91,1) 0) left;
+            background-size: 50% 100%;
+            background-repeat: no-repeat;
+            width: 510px;
+            height: 300px;
+            position: relative;
+        }
+        .item-left{
+            margin-left: 30px;
+			float: left;
+        }
+        .item-right{
+            margin-right:30px;
+			float: right;
+        }
+		.item-title{
+			padding: 5px 0 0 20px;
+			color:white;
+			font-weight: 600;
+		}
+		.item-title i{
+			font-size: 20px;
+			color: rgb(0,101,242);
+			margin-right: 10px;
+		}
+		.item-middle{
+			width: calc(100% - 1100px);
+			float: left;
+			margin-top: 135px;
+			margin-left: 10px;
+			display: inline-block;
+		}
+		/*#mapContent{
+			width: 100%;
+			height: 610px;
+			background-color: white;
+		}*/
+		.mItem{
+			width: 100%;
+		}
+		.mapList{
+			position: absolute;
+			right: 550px;
+			top: 705px;
+			width: 40px;
+			height: 40px;
+			text-align: center;
+			background: rgba(2,22,91,1);
+			line-height: 40px;
+			color: rgb(188,188,188);
+			cursor: pointer;
+		}
+		.mapList:hover,#mapSelect div:hover{
+			color: white;
+		}
+		#mapSelect{
+			position: absolute;
+			right: 590px;
+			top: 705px;
+			width: 250px;
+			height: 40px;
+			text-align: center;
+			background: rgba(2,22,91,1);
+			line-height: 40px;
+			color: rgb(188,188,188);
+			cursor: pointer;
+		}
+		#mapSelect div{
+			width: 80px;
+			text-align: center;
+			border-right: 1px solid white;
+			display: inline-block;
+		}
+		#mapSelect div.selected{
+			color:yellow;
+		}
+		.chart{
+			width: 49%;
+			height: calc(100% - 26px);
+			display: inline-block;
+		}
+		.honor .chart div:first-child{
+			margin-top: 50px;
+		}
+		.honor .chart div,.honor .chart img{
+			margin-bottom: 20px;
+		}
+		.topTitle{
+			z-index: 99;
+		}
+		#townList{
+			height: 200px;
+			width: 250px;
+			z-index:99;
+			position: absolute;
+			top:218px;
+			left:calc(50% - 400px);
+			background-color:rgba(0, 41, 133, 0.6);
+			overflow-y: auto;
+			text-align: center;
+			color: white;
+		}
+		#townList li{
+			height: 30px;
+			line-height: 30px;
+			cursor: pointer;
+		}
+		#townList li:hover{
+			color: rgb(12,255,253);
+		}
+		.amap-copyright,.amap-logo{
+			display: none!important;
+		}
+    </style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+    <div class="header"><img src="img/header.png" ></div>
+	<div class="topTitle" id="partyAll">
+		<div class="math-box flex flex-m">
+			<li class="flex-1">
+				<div class="math Digital rfc-info shadow" id="n1">110个</div>
+				<div class="msg"><span>下辖党组织</span></div>
+			</li>
+			<li class="flex-1">
+				<div class="math Digital rfc-warning shadow" id="n2">2287名</div>
+				<div class="msg"><span>党员总数</span></div>
+			</li>
+			<li class="flex-1">
+				<div class="math Digital rfc-info shadow" id="n3">33个</div>
+				<div class="msg"><span>党群服务中心</span></div>
+			</li>
+			<div class="townBtn" style="position: absolute;left:30%;top: 45%;width: 20px;height:20px;text-align:center;line-height: 20px;background-color: rgba(0,13,55,0.6);">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+		</div>
+	</div>
+	<div id="townList" style="display: none;">
+
+	</div>
+	<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+    <div class="item-left">
+        <div style="margin-top: 135px" class="item">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党组结构</span></div>
+			<div class="text" style="position:absolute;left:35%;top:75%;text-align: center;color:white;" id="text1">党支部<br>32个</div>
+			<!--<div class="text" style="position: absolute;left:40%;top:45%;text-align: center;color:white;" id="text2">党总支部<br>12个</div>-->
+			<!--<div class="text" style="position: absolute;left:32%;top:80%;text-align: center;color:white;" id="text31">二级党委<br>9个</div>-->
+			<div class="text" style="position: absolute;left:3%;top:25%;text-align: center;color:white;" id="text32">二级党委<br>9个</div>
+			<div class="text" style="position: absolute;left:40%;top:50%;text-align: center;color:white;" id="text33">二级党委<br>9个</div>
+			<div class="text" style="position: absolute;left:20%;top:calc(50% - 13px);text-align: center;color:white;font-size: 20px;" id="total1">总数<br>53个</div>
+			<div id="chart1" class="chart"></div>
+			<div class="text" style="position:absolute;left:87%;top:30%;text-align: center;color:white;" id="text4">党支部<br>32个</div>
+			<!--<div class="text" style="position: absolute;left:50%;top:68%;text-aslign: center;color:white;" id="text5">党支部<br>12个</div>-->
+			<!--<div class="text" style="position: absolute;left:63%;top:80%;text-align: center;color:white;" id="text6">党总支部<br>9个</div>-->
+			<div class="text" style="position: absolute;left:70%;top:calc(50% - 13px);text-align: center;color:white;font-size: 20px;" id="total2">总数<br>53个</div>
+			<div id="chart2" class="chart"></div>
+		</div>
+        <div style="margin-top: 10px" class="item">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员结构</span></div>
+			<div class="text" style="position:absolute;left:32%;top:23%;text-align: center;color:white;" id="text7">40-60岁<br>17人</div>
+			<!--position: absolute;left:40%;top:55%;text-align: center;color:white;"-->
+			<div class="text" style="position: absolute;left:25%;top:80%;text-align: center;color:white;" id="text8">60岁以上<br>31人</div>
+			<div class="text" style="position: absolute;left:0;top:28%;text-align: center;color:white;" id="text9">40岁以下<br>69人</div>
+			<div id="chart3" class="chart"></div>
+			<div style="position: absolute;top:80px;right: 120px;color: white;">高中(中专)以下</div>
+			<div style="position: absolute;top:140px;right: 110px;color: white;" id="text10">1521人(66.51%)</div>
+			<div id="chart4" class="chart"></div>
+			<div style="position: absolute;top:160px;right: 160px;color: white;">大专以上</div>
+			<div style="position: absolute;top:220px;right: 120px;color: white;" id="text11">766人(33.49%)</div>
+		</div>
+		<div style="margin-top: 10px" class="item">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党组织层级</span></div>
+			<div id="chart5" class="chart" style="width: 100%;"></div>
+		</div>
+    </div>
+    <div class="item-right">
+        <div style="margin-top: 135px" class="item">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党委组织</span></div>
+			<div class="text" id="t3" style="position:absolute;left:70%;top:65%;text-align: center;color:white;">两新党员<br>45人</div>
+			<div class="text" id="t1" style="position: absolute;left:17%;top:15%;text-align: center;color:white;">农村党员<br>1717人</div>
+			<div class="text" id="t2" style="position: absolute;left:44%;top:50%;text-align: center;color:white;">机关党员<br>525人</div>
+			<div id="chart7" class="chart" style="width: 100%"></div>
+		</div>
+        <div style="margin-top: 10px" class="item">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员信息</span></div>
+			<div class="chart" style="color: white;font-size: 16px;">
+				<div style="position: absolute;top:49px;left: 54px;font-size: 20px;font-weight: 700;">党员总数变化</div>
+				<div style="position: absolute;top:99px;left: 44px;z-index: 10" id="text12">2020.1 ● 2287人</div>
+				<img src="img/grows.png" style="top:109px;left:54px;position: absolute">
+				<div style="position: absolute;top:199px;left: 44px;z-index: 10" id="text13">1938.1 ● 10人</div>
+			</div>
+			<img src="img/women.png" width="32" height="32" style="position: absolute;top:110px;">
+			<img src="img/men.png" width="32" height="32" style="position: absolute;top: 180px;">
+			<div style="position: absolute;top:80px;right: 220px;color: white;">女党员</div>
+			<div style="position: absolute;top:140px;right: 95px;color: white;" id="text14">508人(22.83%)</div>
+			<div id="chart8" class="chart"></div>
+			<div style="position: absolute;top:160px;right: 220px;color: white;">男党员</div>
+			<div style="position: absolute;top:220px;right: 90px;color: white;" id="text15">1717人(77.17%)</div>
+		</div>
+		<div style="margin-top: 10px;" class="item honor">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>荣誉党员</span></div>
+			<div class="chart f1" style="width:120px;text-align: center;color: white;">
+				<div id="text16">197人</div>
+				<img src="img/honor.png">
+				<div>50年以上党龄</div>
+			</div>
+			<div class="chart" style="width:120px;text-align: center;color: white;">
+				<div id="text17">3人</div>
+				<img src="img/honor.png">
+				<div>八一勋章</div>
+			</div>
+			<div class="chart" style="width:120px;text-align: center;color: white;">
+				<div id="text18">1人</div>
+				<img src="img/honor.png">
+				<div>二等功</div>
+			</div>
+			<div class="chart" style="width:120px;text-align: center;color: white;">
+				<div id="text19">57人</div>
+				<img src="img/honor.png">
+				<div>三等功</div>
+			</div>
+		</div>
+    </div>
+	<div class="item-middle">
+		<div id="mapContent" style="width: 100%;height: 610px;"></div>
+		<div class="item mItem" style="margin-top: 10px;">
+			<div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员综合分析</span></div>
+			<div id="chart9" class="chart" style="width: 100%;"></div>
+		</div>
+	</div>
+	<div id="mapSelect" style="display: none;"><div id="darkMap">深色地图</div><div class="selected">原始地图</div><div >地形图</div></div>
+	<div class="mapList"><span><i class="fa fa-angle-double-left fa-2x" style="padding-top: 5px;"></i></span></div>
+	<div id="townFrame" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;display: none;z-index:100;">
+		<span class="close" style="color: white;z-index:101;position: absolute;top: 15px;right: 15px;">x</span>
+		<iframe id="tFrame" src="" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;border: 0"></iframe>
+	</div>
+</body>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+<script>
+	var map;
+	var mapC;
+	var lonlat;
+	var partyJson;
+	var govArr=[];
+	var govPArr=[];
+	$.ajaxSettings.async = false;
+	$.getJSON("lonlat.json",function(data){
+	    lonlat=data;
+	    return lonlat;
+	    /*mapLoad();*/
+	});
+	$.getJSON("partyJSON.json",function(data){
+	    partyJson=data;
+	    return partyJson;
+	});
+
+	$.ajax({
+		url:'/api/nt/partyThemeMiddle/getPartyThemeMiddle',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    $("#n1").text(data.data.partyThemeMiddle.org+"个");
+		    $("#n2").text(data.data.partyThemeMiddle.member+"名");
+		    $("#n3").text(data.data.partyThemeMiddle.masses+"个");
+		}
+	})
+
+	var townArr=[];
+    var townArrDown=[];//下拉用
+	$.ajax({
+		url:'/api/nt/partyOrganization/getName',
+		dataType:'json',
+		async:false,
+		data:{
+            category:"镇属一级党组织"
+		},
+		success:function(data){
+		    for(var i in data.data.partyOrganizationList){
+                townArrDown.push(data.data.partyOrganizationList[i]);
+				if(!!data.data.partyOrganizationList[i].latitude&&!!data.data.partyOrganizationList[i].longitude){
+				    townArr.push(data.data.partyOrganizationList[i]);
+                }
+		    }
+		}
+	})
+	console.log(townArr);
+
+	$.ajaxSettings.async = true;
+
+	var findByName=function(obj,name1){
+	    var value;
+		obj.filter(function(items){
+            if(items.name===name1){
+                value=items.value;
+			}
+		})
+		return value;
+	}
+
+	var MapComp = function() {
+        var domId = "mapContent";
+        var _center = [113.892436, 23.416955];
+        var _map;
+        var _def_zoom = 18;
+        var _curr_zoom = _def_zoom;
+        var _max_zoom = 20;
+        var _min_zoom = 12;
+
+        this.init = function () {
+            _map = new AMap.Map(domId, {
+                zoom: _curr_zoom,//级别
+                center: _center,//中心点坐标
+                expandZoomRange: true,
+                zooms: [_min_zoom, _max_zoom],
+				mapStyle: "amap://styles/darkblue",
+				/*layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]*/
+            });
+            map = _map;
+        };
+        this.init1 = function () {
+            _map = new AMap.Map(domId, {
+                zoom: _curr_zoom,//级别
+                center: _center,//中心点坐标
+                expandZoomRange: true,
+                zooms: [_min_zoom, _max_zoom],
+				/*mapStyle: "amap://styles/darkblue",*/
+				/*layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]*/
+            });
+            map = _map;
+        };
+        this.init2 = function () {
+            _map = new AMap.Map(domId, {
+                zoom: _curr_zoom,//级别
+                center: _center,//中心点坐标
+                expandZoomRange: true,
+                zooms: [_min_zoom, _max_zoom],
+				/*mapStyle: "amap://styles/darkblue",*/
+				layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]
+            });
+            map = _map;
+        };
+    }
+    mapC=new MapComp();
+    mapC.init1();
+    mapLoad();
+
+    /*map.destroy();*/
+	function mapLoad(){
+        /*for(var i in partyJson){
+			if(govArr.indexOf(partyJson[i].组织关系所在单位)<0){
+			    govArr.push(partyJson[i].组织关系所在单位);
+			}
+		}
+		for(var i in govArr){
+		    var temp=[];
+		    for(var j in partyJson){
+		        if(govArr[i]==partyJson[j].组织关系所在单位){
+		            temp.push(partyJson[j]);
+				}
+			}
+			govPArr.push(temp);
+		}
+		for(var i in govArr){
+		    for(var j in lonlat){
+                if(lonlat[j].gop==govArr[i]){
+		            var l=lonlat[j].lonlat.split(",");
+		            var marker=new AMap.Marker({
+						position:new AMap.LngLat(l[0],l[1]),
+						icon:'images/party.png',
+						data:govPArr[i],
+					})
+					marker.on('click',getPInfo);
+					map.add(marker);
+				}
+			}
+		}*/
+        for(var i in townArr){
+            if(!!townArr[i].latitude&&!!townArr[i].longitude){
+                var marker=new AMap.Marker({
+                    position:new AMap.LngLat(townArr[i].longitude,townArr[i].latitude),
+                    icon:'images/party.png',
+                    data:townArr[i],
+                })
+                marker.on('click',getPInfo);
+                map.add(marker);
+			}
+		}
+	}
+	function getPInfo(e){
+	    var data=e.target.get("data");
+	    $.ajax({
+			url:'/api/nt/partyInfo/getPartyInfoList',
+			dataType:'json',
+			data:{
+			    searchName:data.abbreviation
+			},
+			async:false,
+			success:function(data1){
+			    var json=JSON.stringify(data1.data.partyInfoList);
+			    sessionStorage.setItem("abbs",data.abbreviation);
+				sessionStorage.setItem("partyJson",json);
+				$("#tFrame").attr("src","partyTown.html");
+				$("#townFrame").show();
+			}
+		})
+
+	}
+
+    /*
+    * 页面动画开始
+    * */
+
+    $(".mapList").on("click",function(){
+        $("#mapSelect").fadeToggle();
+	})
+	$("#mapSelect div").on("click",function(){
+	    var last=$("#mapSelect div.selected").index();
+	    var index=$(this).index();
+	    if(last==index){
+	        return;
+		}
+        $("#mapSelect div").removeClass("selected");
+        $(this).addClass("selected");
+        switch(parseInt(index)){
+			case 0:
+			    map.destroy();
+			    mapC.init();
+			    mapLoad();
+			    break;
+			case 1:
+			    map.destroy();
+			    mapC.init1();
+			    mapLoad();
+				break;
+			case 2:
+			    map.destroy();
+			    mapC.init2();
+			    mapLoad();
+			    break;
+		}
+	})
+
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+
+
+	/*
+	* 镇选项
+	* */
+	$(".townBtn").on("click",function(){
+	    $("#townList").empty();
+	    $("#townList").append("<li data-index='town'>全镇</li>");
+        for(var i in townArrDown){
+            $("#townList").append("<li data-index='"+townArrDown[i].abbreviation+"'>"+townArrDown[i].name+"</li>");
+        }
+        $("#townList").show();
+    })
+	$("#townList").on("click",'li',function(){
+	    var town=$(this).attr("data-index");
+		$.ajax({
+			url:'/api/nt/partyInfo/getPartyInfoList',
+			dataType:'json',
+			data:{
+			    searchName:town
+			},
+			async:false,
+			success:function(data){
+			    var json=JSON.stringify(data.data.partyInfoList);
+				sessionStorage.setItem("partyJson",json);
+				sessionStorage.setItem("abbs",town);
+				$("#tFrame").attr("src","partyTown.html");
+				$("#townFrame").show();
+			}
+		})
+
+	    $("#townList").hide();
+	})
+	$(".topTitle li").on("click",function(){
+	    $("#townList").hide();
+	})
+
+	$(".close").on("click",function(){
+	    $("#townFrame").hide();
+	    $("#tFrame").attr("src","");
+	    sessionStorage.removeItem("partyJson");
+	    sessionStorage.removeItem("abbs");
+	})
+
+	/*
+	* echarts图表开始
+	* */
+	var dataB=[];
+	var total2=0;
+	$.ajax({
+		url:'/api/nt/partyOrganization/getTotalByType',
+		dataType:'json',
+		async:false,
+		data:{
+		  	category:"镇属二级党组织"
+		},
+		success:function(data){
+		    for(var i in data.data.getTotalByType){
+		        total2+=parseInt(data.data.getTotalByType[i].total);
+		        var obj=new Object();
+		        obj.name=data.data.getTotalByType[i].type;
+		        obj.value=data.data.getTotalByType[i].total;
+		        dataB.push(obj)
+			}
+
+		}
+	})
+
+	$("#total2").html("总数<br>"+total2+"个");
+
+	var dataA=[];
+	var total1=0;
+	$.ajax({
+		url:'/api/nt/partyOrganization/getTotalByType',
+		dataType:'json',
+		async:false,
+		data:{
+		  	category:"镇属一级党组织"
+		},
+		success:function(data){
+		    for(var i in data.data.getTotalByType){
+		        total1+=parseInt(data.data.getTotalByType[i].total);
+		        var obj=new Object();
+		        obj.name=data.data.getTotalByType[i].type;
+		        obj.value=data.data.getTotalByType[i].total;
+		        dataA.push(obj)
+			}
+        }
+	})
+    $("#total1").html("总数<br>"+total1+"个");
+    // $("#text1").html("两新组织<br/>"+findByName(dataA,"两新组织")+"个")
+    // $("#text2").html("二级党委<br/>"+findByName(dataA,"二级党委")+"个")
+	// $("#text3").html("其他党支部<br/>"+findByName(dataA,"其他党支部")+"个")
+	// $("#text31").html("村党支部<br/>"+findByName(dataA,"村党支部")+"个")
+	// $("#text32").html("村（社）党总支部<br/>"+findByName(dataA,"村（社）党总支部")+"个")
+	// $("#text33").html("镇直机关党支部<br/>"+findByName(dataA,"镇直机关党支部")+"个")
+    $("#text33").html("二级党委<br/>"+findByName(dataA,"二级党委")+"个")
+    $("#text1").html("党总支部<br/>"+findByName(dataA,"党总支部")+"个")
+    $("#text32").html("党支部<br/>"+findByName(dataA,"党支部")+"个")
+	var chart1=echarts.init(document.getElementById("chart1"));
+	var option1={
+	    tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c}个 ({d}%)'
+		},
+		legend: {
+	        show:false,
+			bottom:'10',
+			textStyle:{
+	            color:'white'
+			}
+        },
+		color:['#01a6ff','#f0B78c','#ff1c57'],
+		title:{
+	        text:'镇属一级党组织',
+			left:'center',
+			top:'5%',
+			textStyle:{
+	            color:'white'
+			}
+		},
+		series: [
+        {
+            name: '镇属一级党组织',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+			startAngle:0,
+            label: {
+                position:'center',
+				show:false
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '20',
+                    fontWeight: 'bold'
+                }
+            },
+            /*labelLine: {
+                show: true
+            },*/
+            data: dataA
+        }
+    ]
+	}
+	chart1.setOption(option1);
+	chart1.on('mouseover',function(){
+	    $("#total1").hide();
+	})
+	chart1.on('mouseout',function(){
+	    $("#total1").show();
+	})
+
+	var chart2=echarts.init(document.getElementById("chart2"));
+	var option2={
+	    tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c}个 ({d}%)'
+		},
+		legend: {
+	        show:false,
+			bottom:'10',
+			textStyle:{
+	            color:'white'
+			}
+        },
+		color:['#01a6ff','#f0B78c','#ff1c57'],
+		title:{
+	        text:'镇属二级以下党组织',
+			left:'center',
+			top:'5%',
+			textStyle:{
+	            color:'white'
+			}
+		},
+		series: [
+        {
+            name: '镇属二级以下党组织',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            label: {
+                position:'center',
+				show:false
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '20',
+                    fontWeight: 'bold'
+                }
+            },
+            /*labelLine: {
+                show: true
+            },*/
+            data: dataB
+        }
+    ]
+	}
+	chart2.setOption(option2);
+	chart2.on('mouseover',function(){
+	    $("#total2").hide();
+	})
+	chart2.on('mouseout',function(){
+	    $("#total2").show();
+	})
+
+	$("#text4").html("党支部<br/>"+findByName(dataB,"党支部")+"个")
+	// $("#text6").html("村（社）党总支部<br/>"+findByName(dataB,"村（社）党总支部")+"个");
+
+	var ageL40;
+	var age60;
+	var ageM60;
+	$.ajax({
+		url:'/api/nt/partyInfo/getAgeByBirthday',
+		type:'get',
+		dataType:'json',
+		async:false,
+		success:function (data) {
+		    ageL40=age60=ageM60=0;
+			for(var i in data.data.ageByBirthdayList){
+			    var t=data.data.ageByBirthdayList[i];
+			    if(t.ageByBirthday=="other"||t.ageByBirthday=="thirtyToForty"){
+			        ageL40+=parseInt(t.ageCount);
+				}else if(t.ageByBirthday=="fortyToFifty"||t.ageByBirthday=="fiftyToSixty"){
+			        age60+=parseInt(t.ageCount);
+				}else if(t.ageByBirthday=="sixtyToAbove"){
+			        ageM60=+parseInt(t.ageCount);
+				}
+			}
+        }
+	})
+
+	var chart3=echarts.init(document.getElementById("chart3"));
+	var option3={
+	    tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c}人 ({d}%)'
+		},
+		legend: {
+            padding: 1,
+            itemGap: 1,
+            itemWidth: 20,
+            itemHeight: 10,
+	        show:true,
+			bottom:'1',
+			textStyle:{
+	            color:'white'
+			}
+        },
+		color:['#f0B78c','#01a6ff','#ff1c57'],
+		title:{
+	        text:'党员年龄统计',
+			left:'center',
+			top:'1%',
+			textStyle:{
+	            color:'white'
+			}
+		},
+		series: [
+        {
+            name: '党员年龄统计',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            label: {
+                position:'center',
+				show:false,
+				formatter:'{c}人\n{d}%'
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '30',
+                    fontWeight: 'bold'
+                }
+            },
+            labelLine: {
+                show: true
+            },
+            data: [
+                {value: age60, name: '40-60岁'},
+                {value: ageM60, name: '60岁以上'},
+                {value: ageL40, name: '40岁以下'}
+            ]
+        }
+    ]
+	}
+	chart3.setOption(option3);
+	$("#text7").html("40-60岁<br>"+age60+"人");
+	$("#text8").html("60岁以上<br>"+ageM60+"人");
+	$("#text9").html("40岁以下<br>"+ageL40+"人");
+
+	var college;
+	var highschool;
+	$.ajax({
+		url:'/api/nt/partyInfo/getPartyByEducation',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    college=highschool=0;
+		    college+=parseInt(data.data.partyByEducation[0].juniorCollege);
+		    highschool+=(parseInt(data.data.partyByEducation[0].highSchool)+parseInt(data.data.partyByEducation[0].juniorMiddleSchool));
+		}
+	})
+	var chart4=echarts.init(document.getElementById("chart4"));
+	var data=[college,highschool];
+	var sum=eval(data.join("+"));
+	var option4 = {
+		title:{
+		  	text:'党员学历统计',
+		  	left:'center',
+			textStyle:{
+		      color:'white'
+			}
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter: function(params,ticket,callback){
+			    return params[0].seriesName+"<br/>"+params[0].name+":"+params[0].value+"人("+((params[0].value/sum)*100).toFixed(2)+"%)";
+			}
+		},
+		xAxis: {
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				}
+			},
+            splitLine: {
+                lineStyle: {
+                    opacity:0.4
+                }
+            }
+		},
+		yAxis: {
+			type: 'category',
+			data: ['大专以上','高中（中专）以下'],
+			axisLabel: {
+			    show:false,
+				textStyle: {
+					color: 'white'
+				}
+			}
+		},
+		series: [
+			{
+				name: '党员学历统计',
+				type: 'bar',
+				barWidth:30,
+				itemStyle:{
+				    normal:{
+				        barBorderRadius: 15,
+				        color:function(params){
+				            var list=[['#c7c7c7','#0583c7'],['#c7c7c7','#c71745']];
+				            var i=params.dataIndex;
+				            return new echarts.graphic.LinearGradient(0, 0, 1, 0,[{
+                                    offset: 0,
+                                    color: list[i][0]
+                                },
+                                {
+                                    offset: 1,
+                                    color: list[i][1]
+                                }
+                            ]);
+						}
+					}
+				},
+				data: data
+			}
+		]
+	};
+	chart4.setOption(option4);
+	$("#text10").text(highschool+"人("+Math.round(highschool/sum*10000)/100+"%)");
+	$("#text11").text(college+"人("+Math.round(college/sum*10000)/100+"%)");
+
+
+	var chart5=echarts.init(document.getElementById("chart5"));
+	var option5 = {
+
+				tooltip: {
+					trigger: 'item',
+					formatter: "{a} <br/>{b}: {c}个 ({d}%)"
+				},
+				series: [
+					{
+						name:'党组织占比',
+						type:'pie',
+						color:['#000d8d','#0055fe'/*,'#005c8d'*/],
+						selectedMode: 'single',
+						radius: [0, '50%'],
+						label: {
+							normal: {
+								position: 'inner'
+							}
+						},
+						labelLine: {
+							normal: {
+								show: false
+							}
+						},
+						data:[
+							{value:total1, name:'一级党组织'},
+							{value:total2, name:'二级党组织'}
+						]
+					},
+					{
+						name:'党组织占比',
+						type:'pie',
+						color:['#ff1c57','#01a6ff','#12b5b0'/*,'#12b5b0','#f0B78c',#5400d0*/],
+						radius: ['60%', '80%'],
+						label: {
+							textStyle:{
+							    fontSize:'14',
+								color:'white'
+							}
+						},
+						data:[
+							// {value:findByName(dataA,"村（社）党总支部"), name:'党总支部'},
+							// {value:(total1+total2-findByName(dataA,"村（社）党总支部")), name:'党支部'}
+							//{value:(total1+total2-findByName(dataA,"党支部")), name:'党支部'}
+                            {value:findByName(dataA,"党总支部"), name:'党总支部'},
+                            {value:findByName(dataA,"党支部"), name:'党支部'},
+                            {value:findByName(dataB,"党支部"), name:'党支部'}
+							/*{value:3, name:'校园党总支'},*/
+							/*{value:49, name:'校园党支部'}*/
+						]
+					}
+				]
+	};
+	chart5.setOption(option5, true);
+
+	/*var chart6=echarts.init(document.getElementById("chart6"));
+	var option6={
+	    tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c} ({d}%)'
+		},
+		legend: {
+	        show:false
+        },
+		title:{
+	        text:'下属党组织性质',
+			left:'center',
+			top:'5%',
+			textStyle:{
+	            color:'white'
+			}
+		},
+		series: [
+        {
+            name: '下属党组织',
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                position:'center',
+				show:false
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '30',
+                    fontWeight: 'bold'
+                }
+            },
+            /!*labelLine: {
+                show: true
+            },*!/
+            data: [
+                {value: 32, name: '党支部'},
+                {value: 12, name: '党总支部'},
+                {value: 9, name: '二级党委'}
+            ]
+        }
+    ]
+	}
+	chart6.setOption(option6);*/
+	var office,community,two;
+	$.ajax({
+		url:'/api/nt/partyInfo/getPartyByType',
+		dataType:'json',
+		async:false,
+		success:function(data){
+			office=community=two=0;
+			office=parseInt(data.data.partyByType[0].office);
+			community=parseInt(data.data.partyByType[0].community);
+			two=parseInt(data.data.partyByType[0].two);
+		}
+	})
+	var chart7=echarts.init(document.getElementById("chart7"));
+	var data7=[community,office,two];
+	var sum7=eval(data.join("+"));
+
+	var option7 = {
+		title:{
+		  	text:'党组织类别',
+		  	left:'center',
+			textStyle:{
+		      color:'white'
+			}
+		},
+		grid:{
+		    left:50
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter: function(params,ticket,callback){
+			    return params[0].seriesName+"<br/>"+params[0].name+":"+params[0].value+"人("+((params[0].value/sum7)*100).toFixed(2)+"%)";
+			}
+		},
+		xAxis: {
+			type: 'category',
+			data: ['农村党员','机关党员','两新党员'],
+			axisLabel: {
+				textStyle: {
+					color: 'white',
+					fontSize:'16'
+				},
+				interval:0
+			}
+		},
+		yAxis: {
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				},
+				formatter:'{value}人'
+			},
+            splitLine: {
+                lineStyle: {
+                    opacity:0.4
+                }
+            }
+		},
+		series: [
+			{
+				name: '党员学历统计',
+				type: 'bar',
+				barWidth:40,
+				itemStyle:{
+				    normal:{
+				        barBorderRadius: 5,
+				        color:function(params){
+				            var list=[['#c7c7c7','#0583c7'],['#c7c7c7','#c71745'],['#c7c7c7','#f3ccad']];
+				            var i=params.dataIndex;
+				            return new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
+                                    offset: 0,
+                                    color: list[i][0]
+                                },
+                                {
+                                    offset: 1,
+                                    color: list[i][1]
+                                }
+                            ]);
+						}
+					}
+				},
+				data: data7
+			}
+		]
+	};
+	$("#t1").html("农村党员<br/>"+community+"人");
+	$("#t2").html("机关党员<br/>"+office+"人");
+	$("#t3").html("两新党员<br/>"+two+"人");
+	$("#t1").css({'top':66.5-(data7[0]/sum*69)+"%"});
+	$("#t2").css({'top':66.5-(data7[1]/sum*69)+"%"});
+	$("#t3").css({'top':66.5-(data7[2]/sum*69)+"%"});
+	chart7.setOption(option7);
+
+	var men;
+	var women;
+	$.ajax({
+		url:"/api/nt/partyInfo/getTotalBySex",
+		type:'get',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    men=women=0;
+		    for(var i in data.data.totalBySex){
+		        // var t=data.data.totalBySex[i];
+		        // if(t.sex=="男"){
+		        //     men+=parseInt(t.ageCount);
+				// }else{
+		        //     women+=parseInt(t.ageCount);
+				// }
+                men+= data.data.totalBySex[i].male
+                women+= data.data.totalBySex[i].female
+			}
+		}
+	})
+	var chart8=echarts.init(document.getElementById("chart8"));
+	var data8=[men,women];
+	var sum8=eval(data8.join("+"));
+	var option8 = {
+		title:{
+		  	text:'党员性别统计',
+		  	left:'center',
+			textStyle:{
+		      color:'white'
+			}
+		},
+		grid:{
+		    left:50
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter: function(params,ticket,callback){
+			    return params[0].seriesName+"<br/>"+params[0].name+":"+params[0].value+"人("+((params[0].value/sum8)*100).toFixed(2)+"%)";
+			}
+		},
+		xAxis: {
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				}
+			},
+            splitLine: {
+                lineStyle: {
+                    opacity:0.4
+                }
+            }
+		},
+		yAxis: {
+			type: 'category',
+			data: ['男党员','女党员'],
+			axisLabel: {
+			    show:false,
+				textStyle: {
+					color: 'white'
+				}
+			}
+		},
+		series: [
+			{
+				name: '党员性别统计',
+				type: 'bar',
+				barWidth:40,
+				itemStyle:{
+				    normal:{
+				        /*barBorderRadius: 20,*/
+				        color:function(params){
+				            var list=[['#c7c7c7','#0583c7'],['#c7c7c7','#c71745']];
+				            var i=params.dataIndex;
+				            return new echarts.graphic.LinearGradient(0, 0, 1, 0,[{
+                                    offset: 0,
+                                    color: list[i][0]
+                                },
+                                {
+                                    offset: 1,
+                                    color: list[i][1]
+                                }
+                            ]);
+						}
+					}
+				},
+				data: data8
+			}
+		]
+	};
+	chart8.setOption(option8);
+	$("#text14").text("女："+women+"名("+Math.round(women/sum8*10000)/100+"%)");
+	$("#text15").text("男："+men+"名("+Math.round(men/sum8*10000)/100+"%)");
+
+/*
+	var chart9=echarts.init(document.getElementById("chart9"));
+*/
+	var team,theory,committee,organization,sum9;
+	$.ajax({
+		url:'/api/nt/partyThemeSituation/getPartyThemeSituation',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    team=data.data.partyThemeSituation.team;
+		    theory=data.data.partyThemeSituation.theory;
+		    committee=data.data.partyThemeSituation.committee;
+		    organization=data.data.partyThemeSituation.organization;
+		    sum = team+theory+committee+organization
+		}
+	})
+	var chart9=echarts.init(document.getElementById("chart9"));
+	var s=[theory,committee,team,organization];
+	var option9 = {
+		tooltip: {
+		   /* trigger: 'axis',*/
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter:'{b}:{c}次'
+		},
+		legend: {
+			textStyle:{
+				color:'white'
+			}
+		},
+		grid: [{
+			left: '3%',
+			right: '4%',
+			bottom: '10%',
+			containLabel: true
+		}],
+		xAxis: {
+			type: 'category',
+			data:['党委理论学习','镇党委会学习','领导班子成员撰写心得','党组织讲党课'],
+			axisLabel: {
+				textStyle: {
+					color: 'white',
+					fontSize:'16'
+				},
+				interval:0
+			}
+
+		},
+		yAxis: [{
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				},
+				formatter:'{value}次'
+			},
+			nameTextStyle:{
+				color:'white'
+			},
+            splitLine: {
+                lineStyle: {
+					opacity:0.4
+                }
+            }
+		}],
+		series: [
+			{
+				type: 'bar',
+				itemStyle: {
+					color:'#87cefa'
+				},
+				barWidth : 50,
+                label: {
+                    show: true, //开启显示
+                    normal: {
+                        position: 'top', //在上方显示
+                        show: true,
+                        // fontSize: 16,
+                        // fontWeight: 600,
+                        formatter: '次数：{c}次',         // 显示的总数
+                        textStyle: { color: 'white' }
+                    }
+                },
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#c7c7c7'},
+                            {offset: 1, color: '#0583c7'}
+                        ]
+                    )
+                },
+				data:s
+			}]
+	};
+	chart9.setOption(option9);
+	var c9h=$("#chart9").height();
+	var max=Math.max.apply(null,s);
+	// for(var i in s){
+	//     $("#chart9").append("<div style='position:absolute;color:white;left:"+(115+180*i)+"px;bottom:"+(s[i]/max*(c9h-110)+60)+"px'>次数："+s[i]+"次</div>");
+	// }
+
+	$.ajax({
+		url:'/api/nt/partyInfo/getPartyByYearly',
+		dataType:'json',
+		async:false,
+		success:function(data){
+		    $("#text12").text(data.data.partyByYearly[data.data.partyByYearly.length-1].joinYearMonth+" ● "+parseInt(data.data.partyByYearly[data.data.partyByYearly.length-1].joinCountAccumulation)+"人")
+		    $("#text13").text(data.data.partyByYearly[0].joinYearMonth+" ● "+parseInt(data.data.partyByYearly[0].joinCountAccumulation)+"人")
+		}
+	})
+
+	$.ajax({
+		url:'/api/nt/partyHonorary/getTotalByType',
+		dataType:'json',
+		async:false,
+		success:function(data){
+			$("#text16").text(data.data.partyAgeByFifty.total+"人");
+			$("#text19").text(data.data.getTotalByType[0].total+"人");
+			$("#text18").text(data.data.getTotalByType[1].total+"人");
+			$("#text17").text(data.data.getTotalByType[2].total+"人");
+		}
+	})
+
+</script>
+<!--<script type="text/javascript" src="partyJSON.json?cb=partyJSON"></script>
+<script type="text/javascript" src="lonlat.json?cb=getlonlat"></script>-->
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地理信息添加表单</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css"/>
+    <link rel="stylesheet" href="../../css/style.css"/>
+    <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+</head>
+<body>
+<div class=" layui-pad10">
+
+    <form class="layui-form" lay-filter="component-form-group">
+        <input type="hidden" name="id">
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地理信息名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" lay-reqtext="地理信息名称是必填项，岂能为空？"
+                           placeholder="请输入"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地理关注类别：</label>
+                <div class="layui-input-block">
+                    <select id="attention_type" name="attention_type" data-select="type" lay-filter="attention_type" lay-verify="required" lay-reqtext="地理关注类别是必填项，岂能为空？">
+                        <option value=""></option>
+                        <option value="crowd">人群</option>
+                        <option value="building">建筑</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地理信息类别：</label>
+                <div class="layui-input-block">
+                    <select id="geoType" name="geotype_id" data-select="type" lay-filter="geoType" lay-verify="required" lay-reqtext="地理信息类别是必填项，岂能为空？">
+
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs8">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地理经纬度：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="lat_lon" name="lat_lon" lay-verify="required" lay-reqtext="地理经纬度是必填项，岂能为空？"
+                           placeholder="请输入"
+                           autocomplete="off" class="layui-input" readonly="true">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <button id="selectPos" type="button" class="layui-btn layui-btn-normal">选择地址</button>
+        </div>
+        <div class="layui-col-xs10">
+            <div class="layui-form-item">
+                <label class="layui-form-label">地理地址：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="addr" name="addr" lay-verify="required" lay-reqtext="地理地址是必填项，岂能为空？"
+                           placeholder="请输入"
+                           autocomplete="off" class="layui-input" readonly="true">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">人数：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="number" lay-verify="required|number" lay-reqtext="人数是必填项，岂能为空？" placeholder="请输入"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系人：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="contact" lay-verify="required" lay-reqtext="联系人是必填项，岂能为空？"
+                           placeholder="请输入"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系人电话：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="contact_number" lay-verify="required|phone" lay-reqtext="联系人电话是必填项，岂能为空？"
+                           placeholder="请输入"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否启用：</label>
+                <div class="layui-input-block">
+                    <select name="enabled" lay-verify="required">
+                        <option value=""></option>
+                        <option value="0">启用</option>
+                        <option value="1">不启用</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序编号：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sort_no" lay-verify="number" placeholder="请输入"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-mt10 layui-text-center layui-col-xs12">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">
+                提 交
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    var geoTypeIcon;
+    //初始化地理类别select
+    //function initTypeOption() {
+    var geoTypeList = sessionStorage.getItem("geoTypeList");
+    var geotype = $.parseJSON(geoTypeList);
+    $("#geoType").empty();
+    var option = ' <option value=""></option>';
+    for (var i = 0; i < geotype.length; i++) {
+        option += '<option data-icon="'+geotype[i]["iconType"]+'" value="' + geotype[i]["id"] + '">' + geotype[i]["name"] + '</option>';
+    }
+    $("#geoType").append(option);
+    //}
+    var rowData;
+    var edit;
+    if (sessionStorage.getItem("edit") == "true") {
+        var temp = sessionStorage.getItem("row");
+        edit = sessionStorage.getItem("edit");
+        sessionStorage.removeItem("edit");
+        sessionStorage.removeItem("row");
+        rowData = $.parseJSON(temp);
+        for (var key in rowData) {
+            if(key != 'geotype_id'){
+                $("[name=" + key + "]").val(rowData[key]);
+            }
+        }
+        $("#geoType").val(rowData['geotype_id']);
+    }
+
+
+    layui.use(['layer', 'form'], function () {
+        var leyer = layui.layer
+            , form = layui.form;
+        form.render();
+        $("#selectPos").on('click', function () {
+            var lat_lon = $("#lat_lon").val();
+            layer.open({
+                title: "定位",
+                type: 2,
+                content: 'emergencyGeoPosition.html?lat_lon=' + lat_lon,
+                area: ['700px', '400px'],
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    var res = window["layui-layer-iframe" + index].callbackdata();
+                    $("#lat_lon").val(res.latitude_longitude);
+                    $("#addr").val(res.address);
+                    layer.closeAll();
+                },
+                btn2: function () {
+                    layer.closeAll();
+                },
+                cancel: function (index, layero) {
+                    layer.close(index);
+                }
+            });
+        });
+        //监听地理类别，获取选中的data-icon
+        form.on('select(geoType)', function(data){
+            console.log(data.elem[data.elem.selectedIndex].dataset.icon); //得到select选中项的自定义属性值 data
+            geoTypeIcon = data.elem[data.elem.selectedIndex].dataset.icon;
+        });
+
+        form.on('submit(submit)', function (data) {
+          var text =  $("#geoType option:selected").text();//获取地理信息类别文本
+          data.field.geoTypeText = text;
+          data.field.geoTypeIcon = geoTypeIcon;
+            if (edit == "true") {
+                $.ajax({
+                    url: '/geoInfo/update',
+                    type: 'post',
+                    dataType: 'json',
+                    data: data.field,
+                    success: function (rs) {
+                        if (rs == 1) {
+                            swal("编辑成功", "编辑成功", "success");
+                            closeFrame();
+                            parent.showAllMarkers();
+                        }
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: '/geoInfo/insert',
+                    type: 'post',
+                    dataType: 'json',
+                    data: data.field,
+                    success: function (rs) {
+                        if (rs == 1) {
+                            swal("新增成功", "新增成功", "success");
+                            //parent.addMarker(data.field);
+                            parent.showAllMarkers();
+                            closeFrame();
+
+                        }
+                    }
+                });
+            }
+        })
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		<link rel="stylesheet" href="../css/reset.css" />
+		<link rel="stylesheet" href="../css/timeline.css" />
+
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/page/common.js" ></script>
+		<script type="text/javascript" src="../js/timeline.js" ></script>
+		<!--<script type="text/javascript" src="../js/echarts.min.js" ></script>-->
+		<script type="text/javascript" src="../layui/layui.all.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+        <style>
+            body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+            #timeline{
+                width: 95%;
+                height: 100px;
+                bottom:10px;
+                margin: 0 auto;
+            }
+			.layui-timeline-item h3,.layui-timeline-item p{
+				color:white;
+			}
+			.events li{
+				float: left;
+				width: 25%;
+			}
+			.events li a{
+				color: white!important;
+			}
+			.cd-horizontal-timeline .events a{
+				height: 50px!important;
+			}
+        </style>
+</head>
+<body>
+    <div class="comborder5 layoption">
+			<div class="border">
+				<div class="tl comtl">
+					事件过程
+				</div>
+            </div>
+            <div class="pad10 ind_cont clearfix font12 droptype" id="timelinePanel" style="width: 100%;height: 450px;">
+
+            </div>
+		<section class="cd-horizontal-timeline">
+        	<div class="timeline">
+            	<div class="events-wrapper">
+                	<div class="events" style="width: 100%;">
+                    	<ol style="width: 100%">
+
+						</ol>
+						<span class="filling-line" aria-hidden="true"></span>
+					</div>
+				</div>
+				<ul class="cd-timeline-navigation">
+					<li><a href="#0" class="tprev inactive">Prev</a></li>
+					<li><a href="#0" class="tnext">Next</a></li>
+				</ul>
+			</div>
+			<div class="events-content">
+
+			</div>
+		</section>
+	</div>
+</body>
+<script>
+    var data;
+    var timelineA=[];
+    var EDate=[];
+	var EData=[];
+	var FDate=[];
+	var detailA=[];
+	var words=["发送了事件告警","选择了预案","进行预案启动","进行结案"];
+    /*var charts=echarts.init(document.getElementById("timeline"));*/
+    $.ajax({
+        url:'/dispatch/center/getTimeAxisData',
+        data:{
+            actionprogramId:sessionStorage.getItem("HId")
+        },
+        type:'get',
+        dataType:'json',
+        async:false,
+        success:function(data){
+            EDate=[];
+            EData=[];
+            FDate=[];
+            detailA=[];
+            var fakeDate=new Date().getTime();
+            for(var i in data.data.data){
+                if(i==0){
+                    $(".events ol").append("<li><a href='#0' class='selected' data-date='"+toTimelineStr(fakeDate+parseInt(i))+"' style='left:0'>"+data.data.data[i].evendesc+"</a></li>");
+				}else{
+                    switch(parseInt(i)){
+						case 1:
+						    $(".events ol").append("<li><a href='#0' data-date='"+toTimelineStr(fakeDate+parseInt(i))+"' style='left:"+(25*parseInt(i))+"%'>"+data.data.data[i].evendesc+"<br/>期望及时性：5<br/>及时性："+(data.data.data[i].etimely?data.data.data[i].etimely:'')+"</a></li>");
+						    break;
+						case 2:
+						    $(".events ol").append("<li><a href='#0' data-date='"+toTimelineStr(fakeDate+parseInt(i))+"' style='left:"+(25*parseInt(i))+"%'>"+data.data.data[i].evendesc+"<br/>期望有效性：5<br/>有效性："+(data.data.data[i].effective?data.data.data[i].effective:'')+"</a></li>");
+						    break;
+						case 3:
+						    $(".events ol").append("<li><a href='#0' data-date='"+toTimelineStr(fakeDate+parseInt(i))+"' style='left:"+(25*parseInt(i))+"%'>"+data.data.data[i].evendesc+"<br/>期望应急能力：5<br/>应急能力："+(data.data.data[i].emergency?data.data.data[i].emergency:'')+"</a></li>");
+						    break;
+					}
+				}
+                EDate.push(data.data.data[i].date+parseInt(i));
+                EData.push(data.data.data[i].evendesc);
+            }
+            console.log(EDate);
+            /*var option={
+                timeline:{
+                    left:20,
+                    right:20,
+                    autoPlay:false,
+                    playInteval:10000,
+                    data:FDate,
+                    label:{
+                        formatter:function(s,i){
+                            return EData[i];
+                        },
+                        color:'white'
+                    },
+                    lineStyle:{
+                        color:'white'
+                    },
+                    controlStyle:{
+                        color:'white',
+                        borderColor:'white'
+                    }
+                }
+            }
+            charts.setOption(option);*/
+
+            for(var i in data.data.detail){
+                detailA.push(data.data.detail[i]);
+			}
+			detailA.reverse();
+            for(var j in EDate){
+                var temp=[];
+                if(j==0){
+                    if(detailA[i].date<=EDate[j]){
+                        temp.push(detailA[i]);
+					}
+				}else{
+                    for(var i in detailA){
+						if(detailA[i].date<=EDate[j]&&detailA[i].date>EDate[j-1]){
+							temp.push(detailA[i]);
+						}
+					}
+				}
+
+				timelineA.push(temp);
+			}
+        }
+    })
+	loadtimeline(timelineA);
+
+    function loadtimeline(arr){
+
+        $("#timelinePanel").empty();
+        for(var i in arr){
+            if(i==0){
+                var str="<div class='timelineP' style='width: 100%;height: 450px;overflow-y: auto;'><ul class='layui-timeline' style='padding-left: 10%;'>";
+				for(var j in arr[i]){
+					str+="<li class='layui-timeline-item'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i><div class='layui-timeline-content layui-text'><h3>"+toStr(arr[i][j].date)+"</h3><p style='margin-top: 10px'>"+arr[i][j].content+"</p>";
+				}
+				if(arr[i].length==0){
+					str+="<li class='layui-timeline-item'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i><div class='layui-timeline-content layui-text'><h3>"+toStr(EDate[0])+"</h3><p style='margin-top: 10px'>"+toStr(EDate[0])+words[0]+"</p>";
+				}
+				str+="</ul></div>";
+				$("#timelinePanel").append(str);
+			}else{
+                var str="<div class='timelineP' style='width: 100%;height: 450px;display: none;overflow-y: auto;'><ul class='layui-timeline' style='padding-left: 10%;'>";
+                for(var t=i;t>-1;t--){
+                    console.log(t);
+                    if(arr[t].length==0){
+                        str+="<li class='layui-timeline-item'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i><div class='layui-timeline-content layui-text'><h3>"+toStr(EDate[t])+"</h3><p style='margin-top: 10px'>"+toStr(EDate[t])+words[t]+"</p>";
+					}else{
+                        for(var j in arr[t]){
+                            str+="<li class='layui-timeline-item'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i><div class='layui-timeline-content layui-text'><h3>"+toStr(arr[t][j].date)+"</h3><p style='margin-top: 10px'>"+arr[t][j].content+"</p>";
+						}
+					}
+				}
+				str+="</ul></div>";
+				$("#timelinePanel").append(str);
+			}
+
+        }
+	}
+
+    function toStr(date){
+        var date=new Date(date);
+        return date.getFullYear()+"-"+prefixInteger((date.getMonth()+1),2)+"-"+prefixInteger(date.getDate(),2)+" "+prefixInteger(date.getHours(),2)+":"+prefixInteger(date.getMinutes(),2)+":"+prefixInteger(date.getSeconds(),2)
+    }
+    function toTimelineStr(date){
+        var date=new Date(date);
+        return date.getFullYear()+"/"+prefixInteger((date.getMonth()+1),2)+"/"+prefixInteger(date.getDate(),2);
+	}
+	$("body").on("click",".tprev",function(){
+	    var index=$(".events li a.selected").parent().index();
+	    console.log(index);
+	    if(index==0){
+	        return;
+		}
+		if(index-1==0){
+		    $(".tprev").addClass("inactive");
+		}
+	    $(".events li a").removeClass("selected");
+	    $(".events li a").removeClass("older-event")
+        for(var i=0;i<4;i++){
+            if(i<index){
+                $(".events li a").eq(i).addClass("older-event")
+            }
+        }
+        $(".events li a").eq(index-1).addClass("selected");
+        $(".tnext").removeClass("inactive");
+        showPage(index-1)
+    })
+	$("body").on("click",".tnext",function(){
+	    var index=$(".events li a.selected").parent().index();
+	    console.log(index);
+	    if(index==3){
+	        return;
+		}
+		if(index+1==3){
+		  $(".tnext").addClass("inactive");
+		}
+	    $(".events li a").removeClass("selected");
+	    $(".events li a").removeClass("older-event")
+        for(var i=0;i<4;i++){
+            if(i<=index){
+                $(".events li a").eq(i).addClass("older-event")
+            }
+        }
+        $(".events li a").eq(index+1).addClass("selected");
+        $(".tprev").removeClass("inactive");
+        showPage(index+1)
+    })
+	$(".events li").on('click','a',function () {
+		var index=$(this).parent().index();
+		showPage(index);
+    })
+	function showPage(index){
+        $(".timelineP").hide();
+        $(".timelineP").eq(index).show();
+	}
+
+</script>
+</html>

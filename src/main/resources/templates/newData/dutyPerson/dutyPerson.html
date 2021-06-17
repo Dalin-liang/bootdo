@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header">
+</head>
+<script type="text/javascript" href="/layui/layui.js"></script>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<table id="table" style="height: 50%"></table>
+	</div>
+
+	<div th:include="include :: footer"></div>
+</body>
+<style>
+    .fixed-table-body{
+            height: auto!important;
+    }
+</style>
+<script>
+	$("#table").bootstrapTable({
+            url:'/newData/dutyPerson/list',
+            method : 'get',
+            iconSize : 'outline',
+            toolbar : '#exampleToolbar',
+            striped : true, // 设置为true会有隔行变色效果
+            dataType : "json", // 服务器返回的数据类型
+            pagination : true, // 设置为true会在底部显示分页条
+            // queryParamsType : "limit",
+            // //设置为limit则会发送符合RESTFull格式的参数
+            singleSelect : false, // 设置为true将禁止多选
+            // contentType : "application/x-www-form-urlencoded",
+            // //发送到服务器的数据编码类型
+            pageSize : 10, // 如果设置了分页，每页数据条数
+            pageNumber : 1, // 如果设置了分布，首页页码
+            // search : true, // 是否显示搜索框
+            showColumns : false, // 是否显示内容下拉框（选择显示的列）
+            sidePagination : "server", // 设置在哪里进行分页，可选值为"client" 或者
+            // "server"
+            queryParams : function(params) {
+                return {
+                    // 说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
+                    limit : params.limit,
+                    offset : params.offset
+                };
+            },
+            columns:[
+                {
+                    checkbox:true
+                },
+                {
+                    field:'name',
+                    title:'分管领导姓名'
+                },
+                {
+                    field:'job',
+                    title:'分管领导职位'
+                },
+                {
+                    field:'mobile',
+                    title:'分管领导联系电话'
+                },
+                {
+                    field:'towns',
+                    title:'村居'
+                },{
+                    field:'duty',
+                    title:'责任人'
+                },{
+                    field:'dutyjob',
+                    title:'责任人职位'
+                },
+                {
+                    field:'dutymobile',
+                    title:'责任人联系电话'
+                },{
+                    field:'coop',
+                    title:'合作社'
+                },{
+                    field:'coopduty',
+                    title:'合作社责任人'
+                },
+                {
+                    field:'coopjob',
+                    title:'合作商职位'
+                },
+                {
+                    field:'coopmobile',
+                    title:'合作社联系电话'
+                }
+            ]
+        })
+</script>
+</html>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.planManage.dao.PlanEarlywarnLevelDao">
+
+	<sql id="planEarlywarnLevelColumns">
+		a.`id` As id,
+		a.`earlywarn_type_id` As earlywarnTypeId,
+		a.`accident_type_id` As accidentTypeId,
+		a.`name` As name,
+		a.`standards` As standards,
+		a.`status` As status,
+		a.`update_date` As updateDate,
+		accidentType.name As accidentTypeName ,
+		earlywarnType.name As earlywarnTypeName 
+	</sql>
+	
+	<sql id="planEarlywarnLevelJoins">
+		LEFT JOIN plan_accident_type accidentType ON accidentType.id = a.accident_type_id
+		LEFT JOIN plan_earlywarn_type earlywarnType ON earlywarnType.id = a.earlywarn_type_id
+	</sql>
+	
+	<select id="get" resultType="com.bootdo.planManage.domain.PlanEarlywarnLevelDO">
+		select 
+			<include refid="planEarlywarnLevelColumns"/>
+		from plan_earlywarn_level a
+		<include refid="planEarlywarnLevelJoins"/>
+		where a.id = #{value}
+	</select>
+	
+	<select id="getEarlywarnLevel" resultType="com.bootdo.planManage.domain.PlanEarlywarnLevelDO">
+		select 
+			<include refid="planEarlywarnLevelColumns"/>
+		from plan_earlywarn_level a
+		<include refid="planEarlywarnLevelJoins"/>
+		where a.status ='1' OR a.status ='2'
+		ORDER BY a.update_date DESC
+	</select>
+
+	<select id="list" resultType="com.bootdo.planManage.domain.PlanEarlywarnLevelDO">
+		select 
+			<include refid="planEarlywarnLevelColumns"/>
+		from plan_earlywarn_level a
+		<include refid="planEarlywarnLevelJoins"/>
+        <where>  
+  			<if test="name != null and name != ''"> and a.name like concat('%',#{name},'%') </if>
+  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by a.update_date desc , ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.update_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from plan_earlywarn_level
+		 <where>  
+  		 	<if test="name != null and name != ''"> and name like concat('%',#{name},'%') </if>
+  		 </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.planManage.domain.PlanEarlywarnLevelDO">
+		insert into plan_earlywarn_level
+		(
+			`id`, 
+			`earlywarn_type_id`, 
+			`accident_type_id`, 
+			`name`, 
+			`standards`, 
+			`status`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{earlywarnTypeId}, 
+			#{accidentTypeId}, 
+			#{name}, 
+			#{standards}, 
+			#{status}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update plan_earlywarn_level set `status` = #{status}
+		where id = #{id}
+	</update>
+	
+	<update id="update" parameterType="com.bootdo.planManage.domain.PlanEarlywarnLevelDO">
+		update plan_earlywarn_level 
+		<set>
+			<if test="earlywarnTypeId != null">`earlywarn_type_id` = #{earlywarnTypeId}, </if>
+			<if test="accidentTypeId != null">`accident_type_id` = #{accidentTypeId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="standards != null">`standards` = #{standards}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from plan_earlywarn_level where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from plan_earlywarn_level where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getIdByName" resultType="String">
+		SELECT id
+		FROM plan_earlywarn_level
+		WHERE NAME = #{name}
+		LIMIT 1
+	</select>
+
+	<select id="getIdByNames" resultType="String">
+		SELECT l.id
+		FROM plan_earlywarn_level l
+		left  join plan_accident_type p on p.id = l.accident_type_id
+		left  join plan_earlywarn_type w on w.id = l.earlywarn_type_id
+		WHERE l.NAME = #{earlywarnLevelName} and p.name = #{accidentTypeName} and w.name = #{earlywarnTypeName}
+		LIMIT 1
+	</select>
+</mapper>

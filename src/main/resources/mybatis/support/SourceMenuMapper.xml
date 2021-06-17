@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.SourceMenuDao">
+
+	<select id="get" resultType="com.bootdo.support.entity.SourceMenuDO">
+		SELECT d.`id`,d.`name`,d.`type`,d.`watch_source_id`,d.`remarks`,d.`enabled` ,s.name AS watchSourceName
+		FROM watch_source_menu d
+		LEFT JOIN watch_source s ON s.id = d.watch_source_id
+		where d.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.entity.SourceMenuDO">
+		SELECT d.`id`,d.`name`,d.`type`,d.`watch_source_id`,d.`remarks`,d.`enabled` ,s.name AS watchSourceName
+		FROM watch_source_menu d
+		LEFT JOIN watch_source s ON s.id = d.watch_source_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and d.id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and d.name like concat('%',#{name},'%') </if>
+		  		  <if test="type != null and type != ''"> and d.type like concat('%',#{type},'%') </if>
+		  		  <if test="watchSourceId != null and watchSourceId != ''"> and d.watch_source_id = #{watchSourceId} </if>
+		  		  <if test="enabled != null and enabled != ''"> and d.enabled = #{enabled} </if>
+		  		  <if test="remarks != null and remarks != ''"> and d.remarks like concat('%',#{remarks},'%') </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order},s.sort_no asc
+            </when>
+			<otherwise>
+                order by s.sort_no asc,id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*)
+		FROM watch_source_menu d
+		LEFT JOIN watch_source s ON s.id = d.watch_source_id
+		<where>
+			<if test="id != null and id != ''"> and d.id = #{id} </if>
+			<if test="name != null and name != ''"> and d.name like concat('%',#{name},'%') </if>
+			<if test="type != null and type != ''"> and d.type like concat('%',#{type},'%') </if>
+			<if test="watchSourceId != null and watchSourceId != ''"> and d.watch_source_id = #{watchSourceId} </if>
+			<if test="enabled != null and enabled != ''"> and d.enabled = #{enabled} </if>
+			<if test="remarks != null and remarks != ''"> and d.remarks like concat('%',#{remarks},'%') </if>
+		</where>
+	</select>
+
+	<select id="getWatchSource" resultType="com.bootdo.support.entity.SourceDO">
+		SELECT s.*
+		FROM watch_source s
+		where s.enabled = '1'
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.entity.SourceMenuDO" useGeneratedKeys="true" keyProperty="id">
+		insert into watch_source_menu
+		(
+			`name`, 
+			`type`, 
+			`watch_source_id`, 
+			`enabled`,
+			`remarks`
+		)
+		values
+		(
+			#{name}, 
+			#{type}, 
+			#{watchSourceId}, 
+			#{enabled},
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.SourceMenuDO">
+		update watch_source_menu 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="watchSourceId != null">`watch_source_id` = #{watchSourceId}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update watch_source_menu set `enabled` = #{enabled}
+		where id = #{id}
+	</update>
+
+	<select id="getBySourceId" parameterType="java.lang.String" resultType="com.bootdo.support.entity.SourceMenuDO">
+		SELECT d.`id`,d.`name`,d.`type`,d.`watch_source_id`,d.`remarks`,d.`enabled`
+		FROM watch_source_menu d
+		WHERE d.enabled = '1' and d.watch_source_id = #{id}
+	</select>
+
+	<select id="getLastBySourceIdForSms" parameterType="java.lang.String" resultType="com.bootdo.support.entity.SourceMenuDO">
+		SELECT w.*
+		FROM watch_source_menu w
+		WHERE w.watch_source_id = #{id} and w.id NOT IN (
+			SELECT t.`id`
+			FROM watch_source_menu t
+			INNER JOIN sms_send_config c ON c.type = '0' AND c.`targetId` = t.`id`
+			WHERE t.watch_source_id = #{id}
+		)
+	</select>
+	
+	<delete id="remove">
+		delete from watch_source_menu where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from watch_source_menu where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

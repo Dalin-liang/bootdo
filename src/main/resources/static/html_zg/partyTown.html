@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果智慧党建</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/layui/css/layui.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/layui/layui.js"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+    <style>
+        .townItem{
+            width: calc(20% - 10px);
+            float: left;
+            height: calc(100% - 135px);
+            margin-top: 135px;
+            margin-right: 10px;
+            background-color: rgba(2,22,91,1);
+            border: #0a32af 1px solid;
+        }
+        .honorItem{
+            width: calc(25% - 10px);
+            float: left;
+            height: calc(50% - 78px);
+            margin-top: 135px;
+            margin-right: 10px;
+            background-color: rgba(2,22,91,1);
+            border: #0a32af 1px solid;
+        }
+        /*.honorItem:last-of-type{
+            width: calc(25% - 10px);
+            float: left;
+            height: calc(50% - 78px);
+            margin-top: 10px;
+            margin-right: 10px;
+            background-color: rgba(2,22,91,1);
+        }*/
+        .item-title{
+			padding: 5px 0 0 20px;
+			color:white;
+			font-weight: 600;
+		}
+		.item-title i{
+			font-size: 20px;
+			color: rgb(0,101,242);
+			margin-right: 10px;
+		}
+        .imgItem{
+            height: calc(50% - 72px);
+        }
+
+        /*.townItem .item{
+            height: calc(50% - 23px);
+            margin-top: 10px;
+        }*/
+        #chart1{
+            width: 100%;
+            height: 100%;
+        }
+        .item{
+            text-align: center;
+        }
+        .tImg{
+            width: 300px;
+            height: 225px;
+            margin:10px 0;
+        }
+        .tImg:last-of-type{
+            margin-top: 15%;
+        }
+        .imgTxt{
+            text-align: center;
+            color: white;
+            line-height: 25px;
+        }
+        .chartItem{
+            height: calc(50% - 5px);
+            width: 100%;
+            background-color: rgba(2,22,91,1);
+            border: #0a32af 1px solid;
+        }
+        .chart{
+			width: 49%;
+			height: calc(100% - 26px);
+			display: inline-block;
+		}
+        .bottomItem{
+            width: calc(40% - 10px);
+            left: 35%;
+            height: calc(50% - 70px);
+            position: absolute;
+            top: calc(50% + 70px);
+            background-color: rgba(2,22,91,1);
+            border: #0a32af 1px solid;
+        }
+        .a1:before,.a1:after,.a1 .item-title:before,.a1 .item-title:after,.a2:before,.a2:after,.a2 .item-title:before,.a2 .item-title:after
+        ,.b1:before,.b1:after,.b1 .item-title:before,.b1 .item-title:after,.b2:before,.b2:after,.b2 .item-title:before,.b2 .item-title:after
+        ,.c1:before,.c1:after,.c1 .item-title:before,.c1 .item-title:after,.c2:before,.c2:after,.c2 .item-title:before,.c2 .item-title:after
+        ,.d1:before,.d1:after,.d1 .item-title:before,.d1 .item-title:after{
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: url(img/border1.png);
+        }
+        .a1:before{background-position: bottom left;top: calc(50% + 45px);right: calc(25% - 10px);}
+        .b1:before{background-position: bottom left;top: calc(50% + 50px);left: 0;}
+        .c1:before{background-position: bottom left;bottom: calc(50% - 65px);left: 35%;}
+        .c2:before{background-position: bottom left;bottom: calc(50% - 65px);left: 55%;}
+        .d1:before{background-position: bottom left;bottom: 0;left: 0;}
+        .a1:after{background-position: bottom right;right: 10px;top: calc(50% + 45px);}
+        .b1:after{left: calc(35% - 20px);top: calc(50% + 50px);background-position: bottom right;}
+        .c1:after{left: calc(55% - 20px);bottom:calc(50% - 65px);background-position: bottom right;}
+        .c2:after{right: calc(25% + 10px);bottom: calc(50% - 65px);background-position: bottom right;}
+        .d1:after{right: 0;bottom: 0;background-position: bottom right;}
+        .a1 .item-title:before{background-position: top left;top: 135px;right: calc(25% - 10px);}
+        .b1 .item-title:before{background-position: top left;top: 135px;left: 0;}
+        .c1 .item-title:before{background-position: top left;top: 135px;left: 35%;}
+        .c2 .item-title:before{background-position: top left;top: 135px;left: 55%;}
+        .d1 .item-title:before{background-position: top left;top: 0;left: 0;}
+        .a1 .item-title:after{background-position: top right;right: 10px;top: 135px;}
+        .b1 .item-title:after{background-position: top right;left: calc(35% - 20px);top: 135px;}
+        .c1 .item-title:after{background-position: top right;left: calc(55% - 20px);top: 135px;}
+        .c2 .item-title:after{background-position: top right;left: calc(75% - 20px);top: 135px;}
+        .d1 .item-title:after{background-position: top right;right: 0;top: 0;}
+        .a2:before{background-position: bottom left;bottom: 0;right: calc(25% - 10px);}
+        .b2:before{background-position: bottom left;bottom: 0;left: 0;}
+        .a2:after{background-position: bottom right;right: 10px;bottom: 0;}
+        .b2:after{background-position: bottom right;left: calc(35% - 20px);bottom: 0;}
+        .a2 .item-title:before{background-position: top left;top:calc(50% + 65px);right: calc(25% - 10px);}
+        .b2 .item-title:before{background-position: top left;top:calc(50% + 70px);left: 0;}
+        .a2 .item-title:after{background-position: top right;right: 10px;top:calc(50% + 65px);}
+        .b2 .item-title:after{background-position: top right;left: calc(35% - 20px);top:calc(50% + 70px);}
+        table tr{
+            line-height: 30px;
+        }
+        .layui-carousel>[carousel-item]>*{
+            background-color: rgba(2,22,91,1)!important;
+        }
+    </style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+    <div class="header"><img src="img/header.png" ></div>
+    <div class="townItem" style="background-color:rgb(0,13,55);border: 0;width:calc(35% - 10px)">
+        <div class="chartItem b1">
+            <div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员结构</span></div>
+			<div id="chart3" class="chart"></div>
+			<div style="position: absolute;top:calc(130px + 12%);left: 19%;color: white;">高中(中专)以下</div>
+			<div style="position: absolute;top:calc(130px + 18%);left: 19%;color: white;" id="text1">56人(75%)</div>
+			<div id="chart4" class="chart"></div>
+			<div style="position: absolute;top:39%;left: 19%;color: white;">大专以上</div>
+			<div style="position: absolute;top:45%;left: 19%;color: white;" id="text2">19人(25%)</div>
+        </div>
+        <div class="chartItem b2" style="margin-top: 10px;">
+            <div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员信息</span></div>
+			<div class="chart" style="color: white;font-size: 16px;">
+				<div style="position: absolute;top:calc(50% + 109px);left: 104px;font-size: 20px;font-weight: 700;">党员总数变化</div>
+				<div style="position: absolute;top:calc(60% + 149px);left: 104px;z-index: 10" id="text3">2020.1 ● 75人</div>
+				<img src="img/grows.png" style="transform:scale(2);top:calc(60% + 159px);left:104px;position: absolute">
+				<div style="position: absolute;top:calc(60% + 249px);left: 104px;z-index: 10" id="text4">1938.1 ● 1人</div>
+			</div>
+			<img src="img/women.png" width="32" height="32" style="position: absolute;top:calc(60% + 115px);">
+			<img src="img/men.png" width="32" height="32" style="position: absolute;top:85.5%;">
+			<div style="position: absolute;top:calc(60% + 80px);left: 320px;color: white;">女党员</div>
+			<div style="position: absolute;top:calc(60% + 160px);left: 380px;color: #f3ccad;" id="text5">8人(11%)</div>
+			<div id="chart8" class="chart"></div>
+			<div style="position: absolute;top:82%;left: 320px;color: white;">男党员</div>
+			<div style="position: absolute;top:90%;left: 380px;color: #0583c7;" id="text6">67人(89%)</div>
+        </div>
+    </div>
+    <div class="townItem c1 imgItem">
+        <div class="item-title"><span><i class="fa fa-angle-double-right"></i>党建阵地</span></div>
+        <div class="item layui-carousel" id="carousel1">
+            <div carousel-item>
+                <div><img src="img/party1.jpg" class="tImg" id="img1"><div id="imgTxt1" class="imgTxt">党员会议室</div></div>
+                <div><img src="img/party4.jpg" class="tImg" id="img2"><div id="imgTxt2" class="imgTxt">党员办公室</div></div>
+            </div>
+            <!--<img src="img/party1.jpg" class="tImg" id="img1">
+            <div id="imgTxt1" class="imgTxt">党员会议室</div>-->
+            <!--<img src="img/party4.jpg" class="tImg" id="img2">
+            <div id="imgTxt2" class="imgTxt">党员办公室</div>-->
+        </div>
+    </div>
+    <div class="townItem c2 imgItem">
+        <div class="item-title"><span><i class="fa fa-angle-double-right"></i>特色活动</span></div>
+        <div class="item layui-carousel" id="carousel2">
+            <div carousel-item>
+                <div><img src="img/party2.jpg" class="tImg" id="img3"><div id="imgTxt3" class="imgTxt">开展革命传统教育</div></div>
+                <div><img src="img/party3.jpg" class="tImg" id="img4"><div id="imgTxt4" class="imgTxt">开展革命传统教育</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="bottomItem d1">
+        <div class="item-title"><span><i class="fa fa-angle-double-right"></i>党员名单</span></div>
+        <div id="partyList" style="width: 100%;height: calc(100% - 26px);margin-top: 26px;overflow-y: auto">
+            <table id="partyTable" style="width: 100%;height: 100%;line-height: 20px;text-align: center;color: white">
+                <thead>
+                <tr>
+                    <th width="20%">姓名</th>
+                    <th width="10%">性别</th>
+                    <th width="20%">年龄</th>
+                    <th width="25%">入党时间</th>
+                    <th width="25%">组织关系所在单位</th>
+                </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="honorItem a1">
+        <div class="item-title"><span><i class="fa fa-angle-double-right"></i>村级荣誉</span></div>
+        <div class="item" style="height: calc(50% - 50px);text-indent: 28px;margin-top: 20px;padding: 0 20px;color: white;">
+            <table style="width: 100%;text-align: center" id="honorT">
+                <!--<tr>-->
+                    <!--<td width="20%"><img src="img/honor.png" width="16" height="16"></td>-->
+                    <!--<td width="20%">2016年</td>-->
+                    <!--<td width="60%">获得“增城区平安村”荣誉称号</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><img src="img/honor.png" width="16" height="16"></td>-->
+                    <!--<td>2018年</td>-->
+                    <!--<td>被列为红色村</td>-->
+                <!--</tr>-->
+            </table>
+        </div>
+    </div>
+    <div class="honorItem a2" style="margin-top: 10px;height: calc(50% - 68px)">
+        <div class="item-title"><span><i class="fa fa-angle-double-right"></i>先进模范</span></div>
+        <div class="item" id="honorItem" style="height: calc(50% - 50px);margin-top: 20px;padding: 0 20px;color: white;"></div>
+        <!-- 王国祥（1920-1995），1945年加入中国共产党，曾任增城抗日人民自卫队（后编为东纵五支队“铁石中队”）队长、
+            罗浮大队大队长、中国人民解放军粤赣湘边纵东三支五团、六团副团长。增城解放前夕，率部参加强攻正果圩重要战斗，
+            并配合南下大军解放增城。建国后，历任中共增城县委常委、县长、县委书记、县委第一书记、县委第二书记。-->
+    </div>
+</body>
+<script>
+    /*
+    * 党员名单表格
+    * */
+
+    var partyJson=sessionStorage.getItem("partyJson");
+    var json=JSON.parse(partyJson);
+    $("#tableBody").empty();
+    if(json.length>0){
+        for(var i in json){
+            var age=new Date().getFullYear()-parseInt(json[i].birthday.substring(0,json[i].birthday.indexOf("-")));
+            $("#tableBody").append("<tr><td>"+json[i].name+"</td><td>"+json[i].sex+"</td><td>"+age+"</td><td>"+json[i].joinDate+"</td><td>"+json[i].village+"</td></tr>");
+        }
+    }
+    /*
+    * 图片轮播
+    * */
+    var carousel1,carousel2;
+    layui.use(['carousel'],function(){
+        carousel1=layui.carousel;
+        carousel2=layui.carousel;
+        carousel1.render({
+            elem: '#carousel1'
+            ,width: '100%' //设置容器宽度
+            ,height: 'calc(100% - 26px)'
+            ,arrow: 'none' //不显示箭头
+            ,anim: 'fade' //切换动画方式
+          });
+        carousel2.render({
+            elem: '#carousel2'
+            ,width: '100%' //设置容器宽度
+            ,height: 'calc(100% - 26px)'
+            ,arrow: 'none' //不显示箭头
+            ,anim: 'fade' //切换动画方式
+          });
+    })
+
+    /*
+	* echarts图表开始
+	* */
+    var village=sessionStorage.getItem("abbs");//[0].village;
+    var ageL40;
+	var age60;
+	var ageM60;
+    $.ajax({
+        url:'/api/nt/partyInfo/getPartyByAge',
+        dataType:'json',
+        data:{
+            village:village
+        },
+        async:false,
+        success:function(data){
+            if(!data.data.partyByAge[0]) {
+                ageL40=0;
+                ageM60=0;
+                age60=0;
+                return;
+            }
+            ageL40=(data.data.partyByAge[0].thirty?data.data.partyByAge[0].thirty:0)+(data.data.partyByAge[0].forty?data.data.partyByAge[0].forty:0);
+            age60=(data.data.partyByAge[0].fifty?data.data.partyByAge[0].fifty:0)+(data.data.partyByAge[0].sixty?data.data.partyByAge[0].sixty:0);
+            ageM60=(data.data.partyByAge[0].sixtyToAbove?data.data.partyByAge[0].sixtyToAbove:0);
+        }
+    })
+
+    var chart3=echarts.init(document.getElementById("chart3"));
+	var option3={
+	    tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c} ({d}%)'
+		},
+		legend: {
+	        show:true,
+            textStyle:{
+	            color:'white'
+            },
+            bottom:'10%'
+        },
+		color:['#f0B78c','#01a6ff','#ff1c57'],
+		title:{
+	        text:'党员年龄统计',
+			left:'center',
+			top:'5%',
+			textStyle:{
+	            color:'white'
+			}
+		},
+		series: [
+        {
+            name: '党员年龄统计',
+            type: 'pie',
+            radius: ['30%', '60%'],
+            avoidLabelOverlap: false,
+            label: {
+                position:'out',
+				show:true,
+                fontSize: '14',
+				formatter:'{c}人\n{d}%',
+                textStyle:{
+                    color:'white'
+                }
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '14',
+                    fontWeight: 'bold'
+                }
+            },
+            labelLine: {
+                show: false
+            },
+            data: [
+                {value: age60, name: '40-60岁'},
+                {value: ageM60, name: '60岁以上'},
+                {value: ageL40, name: '40岁以下'}
+            ]
+        }
+    ]
+	}
+	chart3.setOption(option3);
+
+
+    var college;
+	var highschool;
+	$.ajax({
+		url:'/api/nt/partyInfo/getPartyByEducation',
+		dataType:'json',
+		async:false,
+        data:{
+		    village:village
+        },
+		success:function(data){
+		    if(!data.data.partyByEducation[0]){college=highschool=0;return;}
+		    college=highschool=0;
+		    college+=parseInt(data.data.partyByEducation[0].juniorCollege);
+		    highschool+=(parseInt(data.data.partyByEducation[0].highSchool)+parseInt(data.data.partyByEducation[0].juniorMiddleSchool));
+		}
+	})
+	var chart4=echarts.init(document.getElementById("chart4"));
+	var data=[college,highschool];
+	var sum=eval(data.join("+"));
+	var option4 = {
+		title:{
+		  	text:'党员学历统计',
+		  	left:'center',
+			textStyle:{
+		      color:'white'
+			}
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter: function(params,ticket,callback){
+			    return params[0].seriesName+"<br/>"+params[0].name+":"+params[0].value+"("+((params[0].value/sum)*100).toFixed(2)+"%)";
+			}
+		},
+		xAxis: {
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				}
+			},
+            splitLine:{
+			    show:false
+            }
+		},
+		yAxis: {
+			type: 'category',
+			data: ['大专以上','高中（中专）以下'],
+			axisLabel: {
+			    show:false,
+				textStyle: {
+					color: 'white'
+				}
+			},
+            splitLine:{
+			    show:false
+            }
+		},
+		series: [
+			{
+				name: '党员学历统计',
+				type: 'bar',
+				barWidth:30,
+				itemStyle:{
+				    normal:{
+				        barBorderRadius: 15,
+				        color:function(params){
+				            var list=[['#c7c7c7','#0583c7'],['#c7c7c7','#c71745']];
+				            var i=params.dataIndex;
+				            return new echarts.graphic.LinearGradient(0, 0, 1, 0,[{
+                                    offset: 0,
+                                    color: list[i][0]
+                                },
+                                {
+                                    offset: 1,
+                                    color: list[i][1]
+                                }
+                            ]);
+						}
+					}
+				},
+				data: data
+			}
+		]
+	};
+	chart4.setOption(option4);
+    $("#text1").text(highschool+"人("+Math.round(highschool/sum*10000)/100+"%)");
+	$("#text2").text(college+"人("+Math.round(college/sum*10000)/100+"%)");
+
+    var men;
+	var women;
+	$.ajax({
+		url:"/api/nt/partyInfo/getTotalBySex",
+		type:'get',
+		dataType:'json',
+		async:false,
+        data:{
+		    village:village
+        },
+		success:function(data){
+		    men=women=0;
+		    for(var i in data.data.totalBySex){
+                men+= data.data.totalBySex[i].male
+                women+= data.data.totalBySex[i].female
+		        // var t=data.data.totalBySex[i];
+		        // if(t.sex=="男"){
+		        //     men+=parseInt(t.ageCount);
+				// }else{
+		        //     women+=parseInt(t.ageCount);
+				// }
+			}
+		}
+	})
+	var chart8=echarts.init(document.getElementById("chart8"));
+	var data8=[men,women];
+	var sum8=eval(data8.join("+"));
+	var option8 = {
+		title:{
+		  	text:'党员性别统计',
+		  	left:'center',
+			textStyle:{
+		      color:'white'
+			}
+		},
+		grid:{
+		    left:50
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			},
+			formatter: function(params,ticket,callback){
+			    return params[0].seriesName+"<br/>"+params[0].name+":"+params[0].value+"("+((params[0].value/sum8)*100).toFixed(2)+"%)";
+			}
+		},
+		xAxis: {
+			type: 'value',
+			axisLabel: {
+				textStyle: {
+					color: 'white'
+				}
+			},
+			splitLine:{
+			    show:false
+            }
+		},
+		yAxis: {
+			type: 'category',
+			data: ['男党员','女党员'],
+			axisLabel: {
+			    show:false,
+				textStyle: {
+					color: 'white'
+				}
+			}
+		},
+		series: [
+			{
+				name: '党员性别统计',
+				type: 'bar',
+				barWidth:40,
+				itemStyle:{
+				    normal:{
+				        color:function(params){
+				            var list=[['#c7c7c7','#0583c7'],['#c7c7c7','#c71745']];
+				            var i=params.dataIndex;
+				            return new echarts.graphic.LinearGradient(0, 0, 1, 0,[{
+                                    offset: 0,
+                                    color: list[i][0]
+                                },
+                                {
+                                    offset: 1,
+                                    color: list[i][1]
+                                }
+                            ]);
+						}
+					}
+				},
+				data: data8
+			}
+		]
+	};
+	chart8.setOption(option8);
+	$("#text5").text("女："+women+"人("+Math.round(women/sum8*10000)/100+"%)");
+	$("#text6").text("男："+men+"人("+Math.round(men/sum8*10000)/100+"%)");
+
+	$.ajax({
+		url:'/api/nt/partyInfo/getPartyByYearly',
+		dataType:'json',
+		async:false,
+        data:{
+		    village:village
+        },
+		success:function(data){
+		    if(!data.data.partyByYearly[0]){$("#text3").text(new Date().getFullYear()+" ● "+50+"人");$("#text4").text("1956 ● "+1+"人");return;}
+		    $("#text3").text(data.data.partyByYearly[data.data.partyByYearly.length-1].joinYearMonth+" ● "+parseInt(data.data.partyByYearly[data.data.partyByYearly.length-1].joinCountAccumulation)+"人")
+		    $("#text4").text(data.data.partyByYearly[0].joinYearMonth+" ● "+parseInt(data.data.partyByYearly[0].joinCountAccumulation)+"人")
+		}
+	})
+    var abbreviation="notFound";
+    $.ajax({
+        url:'/api/nt/partyOrganization/getName',
+        dataType:'json',
+        async:false,
+        success:function(data){
+            for(var i in data.data.partyOrganizationList){
+                if(data.data.partyOrganizationList[i].name.indexOf(village)>-1) {
+                    abbreviation=data.data.partyOrganizationList[i].abbreviation;
+                }
+            }
+        }
+    })
+    $.ajax({
+        url:'/api/nt/partyVillageActivity/getPartyVillageActivityList',
+        dataType:'json',
+        async:false,
+        data:{
+            village:abbreviation
+        },
+        success:function(data){
+            if(data.data.partyVillageActivityList.length>0){
+                var str="<div carousel-item>";
+                for(var i in data.data.partyVillageActivityList){
+                    str+="<div><img src=/"+data.data.partyVillageActivityList[i].url+" class='tImg' id='img1'><div id='imgTxt1' class='imgTxt'>"+data.data.partyVillageActivityList[i].title+"</div></div>";
+                }
+                str+="</div>";
+                $("#carousel2").html(str);
+            }
+        }
+    })
+    $.ajax({
+        url:'/api/nt/partyVillagePosition/getPartyVillagePositionList',
+        dataType:'json',
+        async:false,
+        data:{
+            village:abbreviation
+        },
+        success:function(data){
+            if(data.data.partyVillagePositionList.length>0){
+                var str="<div carousel-item>";
+                for(var i in data.data.partyVillagePositionList){
+                    str+="<div><img src=/"+data.data.partyVillagePositionList[i].url+" class='tImg' id='img1'><div id='imgTxt1' class='imgTxt'>"+data.data.partyVillagePositionList[i].title+"</div></div>";
+                }
+                str+="</div>";
+                $("#carousel1").html(str);
+            }
+        }
+    })
+
+    $.ajax({
+        url:'/api/nt/partyVillageHonor/getHonorByVillage',
+        data:{
+            village:village
+        },
+        dataType:'json',
+        async:false,
+        success:function(data){
+            var str="";
+            //date.getFullYear()
+            for(var i in data.data.partyVillageHonorList){
+                var date=new Date(data.data.partyVillageHonorList[i].registerDate)
+                str+="<tr><td width='20%'><img src='img/honor.png' width='16' height='16'></td><td width='20%'>"+data.data.partyVillageHonorList[i].year+"</td><td width='60%'>"+data.data.partyVillageHonorList[i].content+"</td></tr>";
+            }
+            $("#honorT").append(str);
+        }
+    })
+
+    $.ajax({
+        url:'/api/nt/partyVillageModel/getModelByVillage',
+        data:{
+            village:village
+        },
+        dataType:'json',
+        async:false,
+        success:function(data){
+            var str=""
+            for(var i in data.data.partyVillageModelList){
+                $("#honorItem").append("<p style='text-indent: 28px;line-height: 24px;'>"+data.data.partyVillageModelList[0].content+"</p>");
+            }
+        }
+    })
+
+    window.onresize=function(){
+        // chart8.clear();
+        // chart8.setOption(option8);
+        document.location.reload();
+    }
+</script>
+</html>

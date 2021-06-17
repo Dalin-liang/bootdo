@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.report.dao.EvaluationReportDao">
+
+	<select id="get" resultType="com.bootdo.report.domain.EvaluationReportDO">
+		select `id`,`archive_actionprogram_main_id`,`earlywarn_content`,`report_objectType`,`report_time`,`remarks`,`report_person`,`report_code`,`keyword`,`status` from archive_evaluation_report where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.report.domain.EvaluationReportDO">
+		select `id`,`archive_actionprogram_main_id`,`earlywarn_content`,`report_objectType`,`report_time`,`remarks`,`report_person`,`report_code`,`keyword`,`status` from archive_evaluation_report
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="archiveActionprogramMainId != null and archiveActionprogramMainId != ''"> and archive_actionprogram_main_id = #{archiveActionprogramMainId} </if>
+		  		  <if test="earlywarnContent != null and earlywarnContent != ''"> and earlywarn_content = #{earlywarnContent} </if>
+		  		  <if test="reportObjecttype != null and reportObjecttype != ''"> and report_objectType = #{reportObjecttype} </if>
+		  		  <if test="reportTime != null and reportTime != ''"> and report_time = #{reportTime} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="reportPerson != null and reportPerson != ''"> and report_person = #{reportPerson} </if>
+		  		  <if test="reportCode != null and reportCode != ''"> and report_code = #{reportCode} </if>
+		  		  <if test="keyword != null and keyword != ''"> and keyword = #{keyword} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from archive_evaluation_report
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="archiveActionprogramMainId != null and archiveActionprogramMainId != ''"> and archive_actionprogram_main_id = #{archiveActionprogramMainId} </if>
+		  		  <if test="earlywarnContent != null and earlywarnContent != ''"> and earlywarn_content = #{earlywarnContent} </if>
+		  		  <if test="reportObjecttype != null and reportObjecttype != ''"> and report_objectType = #{reportObjecttype} </if>
+		  		  <if test="reportTime != null and reportTime != ''"> and report_time = #{reportTime} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="reportPerson != null and reportPerson != ''"> and report_person = #{reportPerson} </if>
+		  		  <if test="reportCode != null and reportCode != ''"> and report_code = #{reportCode} </if>
+		  		  <if test="keyword != null and keyword != ''"> and keyword = #{keyword} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		</where>
+	</select>
+
+
+	<select id="evaluationReportList" resultType="com.bootdo.report.domain.EvaluationReportDO">
+		SELECT t.`id` as archiveActionprogramMainId,e.eventdesc as earlywarnContent,p.name as planmainName,r.id as id,r.report_objectType as reportObjecttype,r.report_time as reportTime,r.remarks as remarks,r.report_person as reportPerson,r.report_code as reportCode,r.keyword as keyword,r.status as status,
+				e.repname as repname,e.repdate as repdate,e.accident_type_name as accidentTypeName,e.earlywarn_type_name as earlywarnTypeName,e.eventlevel_name as eventlevelName
+		from archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN watch_receiveinfo w ON e.id = w.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN archive_evaluation_report r ON r.`archive_actionprogram_main_id` = t.`id`
+		<where>
+			<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+			<if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+			<if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+			<if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+			<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+			<if test="name != null and name != ''"> and p.name like concat('%',#{name},'%') </if>
+			<if test="closecaseDateBegin != null and closecaseDateBegin != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{closecaseDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			<if test="closecaseDateEnd != null and closecaseDateEnd != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{closecaseDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			AND t.status ='2'
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order},t.create_date DESC ,t.update_date DESC
+			</when>
+			<otherwise>
+				ORDER BY t.create_date DESC ,t.update_date DESC
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+
+	<select id="evaluationReportCount" resultType="int">
+		select count(*)
+		from archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN watch_receiveinfo w ON e.id = w.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN archive_evaluation_report r ON r.`archive_actionprogram_main_id` = t.`id`
+		<where>
+			<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+			<if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+			<if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+			<if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+			<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+			<if test="name != null and name != ''"> and p.name like concat('%',#{name},'%') </if>
+			<if test="closecaseDateBegin != null and closecaseDateBegin != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{closecaseDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			<if test="closecaseDateEnd != null and closecaseDateEnd != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{closecaseDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			AND t.status ='2'
+		</where>
+	</select>
+
+
+	<insert id="save" parameterType="com.bootdo.report.domain.EvaluationReportDO">
+		insert into archive_evaluation_report
+		(
+			`id`, 
+			`archive_actionprogram_main_id`, 
+			`earlywarn_content`, 
+			`report_objectType`, 
+			`report_time`, 
+			`remarks`, 
+			`report_person`, 
+			`report_code`, 
+			`keyword`, 
+			`status`
+		)
+		values
+		(
+			#{id}, 
+			#{archiveActionprogramMainId}, 
+			#{earlywarnContent}, 
+			#{reportObjecttype}, 
+			#{reportTime}, 
+			#{remarks}, 
+			#{reportPerson}, 
+			#{reportCode}, 
+			#{keyword}, 
+			#{status}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.report.domain.EvaluationReportDO">
+		update archive_evaluation_report 
+		<set>
+			<if test="archiveActionprogramMainId != null">`archive_actionprogram_main_id` = #{archiveActionprogramMainId}, </if>
+			<if test="earlywarnContent != null">`earlywarn_content` = #{earlywarnContent}, </if>
+			<if test="reportObjecttype != null">`report_objectType` = #{reportObjecttype}, </if>
+			<if test="reportTime != null">`report_time` = #{reportTime}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="reportPerson != null">`report_person` = #{reportPerson}, </if>
+			<if test="reportCode != null">`report_code` = #{reportCode}, </if>
+			<if test="keyword != null">`keyword` = #{keyword}, </if>
+			<if test="status != null">`status` = #{status} </if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from archive_evaluation_report where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from archive_evaluation_report where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

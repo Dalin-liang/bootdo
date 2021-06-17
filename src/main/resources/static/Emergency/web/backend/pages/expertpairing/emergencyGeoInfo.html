@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地理信息管理</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../js/laypage/skin/laypage.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.11&key=f651aa8294209e6934caf028cd4cd576&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script type="text/javascript" src="../../js/laypage/laypage.js"></script><!--分页控件-->
+<style>
+
+    #tip {
+        background-color: #ddf;
+        color: #333;
+        border: 1px solid silver;
+        /*box-shadow: 3px 4px 3px 0px silver;*/
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border-radius: 5px;
+        overflow: hidden;
+        line-height: 20px;
+        z-index:9999;
+    }
+    #tip input[type="text"] {
+        height: 25px;
+        border: 0;
+        padding-left: 5px;
+        width: 280px;
+        border-radius: 3px;
+        outline: none;
+        z-index:9999;
+    }
+
+    .content-window-card {
+        position: relative;
+        box-shadow: none;
+        bottom: 12px;
+        left: 0px;
+        width: auto;
+        padding: 0;
+    }
+
+    .content-window-card p {
+        height: 2rem;
+    }
+
+    .custom-info {
+        border: solid 1px silver;
+    }
+
+    div.info-top {
+        position: relative;
+        background: none repeat scroll 0 0 #5b87da99;
+        border-bottom: 1px solid #CCC;
+        border-radius: 5px 5px 0 0;
+    }
+
+    div.info-top div {
+        display: inline-block;
+        color: #333333;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 31px;
+        padding: 0 10px;
+    }
+
+    div.info-top img {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        transition-duration: 0.25s;
+    }
+
+    div.info-top img:hover {
+        box-shadow: 0px 0px 5px #000;
+    }
+
+    div.info-middle {
+        font-size: 12px;
+        font-family: cursive;
+        padding: 10px 6px;
+        line-height: 20px;
+    }
+
+    div.info-bottom {
+        height: 0px;
+        width: 100%;
+        clear: both;
+        text-align: center;
+    }
+
+    div.info-bottom img {
+        position: relative;
+        z-index: 104;
+    }
+
+    span {
+        margin-left: 5px;
+        font-size: 11px;
+    }
+
+    .info-middle img {
+        float: none;
+        margin-right: -19px;
+        margin-bottom: -19px;
+    }
+
+    /*
+        marker列表样式
+    */
+    #panel {
+        position: absolute;
+        background-color: white;
+        max-height: 90%;
+        overflow-y: auto;
+        top: 10px;
+        right: 10px;
+        width: 320px;
+    }
+
+
+    .amap_lib_placeSearch {
+        font-family: "Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #565656;
+        font-size: 12px;
+        line-height: 22px;
+        word-wrap: break-word;
+        background-color: #fff;
+        border: 1px solid silver;
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+
+    .amap_lib_placeSearch_list {
+        background: #fff;
+    }
+
+    .amap_lib_placeSearch ul {
+        list-style: none none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .amap_lib_placeSearch .poibox {
+        border-bottom: 1px solid #eaeaea;
+        cursor: pointer;
+        padding: 5px 0 5px 10px;
+        position: relative;
+        min-height: 35px;
+    }
+    .amap_lib_placeSearch .poibox .poibox-icon {
+        margin-left: 7px;
+        margin-top: 4px;
+    }
+    .amap_lib_placeSearch
+    .amap_lib_placeSearch_poi {
+        position: absolute;
+    }
+    .amap_lib_placeSearch_poi {
+        background: url(https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png) no-repeat;
+        height: 31px;
+        width: 19px;
+        cursor: pointer;
+        left: -1px;
+        text-align: center;
+        color: #fff;
+        font: 12px arial,simsun,sans-serif;
+        padding-top: 3px;
+    }
+
+    .amap-pl-pc .poi-img {
+        float: right;
+        margin: 3px 8px 0;
+        width: 90px;
+        height: 56px;
+        overflow: hidden;
+    }
+    .amap_lib_placeSearch .poibox .poi-title {
+        margin-left: 25px;
+        font-size: 13px;
+        overflow: hidden;
+    }
+
+    .amap-pl-pc .poi-name {
+        vertical-align: middle;
+    }
+
+    .amap_lib_placeSearch .poibox .poi-info {
+        word-break: break-all;
+        margin: 0 0 0 25px;
+        overflow: hidden;
+    }
+    .amap_lib_placeSearch .poibox .poi-info p {
+        color: #999;
+        font-family: Tahoma;
+        line-height: 20px;
+    }
+
+    .amap_lib_placeSearch .clear {
+        clear: both;
+    }
+    .poibox:hover {
+        background: #f6f6f6;
+    }
+
+</style>
+</head>
+<body>
+
+    <div id="container" style="width: 100%;height: 900px;"></div>
+    <div id="panel">
+       <div class="amap_lib_placeSearch">
+            <div class="amap_lib_placeSearch_list">
+                <ul class='amap_lib_placeSearch_ul' id="marker_list">
+
+                </ul>
+           </div>
+            <div id="marker_page" style="background: #e5ecf9;"></div>
+        </div>
+    </div>
+    <div class="layui-pad10">
+        <div id="tip" class="layui-mt10 layui-text-center">
+            <input type="text" id="keyword" name="keyword"  placeholder="请输入"/>
+            <button id="query" type="button" class="layui-btn layui-btn-normal" onclick="queryGeoInfo()">查询</button>
+            <button id="add" type="button" class="layui-btn layui-btn-normal">新增</button>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+    var windowsArr = [];
+    var markers = [];
+    var longitude = "";
+    var latitude = "";
+    var address = "";
+    var nums = 5; //每页出现的数量
+    var pages ; //得到总页数
+    var markerData = [];
+    var circleMarkers = [];
+   // getGeoTypeList();
+    showAllMarkers();
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        center: [113.889348,23.415269],
+        zoom: 13//设置地图级别范围
+        //keyboardEnable: false
+    });
+    /*AMap.service(["AMap.PlaceSearch"], function() {
+        //构造地点查询类
+        var placeSearch = new AMap.PlaceSearch({
+            pageSize: 5, // 单页显示结果条数
+            pageIndex: 1, // 页码
+            city: "", // 兴趣点城市
+            citylimit: true,  //是否强制限制在设置的城市内搜索
+            map: map, // 展现结果的地图实例
+            panel: "panel", // 结果列表将在此容器中进行展示。
+            autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+        });
+        //关键字查询
+        AMap.event.addListener(placeSearch, "complete", autocomplete_CallBack);
+        placeSearch.search('正果镇');
+    });*/
+
+    /*function autocomplete_CallBack(data){
+    console.log("callback data{}");
+        console.log(data);
+    }*/
+
+
+    layui.use(['layer'],function(){
+        var layer=layui.layer;
+        $("#add").on("click",function(){
+            getGeoTypeList();
+            layer.open({
+                type: 2,
+                title: '新增',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['800px', '600px'],
+                content: 'emergencyGeoInfoForm.html'
+            });
+        })
+    })
+
+    //地理信息类别
+    function getGeoTypeList(){
+        $.ajax({
+            url: '/geoInfo/getGeoTypeList',
+            type: 'get',
+            success: function (data) {
+                if(data.status){
+                    sessionStorage.removeItem("geoTypeList");
+                    sessionStorage.setItem("geoTypeList",JSON.stringify(data.geoTypeList));
+                }
+            }
+        });
+    }
+    //查询
+    function queryGeoInfo(){
+       // markers = [];//清空markers
+        showAllMarkers();
+    }
+
+    var thisDate = function(curr, data){
+        //此处只是演示，实际场景通常是返回已经当前页已经分组好的数据
+        var str = '', last = curr*nums - 1;
+        last = last >= data.length ? (data.length-1) : last;
+        for(var i = (curr*nums - nums); i <= last; i++){
+            str += '<li class="poibox" data-in="'+i+'">';
+            str += '<div class="amap_lib_placeSearch_poi poibox-icon">'+(i+1)+'</div> ';
+            str += '<div class="poi-img" style="background-image:url(//store.is.autonavi.com/showpic/2950495dd8ec009cb2a81eb8b1b0bafc?operate=merge&amp;w=90&amp;h=56&amp;position=5)"></div>';
+            str += '<h3 class="poi-title"><span class="poi-name">'+data[i].name+'('+data[i].number+')</span>' +
+                '<div style="margin-right:5px;float:right;">' +
+                '<button type="button" class="layui-btn layui-btn-xs" onclick="edit(\''+data[i].id+'\')"><i class="layui-icon">&#xe642;</i></button>' +
+                '<button type="button" class="layui-btn layui-btn-danger layui-btn-xs" onclick="removeItem(\''+data[i].id+'\')"><i class="layui-icon">&#xe640;</i></button></div>' +
+                '</h3>';
+            str += '<div class="poi-info"><p class="poi-addr">地理类型：'+data[i].typename+'</p></div>';
+            str += '<div class="poi-info"><p class="poi-addr">联系人：'+data[i].contact+'('+data[i].contact_number+')</p></div>';
+            str += '<div class="poi-info"><p class="poi-addr">地址：'+data[i].addr+'</p></div>';
+            str += '<div class="poi-info"><p class="poi-addr">是否启用：'+(data[i].enabled == 1 ? '不启用' : '启用') +'</p></div>';
+            str += '<div class="clear"></div></li>';
+            //str += '<li>'+ data[i] +'</li>';
+        }
+        return str;
+    };
+
+    function edit(_this){
+        var oEvent =  event;
+        oEvent.cancelBubble = true; //js阻止事件冒泡
+        oEvent.stopPropagation();
+        getGeoTypeList();
+
+        $.ajax({
+            url: '/geoInfo/getUniqueById',
+            type: 'post',
+            data: {id: _this},
+            success: function (data) {
+                if(!!data){
+                    sessionStorage.setItem("edit","true");
+                    sessionStorage.setItem("row",JSON.stringify(data));
+                    layer.open({
+                        type: 2,
+                        title: '编辑',
+                        shadeClose: true,
+                        shade: 0.4,
+                        area: ['800px', '600px'],
+                        content: 'emergencyGeoInfoForm.html'
+                    });
+                }
+            }
+        });
+    }
+    function removeItem(_this){
+        var oEvent =  event;
+        oEvent.cancelBubble = true; //js阻止事件冒泡
+        oEvent.stopPropagation();
+        swal({
+            title:'删除',
+            text:'您确定要删除该数据吗？',
+            type:'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            closeOnCancel: false,
+            customClass: "custom_swal"
+        },function (isConfirm) {
+            if(isConfirm){
+                $.ajax({
+                    url:'/geoInfo/delete',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        'id':_this
+                    },
+                    success:function(rs){
+                        if(rs==1){
+                            swal("删除成功","删除成功","success");
+                            showAllMarkers();
+                        }
+                    }
+                });
+                swal.close();
+            }else{
+                swal.close()
+            }
+        })
+    }
+    //显示所有地理信息图标
+    function showAllMarkers() {
+        $.ajax({
+            url: '/geoInfo/getGeoInfos',
+            type: 'post',
+            data: {name: $("#keyword").val()},
+            success: function (data) {
+                map.clearMap();//清空地图上的markers
+                if (data.status) {
+                    var list = data.list;
+                    markerData = list;
+                    pages = Math.ceil(list.length/nums);//总页数
+
+                    console.log("marker list{}");
+                    console.log(list);
+                    //调用分页
+                    laypage({
+                        cont: 'marker_page',
+                        pages: pages,
+                        jump: function(obj){
+                            document.getElementById('marker_list').innerHTML = thisDate(obj.curr,list);
+                        }
+                    });
+                    for (var i = 0; i < list.length; i++) {
+                        if(list[i]['enabled'] == 0){//显示已启用的marker标记点
+                            var icon_type_url = list[i]['icon_type'];
+                            if (icon_type_url != undefined && icon_type_url != ""&&icon_type_url!='--') {
+                                icon_type_url = icon_type_url.trim();
+                                var marker = new AMap.Marker({
+                                    map: map,
+                                    position: [list[i]['lat_lon'].split(',')[1], list[i]['lat_lon'].split(',')[0]],
+                                    icon: new AMap.Icon({
+                                        size: new AMap.Size(32, 46),  //图标大小
+                                        image: "/Emergency/web/backend/Bootstrap-icon-picker/img/" + icon_type_url + ".png",
+                                        imageSize: new AMap.Size(32, 46)
+                                    }),
+                                    offset: new AMap.Pixel(-16, -46),
+                                    title: list[i]['name']
+                                });
+                                marker.name = list[i]["name"];
+                                marker.typename = list[i]["typename"];
+                                marker.number = list[i]["number"];
+                                marker.contact = list[i]["contact"];
+                                marker.contact_number = list[i]["contact_number"];
+                                marker.addr = list[i]["addr"];
+                                marker.lnglat = [list[i]['lat_lon'].split(',')[1], list[i]['lat_lon'].split(',')[0]];
+                                //var elnglat = [list[i]['lat_lon'].split(',')[1], list[i]['lat_lon'].split(',')[0]];
+                                marker.on('click', function (e) {
+                                    console.log(e);
+                                    var infoWindow = new AMap.InfoWindow({
+                                        isCustom: true,//使用自定义窗口
+                                        offset: new AMap.Pixel(2, -53)
+                                    });
+                                    infoWindow.setContent(' <div class="custom-info input-card content-window-card">'
+                                        + '<div class="info-top">'
+                                        + '  <div>' + e.target.name+ '</div>'
+                                        + '  <img onclick="closeInfoWindow()"  src="https://webapi.amap.com/images/close2.gif">'
+                                        + '</div>'
+                                        + '<div class="info-middle" style="background-color: white;">'
+                                        + '  地理类别：' + e.target.typename + '<br>人数：' +  e.target.number + '<br>'
+                                        + '  联系人：' + e.target.contact  + '<br>联系人电话：' + e.target.contact_number + '<br>'
+                                        + '  地址：' +  e.target.addr + '<br>'
+                                        + '<div class="info-bottom" style="position: relative; top: 0px; margin: 0px auto;">'
+                                        + '   <img src="https://webapi.amap.com/images/sharp.png">'
+                                        + '</div>'
+                                        + '</div>');
+                                    infoWindow.open(map,e.target.lnglat);
+                                });
+                                // marker.emit('click', {target: marker});
+                                markers.push(marker);//自动缩放到合适的视野级别
+                            }
+                        }
+
+                    }
+                    map.setFitView();
+                }
+            }
+        });
+    }
+
+    //添加地理信息标记
+    function addMarker(data){
+        if(data.geoTypeIcon != undefined && data.geoTypeIcon != "") {
+            var icon = data.geoTypeIcon.replace("glyphicon glyphicon-", "").trim();
+            var marker = new AMap.Marker({
+                map:map,
+                position: [data.lat_lon.split(',')[1],data.lat_lon.split(',')[0]],
+                icon: new AMap.Icon({
+                    size: new AMap.Size(32, 46),  //图标大小
+                    image: "/Emergency/web/backend/Bootstrap-icon-picker/img/"+icon+".png",
+                    imageSize:new AMap.Size(32, 46)
+                }),
+                offset: new AMap.Pixel(-16, -46),
+                title: data.name
+            });
+            markers.push(marker);
+
+            //设置弹出窗体内容
+           var content = ' <div class="custom-info input-card content-window-card">'
+                +'<div class="info-top">'
+                +'  <div>'+data.name+'</div>'
+                +'  <img  onclick="closeInfoWindow()" src="https://webapi.amap.com/images/close2.gif">'
+                +'</div>'
+                +'<div class="info-middle" style="background-color: white;">'
+                +'  地理类别：'+data.geoTypeText+'<br>人数：'+data.number+'<br>'
+                +'  联系人：'+data.contact+'<br>联系人电话：'+data.contact_number+'<br>'
+                +'  地址：'+data.addr+'<br>'
+                +'<div class="info-bottom" style="position: relative; top: 0px; margin: 0px auto;">'
+                +'   <img src="https://webapi.amap.com/images/sharp.png">'
+                +'</div>'
+                +'</div>';
+
+            var infoWindow = new AMap.InfoWindow({
+                isCustom: true,  //使用自定义窗体
+                content: content,
+                offset: new AMap.Pixel(2, -53)
+            });
+            //marker添加监听事件
+            AMap.event.addListener(marker, "click",function(e) {
+                infoWindow.open(map, marker.getPosition());//
+            });
+        }
+    }
+    //关闭信息窗体
+    function closeInfoWindow() {
+        map.clearInfoWindow();
+    }
+
+    //列表点击定位事件
+    $("#marker_list").on("click", ".poibox", function(){
+        //先清空地图上的CircleMarker
+        map.remove(circleMarkers);
+        var index = $(this).attr("data-in");
+        var data = markerData[index];
+        console.log(data);
+        if(data['enabled'] == 0){//只定位已显示的marker点
+            if(!!data['lat_lon']){
+                var lng = data['lat_lon'].split(',')[1];
+                var lat = data['lat_lon'].split(',')[0];
+                map.setZoomAndCenter(15, [lng, lat]);
+                //定位
+                var circleMarker = new AMap.CircleMarker({
+                    center: new AMap.LngLat(lng, lat),  // 圆心位置
+                    radius: 50, //半径
+                    borderWeight: 3,
+                    strokeColor: "#FF33FF",
+                    strokeOpacity: 1,
+                    strokeWeight: 6,
+                    strokeOpacity: 0.2,
+                    fillOpacity: 0.4,
+                    strokeStyle: 'dashed',
+                    strokeDasharray: [10, 10],
+                    // 线样式还支持 'dashed'
+                    fillColor: '#1791fc',
+                    zIndex: 50,
+                });
+                circleMarkers.push(circleMarker);
+                map.add(circleMarker);
+            }
+        }else{
+            swal("提示","未启用的地理信息","success");
+        }
+    });
+</script>
+
+</body>
+</html>

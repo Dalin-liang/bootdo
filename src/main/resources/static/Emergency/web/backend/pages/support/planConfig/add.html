@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<meta charset="UTF-8">
+	<title>接报途径添加</title>
+	<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../../css/main.css" />
+	<link rel="stylesheet" href="../../../css/style.css" />
+	<script src="../../../js/jquery-3.4.1.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../../layui/layui.js" ></script>
+
+</head>
+<body>
+<div class=" layui-pad10">
+	<form class="layui-form" lay-filter="component-form-group"  id="signupForm">
+		<input type="hidden" name="id" id="id">
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">信息来源名称：</label>
+				<div class="layui-input-block">
+					<input type="text"  id="name" name="name" lay-verify="required" lay-reqtext="信息来源名称是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">信息来源别名：</label>
+				<div class="layui-input-block">
+					<input type="text"  id="sourceLabel" name="sourceLabel" lay-verify="required" lay-reqtext="信息来源别名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">信息来源类别：</label>
+				<div class="layui-input-block">
+					<select id="sourceType" name="sourceType" lay-filter="sourceType_select">
+						<option value=""></option>
+						<option value="0">物联网</option>
+						<option value="1">APP</option>
+						<option value="2">电话</option>
+						<option value="3">短信</option>
+						<option value="4">微博</option>
+						<option value="99">其他</option>
+
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-xs6">
+			<div class="layui-form-item">
+				<label class="layui-form-label">是否启用：</label>
+				<div class="layui-input-block">
+					<select id="enabled" name="enabled" lay-filter="enabled_select">
+						<option value=""></option>
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs12">
+			<div class="layui-form-item">
+				<label class="layui-form-label">备注：</label>
+				<div class="layui-input-block">
+					<textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-mt10 layui-text-center layui-col-xs12">
+			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+			<button id="btn" type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+			<button type="button" class="layui-btn layui-btn-primary layui-btn-radius"   onclick="closeWindow()" >关 闭</button>
+		</div>
+	</form>
+</div>
+
+<script>
+
+	layui.use(['form', 'layer','element'], function() {
+		var form = layui.form
+				, layer = layui.layer
+				, element = layui.element
+		form.render();
+		form.on('submit(submit)', function (data) {
+			$.ajax({
+				url: '/system/source/save',
+				type: 'post',
+				dataType: 'json',
+				data: data.field,
+				success: function (rs) {
+					if (rs.code == 0) {
+						parent.layer.msg("操作成功");
+						parent.reLoad();
+						var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+						parent.layer.close(index);
+					} else {
+						parent.layer.alert(data.msg)
+					}
+				}
+			})
+
+
+		});
+
+	});
+	function closeWindow (){
+		var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+		parent.layer.close(index);
+	}
+
+</script>
+
+
+</body>
+</html>

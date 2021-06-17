@@ -1,0 +1,37 @@
+package com.bootdo.address.dao;
+
+import com.bootdo.address.domain.AddressGroupDO;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 通讯录组表
+ * @author wux
+ * @email 1992lcg@163.com
+ * @date 2020-05-22 11:16:47
+ */
+@Mapper
+public interface AddressGroupDao {
+
+	AddressGroupDO get(String id);
+	
+	List<AddressGroupDO> list(Map<String, Object> map);
+	
+	int count(Map<String, Object> map);
+	
+	int save(AddressGroupDO addressGroup);
+	
+	int update(AddressGroupDO addressGroup);
+	
+	int remove(String id);
+	
+	int batchRemove(String[] ids);
+
+	int changeStatus(@Param("id") String id, @Param("enabled") String enabled);
+
+    List<AddressGroupDO> getGroupAndPerson();
+}

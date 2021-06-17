@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.sms.dao.SmsSendConfigDao">
+
+	<select id="get" resultType="com.bootdo.sms.domain.SmsSendConfigDO">
+		SELECT t.`id`,t.`type`,t.`targetId`,t.`isSend`,t.`remarks`,
+		(CASE t.`type`
+			WHEN '0' THEN m.name
+			WHEN '1' THEN p.name
+			WHEN '2' THEN dp.name
+			WHEN '3' THEN s.name
+			ELSE NULL
+			END )AS targetName,
+			(CASE t.`type`
+			WHEN '0' THEN NULL
+			WHEN '1' THEN p.code
+			WHEN '2' THEN a.code
+			WHEN '3' THEN NULL
+		ELSE NULL
+		END )AS code
+		FROM sms_send_config t
+		LEFT JOIN watch_source_menu m ON t.`type` = '0' AND t.targetId = m.id
+		LEFT JOIN plan_main p ON t.`type` = '1' AND t.targetId = p.id
+		LEFT JOIN dispatch_actionprogram_main a ON t.`type` = '2' AND t.targetId = a.id
+		LEFT JOIN dispatch_plan_main dp ON a.id = dp.actionprogram_id
+		where t.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.sms.domain.SmsSendConfigDO">
+		SELECT t.`id`,t.`type`,t.`targetId`,t.`isSend`,t.`remarks`,
+		(CASE t.`type`
+		WHEN '0' THEN m.name
+		WHEN '1' THEN p.name
+		WHEN '2' THEN dp.name
+		WHEN '3' THEN s.name
+		ELSE NULL
+		END )AS targetName,
+		(CASE t.`type`
+		WHEN '0' THEN NULL
+		WHEN '1' THEN p.code
+		WHEN '2' THEN a.code
+		WHEN '3' THEN NULL
+		ELSE NULL
+		END )AS code
+		FROM sms_send_config t
+		LEFT JOIN watch_source s ON t.`type` = '3' AND t.targetId = s.id
+		LEFT JOIN watch_source_menu m ON t.`type` = '0' AND t.targetId = m.id
+		LEFT JOIN plan_main p ON t.`type` = '1' AND t.targetId = p.id
+		LEFT JOIN dispatch_actionprogram_main a ON t.`type` = '2' AND t.targetId = a.id
+		LEFT JOIN dispatch_plan_main dp ON a.id = dp.actionprogram_id
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id} </if>
+			<if test="type != null and type != ''"> and t.type = #{type} </if>
+			<if test="targetid != null and targetid != ''"> and t.targetId = #{targetid} </if>
+			<if test="issend != null and issend != ''"> and t.isSend = #{issend} </if>
+			<if test="remarks != null and remarks != ''"> and t.remarks like concat('%',#{remarks},'%') </if>
+			<if test='Sourceid != null and Sourceid != "" and type != null and type != "" and type == "0"'> and m.watch_source_id = #{Sourceid} </if>
+			<if test='Sourceid != null and Sourceid != "" and type != null and type != "" and type == "3"'> and s.id = #{Sourceid} </if>
+			<if test='code != null and code != "" and type != null and type != "" and type == "1"'> and p.code like concat('%',#{code},'%') </if>
+			<if test='code != null and code != "" and type != null and type != "" and type == "2"'> and a.code like concat('%',#{code},'%') </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order} ,t.type asc ,t.id desc
+			</when>
+			<otherwise>
+				order by t.type asc ,t.id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*)
+		FROM sms_send_config t
+		LEFT JOIN watch_source s ON t.`type` = '3' AND t.targetId = s.id
+		LEFT JOIN watch_source_menu m ON t.`type` = '0' AND t.targetId = m.id
+		LEFT JOIN plan_main p ON t.`type` = '1' AND t.targetId = p.id
+		LEFT JOIN dispatch_actionprogram_main a ON t.`type` = '2' AND t.targetId = a.id
+		LEFT JOIN dispatch_plan_main dp ON a.id = dp.actionprogram_id
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id} </if>
+			<if test="type != null and type != ''"> and t.type = #{type} </if>
+			<if test="targetid != null and targetid != ''"> and t.targetId = #{targetid} </if>
+			<if test="issend != null and issend != ''"> and t.isSend = #{issend} </if>
+			<if test="remarks != null and remarks != ''"> and t.remarks like concat('%',#{remarks},'%') </if>
+			<if test='Sourceid != null and Sourceid != "" and type != null and type != "" and type == "0"'> and m.watch_source_id = #{Sourceid} </if>
+			<if test='Sourceid != null and Sourceid != "" and type != null and type != "" and type == "3"'> and s.id = #{Sourceid} </if>
+			<if test='code != null and code != "" and type != null and type != "" and type == "1"'> and p.code like concat('%',#{code},'%') </if>
+			<if test='code != null and code != "" and type != null and type != "" and type == "2"'> and a.code like concat('%',#{code},'%') </if>
+		</where>
+	</select>
+
+	<select id="getIsSendBySourceMenuType" resultType="java.lang.String">
+		SELECT t.isSend
+		FROM sms_send_config t
+		WHERE t.type = '0' AND t.`targetId`= (
+			SELECT m.id
+			FROM watch_source_menu m
+			WHERE m.type = #{SourceMenuType}
+		)
+	</select>
+
+	<select id="getIsSendByPlanmainId" resultType="java.lang.String">
+		SELECT t.isSend
+		FROM sms_send_config t
+		WHERE t.type = '1' AND t.`targetId`= #{planmainId}
+	</select>
+
+	<select id="getIsSendByActionprogramMainId" resultType="java.lang.String">
+		SELECT t.isSend
+		FROM sms_send_config t
+		WHERE t.type = '2' AND t.`targetId`= #{actionprogramMainId}
+	</select>
+
+	<select id="getIsSendBySourceType" resultType="java.lang.String">
+		SELECT t.isSend
+		FROM sms_send_config t
+		WHERE t.type = '3' AND t.`targetId`= #{source_type}
+	</select>
+
+	<insert id="save" parameterType="com.bootdo.sms.domain.SmsSendConfigDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sms_send_config
+		(
+			`type`,
+			`targetId`,
+			`isSend`,
+			`remarks`
+		)
+		values
+		(
+			#{type},
+			#{targetid},
+			#{issend},
+			#{remarks}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.bootdo.sms.domain.SmsSendConfigDO">
+		update sms_send_config
+		<set>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="targetid != null">`targetId` = #{targetid}, </if>
+			<if test="issend != null">`isSend` = #{issend}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="changeStatusByParam" parameterType="java.lang.String">
+		UPDATE sms_send_config t
+		LEFT JOIN watch_source_menu m ON t.`type` = '0' AND t.targetId = m.id
+		set t.`isSend` = #{issend}
+		<where>
+			<if test="type != null and type != ''"> and t.type = #{type} </if>
+			<if test="targetid != null and targetid != ''"> and t.targetId = #{targetid} </if>
+			<if test='Sourceid != null and Sourceid != "" and type != null and type != "" and type == "0"'> and m.watch_source_id = #{Sourceid} </if>
+		</where>
+	</update>
+
+	<update id="changeStatusBySourceTypeId" parameterType="java.lang.String">
+		UPDATE sms_send_config t
+		SET t.`isSend` = #{issend}
+		WHERE t.`type` = '0' and targetId IN (
+			SELECT m.id
+			FROM watch_source_menu m
+			WHERE m.watch_source_id = #{sourceId}
+		)
+	</update>
+
+	<update id="changeStatusBySourceMenuTypeId" parameterType="java.lang.String">
+		UPDATE sms_send_config t
+		SET t.`isSend` = #{issend}
+		WHERE t.`type` = '3' and targetId IN (
+			SELECT s.id
+			FROM watch_source_menu m
+			LEFT JOIN watch_source s ON s.id = m.`watch_source_id`
+			WHERE m.id = #{sourceMenuId}
+		)
+	</update>
+
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update sms_send_config set `issend` = #{issend}
+		where id = #{id}
+	</update>
+
+	<update id="changeStatusByType"  parameterType="java.lang.String">
+		update sms_send_config set `issend` = #{issend}
+		where type = #{type}
+	</update>
+
+	<delete id="remove">
+		delete from sms_send_config where id = #{value}
+	</delete>
+
+	<delete id="batchRemove">
+		delete from sms_send_config where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

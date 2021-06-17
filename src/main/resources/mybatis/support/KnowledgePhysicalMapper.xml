@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgePhysicalDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgePhysicalDO">
+		select `id`,`knowledge_info_Id`,`melting_point`,`boiling_point`,`relative_humidity`,`relative_density`,`saturated_vapor_pressure`,`critical_temperature`,`critical_pressure`,`solubility`,`create_date`,`remarks` from safeguard_knowledge_physical where id = #{value}
+	</select>
+	
+	<select id="getByKnowledgeInfoId" resultType="com.bootdo.support.dto.KnowledgePhysicalDO">
+		select `id`,`knowledge_info_Id`,`melting_point`,`boiling_point`,`relative_humidity`,`relative_density`,`saturated_vapor_pressure`,`critical_temperature`,`critical_pressure`,`solubility`,`create_date`,`remarks` from safeguard_knowledge_physical where knowledge_info_Id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.KnowledgePhysicalDO">
+		select `id`,`knowledge_info_Id`,`melting_point`,`boiling_point`,`relative_humidity`,`relative_density`,`saturated_vapor_pressure`,`critical_temperature`,`critical_pressure`,`solubility`,`create_date`,`remarks` from safeguard_knowledge_physical
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="meltingPoint != null and meltingPoint != ''"> and melting_point = #{meltingPoint} </if>
+		  		  <if test="boilingPoint != null and boilingPoint != ''"> and boiling_point = #{boilingPoint} </if>
+		  		  <if test="relativeHumidity != null and relativeHumidity != ''"> and relative_humidity = #{relativeHumidity} </if>
+		  		  <if test="relativeDensity != null and relativeDensity != ''"> and relative_density = #{relativeDensity} </if>
+		  		  <if test="saturatedVaporPressure != null and saturatedVaporPressure != ''"> and saturated_vapor_pressure = #{saturatedVaporPressure} </if>
+		  		  <if test="criticalTemperature != null and criticalTemperature != ''"> and critical_temperature = #{criticalTemperature} </if>
+		  		  <if test="criticalPressure != null and criticalPressure != ''"> and critical_pressure = #{criticalPressure} </if>
+		  		  <if test="solubility != null and solubility != ''"> and solubility = #{solubility} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_knowledge_physical
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="knowledgeInfoId != null and knowledgeInfoId != ''"> and knowledge_info_Id = #{knowledgeInfoId} </if>
+		  		  <if test="meltingPoint != null and meltingPoint != ''"> and melting_point = #{meltingPoint} </if>
+		  		  <if test="boilingPoint != null and boilingPoint != ''"> and boiling_point = #{boilingPoint} </if>
+		  		  <if test="relativeHumidity != null and relativeHumidity != ''"> and relative_humidity = #{relativeHumidity} </if>
+		  		  <if test="relativeDensity != null and relativeDensity != ''"> and relative_density = #{relativeDensity} </if>
+		  		  <if test="saturatedVaporPressure != null and saturatedVaporPressure != ''"> and saturated_vapor_pressure = #{saturatedVaporPressure} </if>
+		  		  <if test="criticalTemperature != null and criticalTemperature != ''"> and critical_temperature = #{criticalTemperature} </if>
+		  		  <if test="criticalPressure != null and criticalPressure != ''"> and critical_pressure = #{criticalPressure} </if>
+		  		  <if test="solubility != null and solubility != ''"> and solubility = #{solubility} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgePhysicalDO">
+		insert into safeguard_knowledge_physical
+		(
+			`id`, 
+			`knowledge_info_Id`, 
+			`melting_point`, 
+			`boiling_point`, 
+			`relative_humidity`, 
+			`relative_density`, 
+			`saturated_vapor_pressure`, 
+			`critical_temperature`, 
+			`critical_pressure`, 
+			`solubility`, 
+			`create_date`, 
+			`remarks`
+		)
+		values
+		(
+			#{id}, 
+			#{knowledgeInfoId}, 
+			#{meltingPoint}, 
+			#{boilingPoint}, 
+			#{relativeHumidity}, 
+			#{relativeDensity}, 
+			#{saturatedVaporPressure}, 
+			#{criticalTemperature}, 
+			#{criticalPressure}, 
+			#{solubility}, 
+			#{createDate}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgePhysicalDO">
+		update safeguard_knowledge_physical 
+		<set>
+			<if test="knowledgeInfoId != null">`knowledge_info_Id` = #{knowledgeInfoId}, </if>
+			<if test="meltingPoint != null">`melting_point` = #{meltingPoint}, </if>
+			<if test="boilingPoint != null">`boiling_point` = #{boilingPoint}, </if>
+			<if test="relativeHumidity != null">`relative_humidity` = #{relativeHumidity}, </if>
+			<if test="relativeDensity != null">`relative_density` = #{relativeDensity}, </if>
+			<if test="saturatedVaporPressure != null">`saturated_vapor_pressure` = #{saturatedVaporPressure}, </if>
+			<if test="criticalTemperature != null">`critical_temperature` = #{criticalTemperature}, </if>
+			<if test="criticalPressure != null">`critical_pressure` = #{criticalPressure}, </if>
+			<if test="solubility != null">`solubility` = #{solubility}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge_physical where id = #{value}
+	</delete>
+	
+	<delete id="deleteByKnowledgeInfoId">
+		delete from safeguard_knowledge_physical where knowledge_info_Id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge_physical where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

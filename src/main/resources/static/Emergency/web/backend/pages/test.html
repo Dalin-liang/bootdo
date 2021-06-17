@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+	</head>
+
+	<body>
+		<div class=" layui-pad10">
+			<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+				<div class="layui-form-item layui-col-xs7 layui-mb0">
+					<label class="layui-form-label">关键字：</label>
+					<div class="layui-input-block ">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+					</div>
+				</div>
+				&emsp;<button type="button" class="layui-btn">查 询</button>
+				<button type="button" class="layui-btn layui-btn-danger">高级查询</button>
+
+			</div>
+			<div class="layui-mt10" id="LAY-component-layer-special-demo">
+				<div class="layadmin-layer-demo">
+					<button type="button" data-method="edittable" data-type="auto"  id="testbtn" class="layui-btn layui-btn-normal">新增</button>
+					<button type="button" class="layui-btn layui-btn-normal">抢险救援</button>
+					<button type="button" class="layui-btn layui-btn-normal">社会求助</button>
+					<button type="button" class="layui-btn layui-btn-normal">市政抢修</button>
+					<button type="button" class="layui-btn layui-btn-normal">重复报警</button>
+					<button type="button" class="layui-btn layui-btn-normal">部门上报</button>
+					<button type="button" class="layui-btn layui-btn-normal">骚扰</button>					
+				</div>
+			</div>
+			<div class="layui-form layui-mt10">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>接报途径</th>
+							<th>上报人</th>
+							<th>联系电话</th>
+							<th>事件描述</th>
+							<th>事件地址</th>
+							<th>事件类别</th>
+							<th>事件级别</th>
+							<th>处理状态</th>
+							<th>操 作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>电话报警</td>
+							<td>zhangsan</td>
+							<td>111111111</td>
+							<td>路灯漏电</td>
+							<td>XXXXX</td>
+							<td>市政抢修</td>
+							<td>III级</td>
+							<td>转交市政所</td>
+							<td>
+								<button class="layui-btn layui-btn-primary layui-btn-sm">修改</button>
+								<button class="layui-btn layui-btn-warm layui-btn-sm">上报</button>
+								<button class="layui-btn layui-btn-danger layui-btn-sm">删除</button>
+							</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>电话报警</td>
+							<td>zhangsan</td>
+							<td>111111111</td>
+							<td>路灯漏电</td>
+							<td>XXXXX</td>
+							<td>市政抢修</td>
+							<td>III级</td>
+							<td>转交市政所</td>
+							<td>
+								<button class="layui-btn layui-btn-primary layui-btn-sm">修改</button>
+								<button class="layui-btn layui-btn-warm layui-btn-sm">上报</button>
+								<button class="layui-btn layui-btn-danger layui-btn-sm">删除</button>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+			
+			<script type="text/javascript" src="../layui/layui.js" ></script>
+			 <script>
+			  layui.config({
+			    base: '../pages/' //静态资源所在路径
+			  }).extend({
+			    index: '../js/index' //主入口模块
+			  })
+			  layui.use(['index'], function(){
+			    var $ = layui.$
+			    ,admin = layui.admin
+			    ,element = layui.element
+			    ,router = layui.router();
+			
+			    element.render();
+			    
+			    var active = {			      
+			    	offset: function(othis){
+			        var type = othis.data('type')
+			        ,text = othis.text();
+			        
+			        layer.open({
+			          type: 1
+			          ,offset: type
+			          ,id: 'layerDemo'+type
+			          ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+			          ,btn: '关闭'
+			          ,btnAlign: 'c'
+			          ,shade: 0
+			          ,yes: function(){
+			            layer.closeAll();
+			          }
+			        });
+			      },
+			      edittable: function(){
+$.ajax({
+	url: "http://localhost:666/sys/user/list?limit=10&offset=0&name=&deptId=",
+	type: "GET",
+	data: {
+	},
+	success: function(res) { //res是server端响应
+		console.log(res);
+	}
+});
+			        layer.open({
+			          type: 2,
+			          title: '信息接报',
+			          shadeClose: true,
+			          shade: 0.4,
+			          area: ['1000px', '600px'],
+			          content: 'test2.html'
+			        }); 
+			      },
+			      
+			    };
+			    
+			    $('#testbtn').on('click', function(){
+			      var othis = $(this), method = othis.data('method');
+			      active[method] ? active[method].call(this, othis) : '';			      
+
+			    });
+			  });
+			  </script>
+	</body>
+
+</html>

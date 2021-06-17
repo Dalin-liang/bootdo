@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.actionprogramManage.dao.DispatchLogDao">
+
+	<select id="get" resultType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		select `id`,`actionprogram_id`,`summary`,`content`,`address`,`lat_lon`,
+		`time`,`show_bigscreen`,`create_by`,`create_date`,
+		`update_by`,`update_date`
+		from dispatch_log
+		where id = #{value}
+		and is_del=1
+	</select>
+
+	<select id="list" resultType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		select dl.`id`,dl.`actionprogram_id`,dl.`time`,dl.`show_bigscreen`,dl.`summary`,dl.`content`,dl.`address`,dl.`lat_lon`,
+		dl.`create_by`,dl.`create_date`,dl.`update_by`,dl.`update_date`,dl.`is_del`,da.code as code
+		from dispatch_log dl left join dispatch_actionprogram_main da on dl.actionprogram_id=da.id
+        <where>
+          		  dl.is_del = 1
+		  		  <if test="id != null and id != ''"> and dl.id = #{id} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and dl.actionprogram_id = #{actionprogramId} </if>
+			      <if test="code != null and code != ''"> and da.code like concat('%', #{code}, '%') </if>
+		  		  <if test="time != null and time != ''"> and dl.time = #{time} </if>
+		  		  <if test="showBigscreen != null and showBigscreen != ''"> and dl.show_bigscreen = #{showBigscreen} </if>
+			      <if test="summary != null and summary != ''"> and dl.summary like concat('%',#{summary},'%') </if>
+			      <if test="content != null and content != ''"> and dl.content like concat('%',#{content},'%')  </if>
+			      <if test="address != null and address != ''"> and dl.address like concat('%',#{address},'%')  </if>
+			      <if test="latLon != null and latLon != ''"> and dl.lat_lon = #{latLon}  </if>
+		  		  <if test="createBy != null and createBy != ''"> and dl.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and dl.create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and dl.update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and dl.update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by dl.${sort} dl.${order}
+            </when>
+			<otherwise>
+                order by dl.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dispatch_log
+		 <where>
+		   		  is_del = 1
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="time != null and time != ''"> and time = #{time} </if>
+		  		  <if test="showBigscreen != null and showBigscreen != ''"> and show_bigscreen = #{showBigscreen} </if>
+			      <if test="summary != null and summary != ''"> and dl.summary like concat('%',#{summary},'%') </if>
+			      <if test="content != null and content != ''"> and dl.content like concat('%',#{content},'%')  </if>
+			      <if test="address != null and address != ''"> and dl.address like concat('%',#{address},'%')  </if>
+			      <if test="latLon != null and latLon != ''"> and dl.lat_lon = #{latLon}  </if>
+			      <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		insert into dispatch_log
+		(
+			`id`, 
+			`actionprogram_id`,
+			`time`, 
+			`show_bigscreen`,
+			`summary`,
+			`content`,
+			`address`,
+			`lat_lon`,
+			`is_del`,
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{actionprogramId},
+			#{time}, 
+			#{showBigscreen},
+			#{summary},
+			#{content},
+			#{address},
+			#{latLon},
+			#{isDel},
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		update dispatch_log 
+		<set>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}, </if>
+			<if test="time != null">`time` = #{time}, </if>
+			<if test="showBigscreen != null">`show_bigscreen` = #{showBigscreen}, </if>
+			<if test="summary != null"> `summary` =#{summary}, </if>
+			<if test="content != null"> `content` =#{content},  </if>
+			<if test="address != null"> `address` =#{address}, </if>
+			<if test="latLon != null"> `lat_lon` = #{latLon}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from dispatch_log where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from dispatch_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="logicalDelete">
+        update dispatch_log set is_del='0' where id=#{id}
+    </update>
+	
+	<select id="getDispatchActionprogram" resultType="java.util.Map">
+		select * from dispatch_actionprogram_main where 1=1
+	</select>
+
+	<select id="getDispatchLogByActionprogramId" resultType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		select
+		t.id as 'id',
+		t.actionprogram_id as 'actionprogramId',
+		t.summary as 'summary',
+		t.content as 'content',
+		t.address as 'address',
+		t.lat_lon as 'latLon',
+		d.code as 'code',
+		t.time as 'time',
+		t.show_bigscreen as 'showBigscreen',(@rowNum:=@rowNum+1) RN
+		from (dispatch_log t,(select (@rowNum:=0)) b) left join dispatch_actionprogram_main d on d.id=t.actionprogram_id
+		<where>
+			t.is_del = 1
+			and t.actionprogram_id=#{actionId}
+			order by t.time desc
+		</where>
+	</select>
+
+	<select id="getDispatchLogByTimeRange" resultType="com.bootdo.actionprogramManage.domain.DispatchLogDO">
+		select
+		t.id as 'id',
+		t.actionprogram_id as 'actionprogramId',
+		t.summary as 'summary',
+		t.content as 'content',
+		t.address as 'address',
+		t.lat_lon as 'latLon',
+		d.code as 'code',
+		t.time as 'time',
+		t.show_bigscreen as 'showBigscreen',(@rowNum:=@rowNum+1) RN
+		from (dispatch_log t,(select (@rowNum:=0)) b) left join dispatch_actionprogram_main d on d.id=t.actionprogram_id
+		<where>
+			t.is_del = 1
+			and t.time <![CDATA[>=]]> #{startTime}
+			and t.time <![CDATA[<=]]> #{endTime}
+			and t.actionprogram_id = #{actionId}
+		</where>
+	</select>
+	<delete id="removeByActionprogramId" >
+		DELETE FROM dispatch_log  WHERE actionprogram_id=#{actionprogramId} 
+	</delete>
+</mapper>

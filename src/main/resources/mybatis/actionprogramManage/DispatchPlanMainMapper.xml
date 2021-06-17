@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.actionprogramManage.dao.DispatchPlanMainDao">
+
+	<sql id="dispatchPlanMainColumns">
+		a.`id` As id,
+		a.`planmain_id` As planmainId,
+		a.`actionprogram_id` As actionprogramId,
+		a.`accident_type_name` As accidentTypeName,
+		a.`earlywarn_type_name` As earlywarnTypeName,
+		a.`earlywarn_level_name` As earlywarnLevelName,
+		a.`duty_dept_name` As dutyDeptName,
+		a.`name` As name,
+		a.`code` As code,
+		a.`start_condition` As startCondition,
+		a.`reprot_dept_name` As reprotDeptName,
+		a.`start_dept_name` As startDeptName,
+		a.`enabled` As enabled,
+		a.`use_time` As useTime,
+		a.`remarks` As remarks,
+		a.`create_by` As createBy,
+		a.`create_date` As createDate,
+		a.`update_by` As updateBy,
+		a.`update_date` As updateDate
+		
+		
+	</sql>
+	
+	<select id="get" resultType="com.bootdo.actionprogramManage.domain.DispatchPlanMainDO">
+		select 
+			<include refid="dispatchPlanMainColumns"/>
+		from dispatch_plan_main a
+		where a.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.actionprogramManage.domain.DispatchPlanMainDO">
+		select 
+			<include refid="dispatchPlanMainColumns"/>
+		from dispatch_plan_main a
+        <where>  
+		  		  <if test="id != null and id != ''"> and a.id = #{id} </if>
+		  		  <if test="planmainId != null and planmainId != ''"> and a.planmain_id = #{planmainId} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and a.actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="accidentTypeName != null and accidentTypeName != ''"> and a.accident_type_name = #{accidentTypeName} </if>
+		  		  <if test="earlywarnTypeName != null and earlywarnTypeName != ''"> and a.earlywarn_type_name = #{earlywarnTypeName} </if>
+		  		  <if test="earlywarnLevelName != null and earlywarnLevelName != ''"> and a.earlywarn_level_name = #{earlywarnLevelName} </if>
+		  		  <if test="dutyDeptName != null and dutyDeptName != ''"> and a.duty_dept_name = #{dutyDeptName} </if>
+		  		  <if test="name != null and name != ''"> and a.name = #{name} </if>
+		  		  <if test="code != null and code != ''"> and a.code = #{code} </if>
+		  		  <if test="startCondition != null and startCondition != ''"> and a.start_condition = #{startCondition} </if>
+		  		  <if test="reprotDeptName != null and reprotDeptName != ''"> and a.reprot_dept_name = #{reprotDeptName} </if>
+		  		  <if test="startDeptName != null and startDeptName != ''"> and a.start_dept_name = #{startDeptName} </if>
+		  		  <if test="enabled != null and enabled != ''"> and a.enabled = #{enabled} </if>
+		  		  <if test="useTime != null and useTime != ''"> and a.use_time = #{useTime} </if>
+		  		  <if test="remarks != null and remarks != ''"> and a.remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and a.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and a.create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and a.update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dispatch_plan_main
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="planmainId != null and planmainId != ''"> and planmain_id = #{planmainId} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="accidentTypeName != null and accidentTypeName != ''"> and accident_type_name = #{accidentTypeName} </if>
+		  		  <if test="earlywarnTypeName != null and earlywarnTypeName != ''"> and earlywarn_type_name = #{earlywarnTypeName} </if>
+		  		  <if test="earlywarnLevelName != null and earlywarnLevelName != ''"> and earlywarn_level_name = #{earlywarnLevelName} </if>
+		  		  <if test="dutyDeptName != null and dutyDeptName != ''"> and duty_dept_name = #{dutyDeptName} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="startCondition != null and startCondition != ''"> and start_condition = #{startCondition} </if>
+		  		  <if test="reprotDeptName != null and reprotDeptName != ''"> and reprot_dept_name = #{reprotDeptName} </if>
+		  		  <if test="startDeptName != null and startDeptName != ''"> and start_dept_name = #{startDeptName} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="useTime != null and useTime != ''"> and use_time = #{useTime} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+	</select>
+	
+	<select id="getByActionprogramId" resultType="com.bootdo.actionprogramManage.domain.DispatchPlanMainDO">
+		select 
+			<include refid="dispatchPlanMainColumns"/>
+		from dispatch_plan_main a
+		where a.actionprogram_id = #{value}
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.actionprogramManage.domain.DispatchPlanMainDO">
+		insert into dispatch_plan_main
+		(
+			`id`, 
+			`planmain_id`, 
+			`actionprogram_id`, 
+			`accident_type_name`, 
+			`earlywarn_type_name`, 
+			`earlywarn_level_name`, 
+			`duty_dept_name`, 
+			`name`, 
+			`code`, 
+			`start_condition`, 
+			`reprot_dept_name`, 
+			`start_dept_name`, 
+			`enabled`, 
+			`use_time`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{planmainId}, 
+			#{actionprogramId}, 
+			#{accidentTypeName}, 
+			#{earlywarnTypeName}, 
+			#{earlywarnLevelName}, 
+			#{dutyDeptName}, 
+			#{name}, 
+			#{code}, 
+			#{startCondition}, 
+			#{reprotDeptName}, 
+			#{startDeptName}, 
+			#{enabled}, 
+			#{useTime}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.actionprogramManage.domain.DispatchPlanMainDO">
+		update dispatch_plan_main 
+		<set>
+			<if test="planmainId != null">`planmain_id` = #{planmainId}, </if>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}, </if>
+			<if test="accidentTypeName != null">`accident_type_name` = #{accidentTypeName}, </if>
+			<if test="earlywarnTypeName != null">`earlywarn_type_name` = #{earlywarnTypeName}, </if>
+			<if test="earlywarnLevelName != null">`earlywarn_level_name` = #{earlywarnLevelName}, </if>
+			<if test="dutyDeptName != null">`duty_dept_name` = #{dutyDeptName}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="startCondition != null">`start_condition` = #{startCondition}, </if>
+			<if test="reprotDeptName != null">`reprot_dept_name` = #{reprotDeptName}, </if>
+			<if test="startDeptName != null">`start_dept_name` = #{startDeptName}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="useTime != null">`use_time` = #{useTime}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from dispatch_plan_main where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from dispatch_plan_main where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<delete id="removeByActionprogramId">
+		DELETE FROM dispatch_plan_main  WHERE actionprogram_id=#{actionprogramId}
+	</delete>
+
+</mapper>

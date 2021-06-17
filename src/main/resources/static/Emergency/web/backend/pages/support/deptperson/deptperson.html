@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header">
+	<script type="text/javascript" src="../../../js/jquery-3.4.1.js" ></script>
+	<script type="text/javascript" src="../../../layui/layui.all.js" ></script>
+	<script type="text/javascript" src="../../../js/popper.js"></script>
+	<script type="text/javascript" src="../../../js/bootstrap.js"></script>
+	<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.js" ></script>
+	<script type="text/javascript" src="../../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../deptperson/js/deptperson.js?v=1.0"></script>
+	<link rel="stylesheet" href="../../../css/bootstrap.css" />
+	<link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.css" />
+	<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../../css/main.css" />
+	<link rel="stylesheet" href="../../../css/style.css" />
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="layui-pad10">
+				<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+					<form class="layui-form"  lay-filter="importantThing" action="">
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">姓名：</label>
+								<div class="layui-input-block ">
+									<input type="text" id="name" name="name" lay-verify="title" autocomplete="off" placeholder="请输入名称" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">部门：</label>
+								<div class="layui-input-block ">
+									<input type="text" name="deptName" lay-verify="title" id="deptName" autocomplete="off" placeholder="请输入部门" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">职位：</label>
+								<div class="layui-input-block ">
+									<input type="text" name="position" lay-verify="title" id="position" autocomplete="off" placeholder="请输入职位" class="layui-input">
+								</div>
+							</div>
+						</div>
+					</form>
+					&emsp;<button type="button" class="layui-btn"  onclick="reLoad()">查 询</button>
+				</div>
+				<div class="layui-mt10" id="LAY-component-layer-special-demo">
+					<div class="layadmin-layer-demo">
+						<button type="button" data-method="add" data-type="auto" onclick="add()"  id="add" class="layui-btn layui-btn-normal">新增</button>
+					</div>
+				</div>
+				<div class="layui-mt10">
+					<table id="ArbetTable"></table>
+				</div>
+
+
+			</div>
+
+
+			<table id="exampleTable" data-mobile-responsive="true">
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+<div>
+	<script type="text/javascript">
+		var s_edit_h = 'hidden';
+		var s_remove_h = 'hidden';
+		var s_resetPwd_h = 'hidden';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:edit">
+	<script type="text/javascript">
+		s_edit_h = '';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:remove">
+	<script type="text/javascript">
+		var s_remove_h = '';
+	</script>
+</div>
+<div shiro:hasPermission="equipment:resetPwd">
+	<script type="text/javascript">
+		var s_resetPwd_h = '';
+	</script>
+</div>
+</div>
+<div th:include="include :: footer"></div>
+
+
+
+
+</body>
+</html>

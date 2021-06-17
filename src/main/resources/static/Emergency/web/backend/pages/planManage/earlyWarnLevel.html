@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../../client/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.min.css" />
+		<script type="text/javascript" src="../../js/jquery-3.4.1.js" ></script>
+		<script type="text/javascript" src="../../../client/js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="../../bootstrap-table/bootstrap-table.min.js" ></script>
+		<script type="text/javascript" src="../../bootstrap-table/bootstrap-table-zh-CN.js" ></script>
+		<style type="text/css">
+			body {
+				background-color:#f2f2f2!important;
+			}
+			.fixed-table-toolbar{
+				display: none;
+			}
+			/**字符串过长 转化为 。。。**/
+			table{
+			   width:100px;
+			   table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+			   background-color:#FFFFFF!important;
+			}
+			td{
+			   width:100%;
+			   word-break:keep-all;/* 不换行 */
+			   white-space:nowrap;/* 不换行 */
+			   overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+			   text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+			   -o-text-overflow:ellipsis;
+			   -icab-text-overflow: ellipsis;
+			   -khtml-text-overflow: ellipsis;
+			   -moz-text-overflow: ellipsis;
+			   -webkit-text-overflow: ellipsis;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class=" layui-pad10">
+			<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+				<form class="layui-form" action="">
+					<div class="layui-form-item layui-col-xs7 layui-mb0">
+						<label class="layui-form-label">预警级别：</label>
+						<div class="layui-input-block ">
+							<input type="text" id="earlyWarnLevelName" name="earlyWarnLevelName" required placeholder="请输入预警级别名称" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+					&emsp;<button type="button" class="layui-btn" onclick="reloadTable()">查 询</button>
+					<button type="button" class="layui-btn layui-btn-danger">高级查询</button>
+				</form>
+			</div>
+			<div class="layui-mt10" id="LAY-component-layer-special-demo">
+				<div class="layadmin-layer-demo">
+					<button type="button" data-method="edittable" data-type="auto"  id="testbtn" class="layui-btn layui-btn-normal">新增</button>
+								
+				</div>
+			</div>
+			<div class="layui-form layui-mt10">
+				<table id="earlyWarnLevelTable" data-mobile-responsive="true"></table>
+			</div>
+			
+			<script type="text/javascript" src="../../layui/layui.js" ></script>
+			<script type="text/javascript" src="../../js/planManage/earlyWarnLevel.js" ></script>
+			 <script>
+			  layui.config({
+			    base: '../../pages/' //静态资源所在路径
+			  }).extend({
+			    index: '../js/index' //主入口模块
+			  })
+			  layui.use(['index'], function(){
+			    var $ = layui.$
+			    ,admin = layui.admin
+			    ,element = layui.element
+			    ,router = layui.router();
+			
+			    element.render();
+			    
+			    var active = {			      
+			    	offset: function(othis){
+			        var type = othis.data('type')
+			        ,text = othis.text();
+			        
+			        layer.open({
+			          type: 1
+			          ,offset: type
+			          ,id: 'layerDemo'+type
+			          ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+			          ,btn: '关闭'
+			          ,btnAlign: 'c'
+			          ,shade: 0
+			          ,yes: function(){
+			            layer.closeAll();
+			          }
+			        });
+			      },
+			      edittable: function(){
+			        layer.open({
+			          type: 2,
+			          title: '编辑预警级别信息',
+			          shadeClose: true,
+			          shade: 0.4,
+			          area: ['800px', '380px'],
+			          content: 'earlyWarnLevelForm.html'
+			        }); 
+			      },
+			      
+			    };
+			    
+			    $('#testbtn').on('click', function(){
+			      var othis = $(this), method = othis.data('method');
+			      active[method] ? active[method].call(this, othis) : '';			      
+
+			    });
+			  });
+			  </script>
+	</body>
+
+</html>

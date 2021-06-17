@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.newData.dao.PersonDao">
+
+	<select id="get" resultType="com.bootdo.newData.domain.PersonDO">
+		select `id`,`towns`,`name`,`sex`,`age`,`address`,`fname`,`mobile`,`tname`,`tmobile`,`point`,`deleted`,`submitDate`,`remarks` from old_person where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.newData.domain.PersonDO">
+		select `id`,`towns`,`name`,`sex`,`age`,`address`,`fname`,`mobile`,`tname`,`tmobile`,`point`,`deleted`,`submitDate`,`remarks` from old_person
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="towns != null and towns != ''"> and towns = #{towns} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="age != null and age != ''"> and age = #{age} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="fname != null and fname != ''"> and fname = #{fname} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="tname != null and tname != ''"> and tname = #{tname} </if>
+		  		  <if test="tmobile != null and tmobile != ''"> and tmobile = #{tmobile} </if>
+		  		  <if test="point != null and point != ''"> and point = #{point} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from old_person
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="towns != null and towns != ''"> and towns = #{towns} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="age != null and age != ''"> and age = #{age} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="fname != null and fname != ''"> and fname = #{fname} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="tname != null and tname != ''"> and tname = #{tname} </if>
+		  		  <if test="tmobile != null and tmobile != ''"> and tmobile = #{tmobile} </if>
+		  		  <if test="point != null and point != ''"> and point = #{point} </if>
+		  		  <if test="deleted != null and deleted != ''"> and deleted = #{deleted} </if>
+		  		  <if test="submitdate != null and submitdate != ''"> and submitDate = #{submitdate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.newData.domain.PersonDO" useGeneratedKeys="true" keyProperty="id">
+		insert into old_person
+		(
+			`towns`, 
+			`name`, 
+			`sex`, 
+			`age`, 
+			`address`, 
+			`fname`, 
+			`mobile`, 
+			`tname`, 
+			`tmobile`, 
+			`point`, 
+			`deleted`, 
+			`submitDate`, 
+			`remarks`
+		)
+		values
+		(
+			#{towns}, 
+			#{name}, 
+			#{sex}, 
+			#{age}, 
+			#{address}, 
+			#{fname}, 
+			#{mobile}, 
+			#{tname}, 
+			#{tmobile}, 
+			#{point}, 
+			#{deleted}, 
+			#{submitdate}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.newData.domain.PersonDO">
+		update old_person 
+		<set>
+			<if test="towns != null">`towns` = #{towns}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="sex != null">`sex` = #{sex}, </if>
+			<if test="age != null">`age` = #{age}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="fname != null">`fname` = #{fname}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="tname != null">`tname` = #{tname}, </if>
+			<if test="tmobile != null">`tmobile` = #{tmobile}, </if>
+			<if test="point != null">`point` = #{point}, </if>
+			<if test="deleted != null">`deleted` = #{deleted}, </if>
+			<if test="submitdate != null">`submitDate` = #{submitdate}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from old_person where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from old_person where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

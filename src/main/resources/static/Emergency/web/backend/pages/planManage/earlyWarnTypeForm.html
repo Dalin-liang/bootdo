@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+	<body>
+		<div class=" layui-pad10">
+			<form class="layui-form" lay-filter="earlyWarnTypeForm"  action="">
+				<input type="text" id="earlyWarnTypeId" name="id"  class="layui-input" style="display:none;">
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">预警类型：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="name" name="name" lay-verify="required|nameLong" lay-reqtext="预警类型是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+					<div class="layui-form-item">
+						<label class="layui-form-label">事故类型：</label>
+						<div class="layui-input-block">
+							<select id="accidentTypeId"  name="accidentTypeId" lay-verify="required" lay-reqtext="事故类型是必填项，岂能为空？">
+						    </select>
+						</div>
+					</div>	
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea id="remarks" name="remarks" placeholder="请输入内容" lay-verify="remarkLong" class="layui-textarea"></textarea>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">是否启用：</label>
+					<div class="layui-input-block">
+					  <input type="checkbox" id="status" checked="checked" name="status" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+					</div>
+				</div>
+			 <div class="layui-form-item layui-mt10 layui-text-center">
+		 		<button type="button" class="layui-btn layui-btn-radius" lay-submit lay-filter="formSubmit">保 存</button>
+				<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+			 </div>
+			 </form>
+		</div>
+		
+		
+		
+		
+			<script type="text/javascript" src="../../layui/layui.js" ></script>
+			 <script>
+			 var prefix = "/planManage/planEarlywarnType"; 
+			 var parentData;
+			 layui.use(['form', 'layedit'], function(){
+				 var form = layui.form,
+				  layer = layui.layer,
+				  $ = layui.$;
+				  
+				  $.ajax({   
+			    		url: prefix + '/getSelectData',       
+			        	method:'post',       
+			        	data:{
+			  			},
+			  			async: false,       
+			        	success:function(data){      
+				  			if(data.msg =='true'){       
+			  					if(data.accidentTypeList !=null && data.accidentTypeList !=""){
+				  					var accident = data.accidentTypeList;
+				  					var html = '<option value=""></option>';
+				  					for(var i=0;i<accident.length;i++){
+				  						html += '<option value="'+accident[i].id+'">'+accident[i].name+'</option>';
+				  					}
+			  						$("#accidentTypeId").html(html);
+			  						form.render('select', 'earlyWarnTypeForm');
+			  					}else{
+			  						layer.open({
+			  						  title: '提示'
+			  						  ,content: '请先编辑事故类型信息'
+			  						});
+			  					}
+			  					
+			  				} else {
+								layer.msg("获取事件类型失败");
+			  				}           
+			       	 	},              
+			       		error:function (data) {
+				  			layer.msg("获取事件类型失败");
+			  			}           
+			      }) ;   
+			  
+				  //回显
+				  if(parent.editDate !=null && parent.editDate !=""){
+					  parentData = parent.editDate;
+					  parent.editDate =null;
+					  //form初始化赋值
+					  form.val('earlyWarnTypeForm', {
+		            	    "id": parentData.id 
+		            	    ,"name": parentData.name
+		            	    ,"accidentTypeId": parentData.accidentTypeId 
+		            	    ,"remarks": parentData.remarks
+		            	    ,"status": (parentData.status =='0' ||parentData.status =='3')?false:true
+		              });
+				  }
+			  
+				  //表单校验
+				  form.verify({
+					nameLong: function(value){ 
+						if(value.length > 60){
+			                 return '预警类型名称长度大于60！请重新输入';
+			             }
+					},
+					remarkLong:function(value){ 
+						if(value.length > 500){
+			                 return '备注长度大于500！请重新输入';
+			             }
+					}
+				  });
+			  
+				  form.on('submit(formSubmit)', function(data){ 
+					  
+				  	  if(data.field.id !=null && data.field.id !=""){
+				  		 	var o = $(".layui-form-switch");
+				  		 	if(o.find("em").text() =="OFF"){
+					  			data.field.status = "0";
+					  	    }else {
+					  			data.field.status = "1";
+					  	    }
+				  		    $.ajax({   
+		   		                  url: prefix + '/update',       
+		   		                  method:'post',       
+		   		                  data:data.field,
+		   		  				  async: false,       
+		   		                  success:function(data){      
+		   		                       if(data.code =='0'){       
+		   		  							var index = parent.layer.getFrameIndex(window.name);
+		   		  							parent.reloadTable();//重载父页表格
+		   		  							parent.layer.msg(data.msg);
+		   		  							parent.layer.close(index);
+		   		                       } else {
+		   		                            var index = parent.layer.getFrameIndex(window.name);
+		   									parent.layer.msg(data.msg);
+		   									parent.layer.close(index); 
+		   		  					   }           
+		   		                  },              
+		   		                  error:function (data) {
+		   		                  		parent.layer.msg("保存失败");
+		   		  				  }           
+		   		           }) ;         
+				  	  }else{
+				  			if(data.field.status =="on"){
+					  			data.field.status = "1";
+					  	    }else {
+					  			data.field.status = "3";
+					  	    }
+				  		  	$.ajax({   
+		 		                  url: prefix + '/save',       
+		 		                  method:'post',       
+		 		                  data:data.field,
+		 		  				  async: false,       
+		 		                  success:function(data){      
+		 		                       if(data.code =='0'){       
+		 		  							var index = parent.layer.getFrameIndex(window.name);
+		 		 							parent.reloadTable();//重载父页表格
+		 		  							parent.layer.msg(data.msg);
+		 		  							parent.layer.close(index);
+		 		                       } else {
+		 		                            var index = parent.layer.getFrameIndex(window.name);
+		 									parent.layer.msg(data.msg);
+		 									parent.layer.close(index); 
+		 		  					   }           
+		 		                  },              
+		 		                  error:function (data) {
+		 		                  		parent.layer.msg("保存失败");
+		 		  				  }           
+		 		           }) ;         
+				  	  }
+		                 
+		          });   
+				  
+				  $("#closeForm").click(function() {
+					  var index = parent.layer.getFrameIndex(window.name);
+					  parent.layer.close(index);
+				  });
+				        
+			  })
+			  </script>
+	</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+            <form class="layui-form" lay-filter="component-form-group">
+                <input type="hidden" name="id">
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">物资名称：</label>
+                        <div class="layui-input-block">
+                            <select name="goodsinfo_id" id="goodsinfo_id" lay-filter="goodsinfo_id" lay-verify="required" lay-reqtext="物资名称是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">调出储备库：</label>
+                        <div class="layui-input-block">
+                            <select name="from_goodsstorehouse_id" id="from_goodsstorehouse_id" lay-filter="from_goodsstorehouse_id" lay-verify="required" lay-reqtext="调出储备库是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">调入储备库：</label>
+                        <div class="layui-input-block">
+                            <select name="to_goodsstorehouse_id" id="to_goodsstorehouse_id" lay-filter="to_goodsstorehouse_id" lay-verify="required" lay-reqtext="调入储备库是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">库存数量：</label>
+				    <div class="layui-input-block">
+                        <input type="text" id="inventorynum" name="inventorynum"  autocomplete="off" class="layui-input" disabled="disabled">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">调拨数量：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="transnum" name="transnum" lay-verify="required" lay-reqtext="调拨数量是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">调拨时间：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="transdate" name="transdate" lay-verify="required" lay-reqtext="调拨时间是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+			 	</div>
+			</form>
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				$.ajax({
+                    url:'/goodsPush/getStoreHouse',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.length>0){
+                            $("#from_goodsstorehouse_id").empty();
+                            $("#to_goodsstorehouse_id").empty();
+                            for(var i in rs){
+                                $("#from_goodsstorehouse_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                                $("#to_goodsstorehouse_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                            }
+						}
+                    }
+                })
+				$.ajax({
+                    url:'/goodsPush/getGoods',
+                    type:'post',
+                    dataType:'json',
+					async:false,
+                    success:function (rs) {
+                        if(rs.length>0){
+                            $("#goodsinfo_id").empty();
+                            for(var i in rs){
+                                $("#goodsinfo_id").append("<option value='"+rs[i].id+"'>"+rs[i].goodsname+"</option>")
+                            }
+						}
+                    }
+                })
+				changeSel();
+				if(sessionStorage.getItem("edit")=="true"){
+				    var temp=sessionStorage.getItem("row");
+				    var edit=sessionStorage.getItem("edit");
+				    sessionStorage.removeItem("edit");
+				    sessionStorage.removeItem("row");
+				    rowData=$.parseJSON(temp);
+					for(var key in rowData){
+					    $("*[name="+key+"]").val(rowData[key]);
+					}
+				}
+			  layui.use(['form', 'layer','element','laydate'], function(){
+				  var form = layui.form
+					  ,layer = layui.layer
+					  ,element=layui.element
+					  ,laydate=layui.laydate
+				  form.render();
+				  laydate.render({
+					  type:'datetime',
+					  elem:'#transdate',
+					  trigger:'click'
+				  })
+				  form.on('submit(submit)',function(data){
+					  var store=parseInt($("#inventorynum").val());
+					  var transnum=parseInt($("#transnum").val());
+					  if(store==0){
+						  swal("保存失败","库存数量为0不能调拨","error");
+						  return;
+					  }
+					  if(store<transnum){
+						  swal("保存失败","调拨数量不能大于库存数量","error");
+						  return;
+					  }
+					   if(parseInt($("#transnum").val())<0){
+						  swal("不能为负数","调拨数量不能为负数","warning");
+						  return false;
+					  }
+				      if(edit=="true"){
+                          console.log(111);
+                          $.ajax({
+                              url:'/goodsTran/update',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/goodsTran/query");
+								 }
+                              }
+                          })
+					  }else{
+                          $.ajax({
+                              url:'/goodsTran/insert',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/goodsTran/query");
+								 }
+                              }
+                          })
+					  }
+				  })
+				  form.on('select(from_goodsstorehouse_id)', function(data){
+					  changeSel();
+
+				  });
+				  form.on('select(goodsinfo_id)', function(data){
+					  changeSel();
+				  });
+			  })
+
+
+				function changeSel(){
+					var goodsstorehouse_id=$("#from_goodsstorehouse_id").val();
+					var goodsinfo_id=$("#goodsinfo_id").val()
+
+					$.ajax({
+						url:'/goodsPop/getStoreNum',
+						type:'post',
+						dataType:'json',
+						data:{'goodsstorehouseId':goodsstorehouse_id,'goodsinfoId':goodsinfo_id},
+						success:function(rs){
+							$("#inventorynum").val(rs.storeNum);
+						}
+					})
+				}
+
+		</script>
+	</body>
+</html>

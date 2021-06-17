@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.AppSignDao">
+
+	<select id="get" resultType="com.bootdo.support.entity.AppSignDO">
+		select `id`,`userid`,`areacode`,`cname`,`signtime`,`lat`,`lon`,`address`,`ljcount`,`qdzplj`,`jrqd`,`sign_type`,`work_type` from t_app_sign where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.entity.AppSignDO">
+		select ta.`id`,ta.`userid`,ta.`areacode`,ta.`cname`,ta.`signtime`,ta.`lat`,ta.`lon`,ta.`address`,ta.`ljcount`,ta.`qdzplj`,
+		ta.`jrqd`,ta.`sign_type`,ta.`work_type`,su.name as "person.name" from t_app_sign ta
+		left join safeguard_deptperson su on ta.userid=su.id
+        <where>  
+		  		  <if test="id != null and id != ''"> and ta.id = #{id} </if>
+		  		  <if test="userid != null and userid != ''"> and ta.userid = #{userid} </if>
+		  		  <if test="areacode != null and areacode != ''"> and ta.areacode = #{areacode} </if>
+		  		  <if test="cname != null and cname != ''"> and ta.cname like concat('%',#{cname}, '%') </if>
+			      <if test="username != null and username != ''"> and su.name like concat('%',#{username}, '%')</if>
+		  		  <if test="signtime != null and signtime != ''"> and signtime = #{signtime} </if>
+		  		  <if test="lat != null and lat != ''"> and ta.lat = #{lat} </if>
+		  		  <if test="lon != null and lon != ''"> and ta.lon = #{lon} </if>
+		  		  <if test="address != null and address != ''"> and ta.address = #{address} </if>
+		  		  <if test="ljcount != null and ljcount != ''"> and ta.ljcount = #{ljcount} </if>
+		  		  <if test="qdzplj != null and qdzplj != ''"> and ta.qdzplj = #{qdzplj} </if>
+		  		  <if test="jrqd != null and jrqd != ''"> and ta.jrqd = #{jrqd} </if>
+		  		  <if test="signType != null and signType != ''"> and ta.sign_type = #{signType} </if>
+		  		  <if test="workType != null and workType != ''"> and ta.work_type = #{workType} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by signtime desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from t_app_sign
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="areacode != null and areacode != ''"> and areacode = #{areacode} </if>
+		  		  <if test="cname != null and cname != ''"> and cname = #{cname} </if>
+		  		  <if test="signtime != null and signtime != ''"> and signtime = #{signtime} </if>
+		  		  <if test="lat != null and lat != ''"> and lat = #{lat} </if>
+		  		  <if test="lon != null and lon != ''"> and lon = #{lon} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="ljcount != null and ljcount != ''"> and ljcount = #{ljcount} </if>
+		  		  <if test="qdzplj != null and qdzplj != ''"> and qdzplj = #{qdzplj} </if>
+		  		  <if test="jrqd != null and jrqd != ''"> and jrqd = #{jrqd} </if>
+		  		  <if test="signType != null and signType != ''"> and sign_type = #{signType} </if>
+		  		  <if test="workType != null and workType != ''"> and work_type = #{workType} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.entity.AppSignDO">
+		insert into t_app_sign
+		(
+			`id`, 
+			`userid`, 
+			`areacode`, 
+			`cname`, 
+			`signtime`, 
+			`lat`, 
+			`lon`, 
+			`address`, 
+			`ljcount`, 
+			`qdzplj`, 
+			`jrqd`, 
+			`sign_type`, 
+			`work_type`
+		)
+		values
+		(
+			#{id}, 
+			#{userid}, 
+			#{areacode}, 
+			#{cname}, 
+			#{signtime}, 
+			#{lat}, 
+			#{lon}, 
+			#{address}, 
+			#{ljcount}, 
+			#{qdzplj}, 
+			#{jrqd}, 
+			#{signType}, 
+			#{workType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.AppSignDO">
+		update t_app_sign 
+		<set>
+			<if test="userid != null">`userid` = #{userid}, </if>
+			<if test="areacode != null">`areacode` = #{areacode}, </if>
+			<if test="cname != null">`cname` = #{cname}, </if>
+			<if test="signtime != null">`signtime` = #{signtime}, </if>
+			<if test="lat != null">`lat` = #{lat}, </if>
+			<if test="lon != null">`lon` = #{lon}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="ljcount != null">`ljcount` = #{ljcount}, </if>
+			<if test="qdzplj != null">`qdzplj` = #{qdzplj}, </if>
+			<if test="jrqd != null">`jrqd` = #{jrqd}, </if>
+			<if test="signType != null">`sign_type` = #{signType}, </if>
+			<if test="workType != null">`work_type` = #{workType}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from t_app_sign where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from t_app_sign where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

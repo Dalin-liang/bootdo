@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.DeptPersonMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportDeptPerson">
+        insert into safeguard_deptperson(
+            id,
+            dept_id,
+            user_id,
+            name,
+            mobile,
+            sex,
+            position,
+            remarks,
+            create_by,
+            create_date,
+            is_duty
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{dept_id,jdbcType=VARCHAR},
+            #{user_id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR},
+            #{sex,jdbcType=INTEGER},
+            #{position,jdbcType=VARCHAR},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date},
+            #{is_duty}
+        )
+    </insert>
+
+    <update id="updateSysUserPersoinId">
+          update sys_user set deptperson_id=#{deptpersonId} where user_id=#{userId}
+    </update>
+
+    <!-- 清空sys_user表关联deptperson表的deptperson_id-->
+    <update id="clearSysUserPersonId">
+        update sys_user set deptperson_id='' where deptperson_id=#{deptpersonId}
+    </update>
+
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportDeptPersonDTO">
+        SELECT hc.*,(@rowNum:=@rowNum+1) RN,d.NAME AS dept
+        FROM safeguard_deptperson hc
+        LEFT JOIN safeguard_dept d ON d.id = hc.`dept_id`,(SELECT (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="dept_id != null  and dept_id != '' ">
+	            AND HC.dept_id like concat('%',#{dept_id},'%')
+	        </if>
+            <if test="name != null  and name != '' ">
+	            AND HC.name like concat('%',#{name},'%')
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+            <if test="update_by != null and update_by != '' ">
+                AND HC.update_by like concat('%',#{update_by},'%')
+	        </if>
+			<if test="mobile != null and mobile != '' ">
+	            AND  HC.mobile = #{mobile}
+	        </if>
+            <if test="sex != null and sex != '' ">
+	            AND  HC.sex = #{sex}
+	        </if>
+            <if test="position != null and position != '' ">
+	            AND  HC.position like concat('%',#{position},'%')
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+              <if test="update_date != null and update_date != '' ">
+	            AND  HC.update_date = #{update_date}
+	        </if>
+	        <if test="is_duty != null and is_duty != '' ">
+	            AND  HC.is_duty = #{is_duty}
+	        </if>
+            <if test="deptName != null and deptName != '' ">
+                AND  d.NAME like concat('%',#{deptName},'%')
+            </if>
+	        
+        </where>
+        order by HC.create_date desc
+    </select>
+    
+    <select id="getEmergencyDept" resultType="java.util.Map">
+    select *  from safeguard_dept
+    
+    </select>
+
+    <select id="getSysUser" resultType="java.util.Map">
+        select * from sys_user
+    </select>
+
+    <!--查询未关联的用户-->
+    <select id="getUnrelatedSysUser" resultType="java.util.Map">
+        select * from sys_user where deptperson_id is null or deptperson_id =''
+    </select>
+
+    <!--查询未关联和当前用户的关联的用户-->
+    <select id="getUnrelatedAndOneSysUser" resultType="java.util.Map">
+        select * from sys_user where deptperson_id is null or deptperson_id ='' or deptperson_id=#{personId}
+    </select>
+    
+    <select id="getByIdAndName" resultType="java.util.Map">
+        SELECT p.* 
+        FROM safeguard_deptperson p 
+        <where>
+			<if test="id != null and id != '' ">
+	            AND  p.id = #{id}
+	        </if>
+            <if test="name != null and name != '' ">
+	            AND p.name like concat('%',#{name},'%')
+	        </if>
+        </where>
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportDeptPerson">
+        update safeguard_deptperson
+        <set>
+            <if test="dept_id != null">dept_id=#{dept_id,jdbcType=VARCHAR},</if>
+            <if test="user_id != null">user_id=#{user_id,jdbcType=VARCHAR},</if>
+            <if test="name != null"> name=#{name,jdbcType=VARCHAR},</if>
+            <if test="mobile != null"> mobile=#{mobile,jdbcType=VARCHAR},</if>
+            <if test="sex != null"> sex=#{sex,jdbcType=INTEGER},</if>
+            <if test="position != null">position=#{position,jdbcType=VARCHAR},</if>
+            <if test="remarks != null">remarks=#{remarks,jdbcType=VARCHAR},</if>
+            <if test="update_by != null">update_by=#{update_by,jdbcType=VARCHAR},</if>
+            <if test="update_date != null">update_date=#{update_date,jdbcType=TIMESTAMP},</if>
+            <if test="is_duty != null">is_duty=#{is_duty},</if>
+        </set>
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_deptperson where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_deptperson set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_deptperson where id=#{id}
+    </select>
+
+    <select id="getSysUserCountById" resultType="integer">
+        select count(user_id) from sys_user t where t.deptperson_id=#{id}
+    </select>
+
+    <!--根据dept_id查询部门人员-->
+    <select id="getDeptpersonByDeptId" resultType="java.util.Map">
+        select sd.id,sd.name,sd.contact,sd.mobile,sdp.id as personid,sdp.name as personname from safeguard_dept sd left join safeguard_deptperson sdp on sd.id=sdp.dept_id
+        where sd.id=#{dept_id} order by sdp.name=sd.contact desc
+    </select>
+    <!--根据人员获取对应部门-->
+    <select id="getDeptByDeptPersonId" resultType="com.bootdo.support.entity.SupportDeptDO">
+        select t.* from safeguard_dept t left join safeguard_deptperson s on s.dept_id=t.id where s.id=#{id}
+          union
+	    select t2.* from safeguard_dept t2 where t2.id=#{id}
+    </select>
+    
+    <!--根据队伍获取对应部门人员-->
+    <select id="getDeptPersonByTeam" resultType="com.bootdo.support.entity.SupportDeptPerson">
+       select t.*  from safeguard_deptperson t LEFT JOIN safeguard_teamperson t1 on t.id=t1.deptperson_id where t1.team_id=#{teamId}
+    </select>
+
+    <select id="getDeptPersonByTeamIds" resultType="com.bootdo.dispatch.center.vo.TeamMemberVO">
+        select tp.team_id,
+        dp.dept_id,
+        d.name as 'dept_name',
+        dp.name,
+        dp.mobile,
+        dp.sex,
+        dp.position,
+        dp.remarks
+        from safeguard_teamperson tp
+        inner join safeguard_deptperson dp on tp.deptperson_id=dp.id
+        left join safeguard_dept d on dp.dept_id=d.id
+        where tp.team_id in
+        <foreach collection="teamIds" open="(" close=")" item="teamId" separator=",">
+            #{teamId}
+        </foreach>
+        order by tp.team_id,dp.create_date
+    </select>
+
+    <!--根据userName获取deptPerson-->
+    <select id="getDeptPersonByUserName" resultType="com.bootdo.support.entity.SupportDeptPerson">
+        select * from safeguard_deptperson sd
+        left join sys_user su on sd.user_id=su.user_id
+        where su.username=#{userName, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getDeptPersonInfoByUserId" resultType="java.util.Map">
+        SELECT sd.id AS deptpersonId,sd.name,sd.`position`,d.id AS deptId,d.name AS deptName
+        FROM safeguard_deptperson sd
+        LEFT JOIN sys_user su ON sd.user_id=su.user_id
+        LEFT JOIN safeguard_dept d ON d.id = sd.`dept_id`
+        WHERE su.`user_id` = #{userId}
+    </select>
+
+    <select id="getPersonList" resultType="java.util.Map">
+        SELECT sd.*,d.id AS deptId,d.name AS deptName
+        FROM safeguard_deptperson sd
+        LEFT JOIN safeguard_dept d ON d.id = sd.`dept_id`
+    </select>
+
+</mapper>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <style type="text/css">
+        .layui-disabled, .layui-disabled:hover {
+            color: #3e3c3c!important;
+            cursor: not-allowed!important;
+        }
+    </style>
+</head>
+<body>
+<div class=" layui-pad10">
+    <form  class="layui-form" lay-filter="smsSendConfigForm"  action="">
+        <div class="layui-col-xs12">
+            <div class="layui-form-item">
+                <input type="text" id="smsSendConfigId" name="id"  class="layui-input" style="display:none;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">配置类型：</label>
+                    <div class="layui-input-block">
+                        <select id="type"  name="type" lay-verify="required" lay-reqtext="配置类型是必填项，岂能为空？" lay-filter="typeChange">
+                            <option value=""></option>
+                            <option value="1">预案</option>
+                            <option value="2">方案</option>
+                            <option value="3">接报来源</option>
+                            <option value="0">接报来源类目</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6" id="SourceItem" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">接报来源：</label>
+                <div class="layui-input-block">
+                    <select id="Sourceid"  name="Sourceid" lay-verify="required" lay-reqtext="接报来源是必填项，岂能为空？" lay-filter="SourceChange">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">配置对象：</label>
+                <div class="layui-input-block">
+                    <select id="targetid"  name="targetid" lay-verify="required" lay-reqtext="配置对象是必填项，岂能为空？" lay-filter="targetidChange">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6" id="codeItem" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">编码：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="code" name="code" autocomplete="off" class="layui-input" readonly = "readonly">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <textarea id="remarks"  name="remarks" placeholder="请输入内容" lay-verify="required|remarkLong" lay-reqtext="备注是必填项，岂能为空？" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否开启短信：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" id="issend"  name="issend" checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+            </div>
+        </div>
+        <div class="layui-form-item layui-mt10 layui-text-center">
+            <button class="layui-btn layui-btn-radius" lay-submit lay-filter="formSubmit">保 存</button>
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script>
+    var prefix = "/sms/smsSendConfig";
+    var parentData;
+    var form;
+    var SourceList;
+    var planminList;
+    var actionprogramMainList;
+    layui.use([ 'form', 'layedit' ],function() {
+        form = layui.form;
+        var layer = layui.layer
+            , $ = layui.$;
+        selectChange();
+
+        //回显
+        if (parent.editDate != null && parent.editDate != "") {
+            parentData = parent.editDate;
+            parent.editDate = null;
+            getTargetByType( parentData.type);
+            if(parentData.type == 0){
+                SourceTarget(parentData.targetid);
+
+            }
+            //form初始化赋值
+            form.val('smsSendConfigForm',{
+                "id" : parentData.id,
+                "type" : parentData.type,
+                "targetid" : parentData.targetid,
+                "remarks" : parentData.remarks,
+                "code" : parentData.code,
+                "issend" : (parentData.issend == '0') ? false: true
+            });
+
+            $("#type").attr('disabled','disabled');
+            $("#Sourceid").attr('disabled','disabled');
+            $("#targetid").attr('disabled','disabled');
+            form.render('select', 'smsSendConfigForm');
+        }
+
+        //表单校验
+        form.verify({
+            nameLong: function(value){
+                if(value.length > 60){
+                    return '事件类型名称长度大于60！请重新输入';
+                }
+            },
+            remarkLong:function(value){
+                if(value.length > 500){
+                    return '备注长度大于500！请重新输入';
+                }
+            }
+        });
+
+        function getTargetByType(type){
+            $("#SourceItem").css("display","none");
+            $("#codeItem").css("display","none");
+            $("#targetid").empty();
+            SourceList = null;
+            planminList = null;
+            actionprogramMainList = null;
+            var url = null;
+            if(parentData != null){
+                url = prefix + '/getTargetByType'
+            }else {
+                url = prefix + '/getLastTargetByType'
+            }
+            $.ajax({
+                url : url,
+                method : 'post',
+                data : {
+                    type: type
+                },
+                async : false,
+                success : function(data) {
+                    if (data.msg == 'true') {
+                        if(type == 0){
+                            if(data.SourceList !=null && data.SourceList !=""){
+                                $("#SourceItem").css("display","block");
+                                SourceList = data.SourceList;
+                                var html = '<option value=""></option>';
+                                for(var i=0;i<SourceList.length;i++){
+                                    html += '<option value="'+SourceList[i].id+'">'+SourceList[i].name+'</option>';
+                                }
+                                $("#Sourceid").html(html);
+
+                            }
+                        }else if(type == 1){
+                            if(data.planminList !=null && data.planminList !=""){
+                                $("#codeItem").css("display","block");
+                                planminList = data.planminList;
+                                var html = '<option value=""></option>';
+                                for(var i=0;i<planminList.length;i++){
+                                    html += '<option value="'+planminList[i].id+'">'+planminList[i].name+'</option>';
+                                }
+                                $("#targetid").html(html);
+                            }
+                        }else if(type == 2){
+                            if(data.actionprogramMainList !=null && data.actionprogramMainList !=""){
+                                $("#codeItem").css("display","block");
+                                actionprogramMainList = data.actionprogramMainList;
+                                var html = '<option value=""></option>';
+                                for(var i=0;i<actionprogramMainList.length;i++){
+                                    html += '<option value="'+actionprogramMainList[i].id+'">'+actionprogramMainList[i].name+'</option>';
+                                }
+                                $("#targetid").html(html);
+                            }
+                        }else if(type == 3){
+                            if(data.SourceList !=null && data.SourceList !=""){
+                                SourceList = data.SourceList;
+                                var html = '<option value=""></option>';
+                                for(var i=0;i<SourceList.length;i++){
+                                    html += '<option value="'+SourceList[i].id+'">'+SourceList[i].name+'</option>';
+                                }
+                                $("#targetid").html(html);
+
+                            }
+                        }
+                        form.render('select', 'smsSendConfigForm');
+                    } else {
+                        layer.msg("获取下拉失败");
+                    }
+                },
+                error : function(data) {
+                    layer.msg("获取下拉失败");
+                }
+            });
+        }
+
+        function SourceChange(SourceId){
+            $("#targetid").empty();
+            $("#code").val("");
+            if(SourceId !=null && SourceId !=""){
+                for(var i=0;i<SourceList.length;i++){
+                    if(SourceId == SourceList[i].id){
+                        if(SourceList[i].sourceMenuList !=null && SourceList[i].sourceMenuList !=""){
+                            var sourceMenuList = SourceList[i].sourceMenuList;
+                            var html = '<option value=""></option>';
+                            for (var j=0;j<sourceMenuList.length;j++){
+                                html += '<option value="'+sourceMenuList[j].id+'">'+sourceMenuList[j].name+'</option>';
+                            }
+                            $("#targetid").html(html);
+                        }
+                    }
+                }
+                form.render('select', 'smsSendConfigForm');
+            }
+        }
+
+        function SourceTarget(targetid){
+            for(var i=0;i<SourceList.length;i++){
+                if(SourceList[i].sourceMenuList !=null && SourceList[i].sourceMenuList !=""){
+                    var sourceMenuList = SourceList[i].sourceMenuList;
+                    for (var j=0;j<sourceMenuList.length;j++){
+                        if(sourceMenuList[j].id == targetid){
+                            $("#Sourceid").val(SourceList[i].id);
+                            SourceChange(SourceList[i].id);
+                        }
+                    }
+
+                }
+            }
+            form.render('select', 'smsSendConfigForm');
+        }
+
+        function targetidChange(targetid) {
+            var type = $("#type").val();
+            var dataList = null;
+            if(type == 1){
+                dataList = planminList;
+            }else if(type == 2){
+                dataList = actionprogramMainList;
+            }
+            if(dataList !=null && dataList !=""){
+                for(var i=0; i<dataList.length;i++){
+                    if(dataList[i].id == targetid){
+                        $("#code").val(dataList[i].code);
+                    }
+                }
+            }
+        }
+
+        function selectChange(){
+            form.on('select(typeChange)', function(data){
+                if(data.value !=null && data.value !=""){
+                    getTargetByType(data.value);
+                }
+            });
+            form.on('select(SourceChange)', function(data){
+                SourceChange(data.value);
+            });
+            form.on('select(targetidChange)', function(data){
+                targetidChange(data.value);
+            });
+        }
+
+        form.on('submit(formSubmit)',function(data) {
+            if (data.field.id != null && data.field.id != "") {
+                var o = $(".layui-form-switch");
+                if (o.find("em").text() == "OFF") {
+                    data.field.issend = "0";
+                } else {
+                    data.field.issend = "1";
+                }
+                $.ajax({
+                    url : prefix + '/update',
+                    method : 'post',
+                    data : data.field,
+                    async : false,
+                    success : function(data) {
+                        if (data.code == '0') {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.reloadTable();//重载父页表格
+                            parent.layer.msg(data.msg);
+                            parent.layer.close(index);
+                        } else {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.msg(data.msg);
+                            parent.layer.close(index);
+                        }
+                    },
+                    error : function(data) {
+                        parent.layer.msg("保存失败");
+                    }
+                });
+            } else {
+                if (data.field.issend == "on") {
+                    data.field.issend = "1";
+                } else {
+                    data.field.issend = "0";
+                }
+                $.ajax({
+                    url : prefix + '/save',
+                    method : 'post',
+                    data : data.field,
+                    async : false,
+                    success : function(data) {
+                        if (data.code == '0') {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.reloadTable();//重载父页表格
+                            parent.layer.msg(data.msg);
+                            parent.layer.close(index);
+                        } else {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.msg(data.msg);
+                            parent.layer.close(index);
+                        }
+                    },
+                    error : function(data) {
+                        parent.layer.msg("保存失败");
+                    }
+                });
+            }
+
+        });
+
+        $("#closeForm").click(function() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+</script>
+</body>
+</html>

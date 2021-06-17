@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <head th:include="include :: header">
+
+
+
+        <script type="text/javascript" src="../../../js/jquery-3.4.1.js" ></script>
+        <script type="text/javascript" src="../../../layui/layui.all.js" ></script>
+        <script type="text/javascript" src="../../../js/fullcalendar.js"></script>
+        <script type="text/javascript" src="../duty/js/scheduling.js?v=1.0"></script>
+
+        <script type="text/javascript" src="../duty/js/duty.js?v=1.0"></script>
+        <link rel="stylesheet" href="../../../css/fullcalendar.css "/>
+        <link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+
+        <link rel="stylesheet" href="../../../../client/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.min.css" />
+        <script type="text/javascript" src="../../../../client/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.min.js"></script>
+        <script type="text/javascript" src="../../../bootstrap-table/bootstrap-table-zh-CN.js"></script>
+    </head>
+<script type="text/javascript">
+    $(function() {
+        //页面加载完初始化日历
+        $('#calendar').fullCalendar({
+            //设置日历头部信息
+            header: {
+                left: 'prev,next today',
+                center: 'title'
+
+            },
+            firstDay:1,//每行第一天为周一
+            editable: true,
+            droppable: true, // this allows things to be dropped onto the calendar
+            monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+            dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+            today: ["今天"],
+            buttonText: {
+                today: '今天',
+
+                prev: '上一月',
+                next: '下一月'
+            },
+            'height':700,
+            locale: 'zh-cn',
+            // timeFormat: 'H(:mm)' ,// uppercase H for 24-hour clock
+            //点击某一天时促发
+            dayClick: function(date, jsEvent, view) {
+                f_date=new Date(date).Format('yyyy-MM-dd');
+                reLoad();
+            } ,
+
+            selectable: true, //允许用户拖动
+        });
+
+        $('#external-events .fc-event').each(function() {
+            // store data so the calendar knows to render an event upon drop
+            $(this).data('event', {
+                title: $.trim($(this).text()), // use the element's text as the event title
+                color:$(this).css("background-color")
+                //stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+
+        });
+        $('.fc-corner-left').click(function(){
+            initCalendar();
+        })
+        $('.fc-corner-right').click(function(){
+            initCalendar();
+        })
+
+    });
+/*    function add(){
+        var html = $("<div class='fc-event  bg-default'>"+$("#title").val()+"</div>");
+        $(html).insertBefore($("#p"));
+        $(html).draggable({
+            zIndex: 999,
+            revert: true,      // will cause the event to go back to its
+            revertDuration: 0  //  original position after the drag
+        });
+
+    }*/
+</script>
+<style>
+
+    #external-events {
+        padding: 0 10px;
+        background: #eee;
+        text-align: left;
+    }
+
+    #external-events h4 {
+        font-size: 16px;
+        margin-top: 0;
+        padding-top: 1em;
+    }
+
+    #external-events .fc-event {
+        margin: 10px 0;
+        cursor: pointer;
+    }
+
+    #external-events p {
+        margin: 1.5em 0;
+        font-size: 11px;
+        color: #666;
+    }
+
+    #external-events p input {
+        margin: 0;
+        vertical-align: middle;
+    }
+
+
+</style>
+</head>
+
+<body>
+<div class="conter-wrapper">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+
+
+
+                <div class="col-sm-9">
+                    <div id="calendar"></div>
+                </div>
+            <div class="col-sm-3">
+                <div class="layui-mt10" style="text-align:right" id="LAY-component-layer-special-demo">
+                    <div class="layadmin-layer-demo">
+                        <button type="button" data-method="add" data-type="auto" onclick="add()"  id="add" class="layui-btn layui-btn-normal">添加</button>
+                        <button type="button" data-method="add" data-type="auto" onclick="batchRemove()"  id="remove" class="layui-btn layui-btn-danger">移除</button>
+
+                    </div>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true">
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+
+</body>
+</html>

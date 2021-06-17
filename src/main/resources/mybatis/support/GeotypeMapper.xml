@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.GeotypeDao">
+
+	<select id="get"  resultType="java.util.Map" parameterType="com.bootdo.support.entity.GeotypeDO">
+		select hc.id,hc.name,hc.enabled,hc.sort_no as sortNo,hc.icon_type as iconType,hc.icon_type_cn as iconTypeCN,hc.remarks,hc.create_by as createBy,hc.create_date as createDate,
+		 hc.update_by as updateBy, hc.update_date as updateDate,(@rowNum:=@rowNum+1) RN  from safeguard_geotype hc,(select (@rowNum:=0)) b
+        <where>
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name like concat('%',#{name},'%') </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="iconType != null and iconType != ''"> and icon_type = #{iconType} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+		order by HC.create_date desc
+
+	</select>
+	 
+	<insert id="insert" parameterType="com.bootdo.support.entity.GeotypeDO">
+		insert into safeguard_geotype
+		(
+			`id`, 
+			`name`, 
+			`enabled`, 
+			`sort_no`, 
+			`icon_type`,
+			`icon_type_cn`,
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{name}, 
+			#{enabled}, 
+			#{sortNo}, 
+			#{iconType},
+			#{iconTypeCN},
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.GeotypeDO">
+		update safeguard_geotype 
+		<set>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="enabled != null">`enabled` = #{enabled},</if>
+			<if test="sortNo != null">`sort_no` = #{sortNo},</if>
+			<if test="iconType != null">`icon_type` = #{iconType},</if>
+			<if test="iconTypeCN != null">`icon_type_cn` = #{iconTypeCN},</if>
+			<if test="remarks != null">`remarks` = #{remarks},</if>
+			<if test="createBy != null">`create_by` = #{createBy},</if>
+			<if test="createDate != null">`create_date` = #{createDate},</if>
+			<if test="updateBy != null">`update_by` = #{updateBy},</if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<delete id="delete">
+		delete from safeguard_geotype where id = #{id}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_geotype where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getGeoInfoByTypeId" resultType="com.bootdo.support.entity.SupportGeoInfo">
+		select sg.* from safeguard_geoinfo sg left join safeguard_geotype st on sg.geotype_id=st.id
+		where st.id=#{typeId}
+	</select>
+
+</mapper>

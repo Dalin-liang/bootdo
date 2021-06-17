@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../../css/main.css" />
+		<link rel="stylesheet" href="../../../css/style.css" />
+		<link rel="stylesheet" href="../../../../client/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.min.css" />
+		<script type="text/javascript" src="../../../js/jquery-3.4.1.js"></script>
+		<script type="text/javascript" src="../../../../client/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.min.js"></script>
+		<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table-zh-CN.js"></script>
+		<style type="text/css">
+			.layui-input-block input {
+				color: black !important;
+			}
+			body {
+				background-color: #f2f2f2;
+			}
+			.fixed-table-toolbar{
+				display:none;
+			}
+			/**字符串过长 转化为 。。。**/
+			table{
+			   width:100px;
+			   table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+			   background-color:#FFFFFF!important;
+			}
+			td{
+			   width:100%;
+			   word-break:keep-all;/* 不换行 */
+			   white-space:nowrap;/* 不换行 */
+			   overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+			   text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+			   -o-text-overflow:ellipsis;
+			   -icab-text-overflow: ellipsis;
+			   -khtml-text-overflow: ellipsis;
+			   -moz-text-overflow: ellipsis;
+			   -webkit-text-overflow: ellipsis;
+			}
+		</style>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+				<div class="layui-col-md12">
+				  <div class="layui-card">
+					<div class="layui-card-header">知识库信息</div>
+					<div class="layui-card-body" style="height: 300px;">
+						<form class="layui-form"  lay-filter="infoForm" action="">
+							<input type="text" name="id" style="display:none;">
+							<div class="layui-col-xs3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">序号：</label>
+									<div class="layui-input-block">
+									  <input type="text" id="px" name="px" lay-verify="required|number" lay-reqtext="序号是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-col-xs3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">等级/规格：</label>
+									<div class="layui-input-block">
+										<input type="text" id="level" name="level" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-col-xs3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">使用部门：</label>
+									<div class="layui-input-block">
+						  				<input type="text" id="dept" name="dept" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-col-xs3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">生效日期：</label>
+									<div class="layui-input-block">
+									  <input type="text" id="effectiveDate" name="effectiveDate" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-col-xs12">
+								<div class="layui-form-item">
+									<label class="layui-form-label">保管地点：</label>
+									<div class="layui-input-block">
+										<input type="text" id="storagelocation" lay-verify="storagelocationLong" name="storagelocation" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-form-item layui-form-text">
+								<label class="layui-form-label">备注：</label>
+								<div class="layui-input-block">
+								  <textarea id="remarks" name="remarks" lay-verify="remarksLong" placeholder="请输入内容" class="layui-textarea"></textarea>
+								</div>
+							  </div>	
+							<div class="layui-form-item">
+								<label class="layui-form-label">是否启用：</label>
+								<div class="layui-input-block">
+								  <input type="checkbox" id="enabled" name="enabled" checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+								</div>
+							</div>
+							
+							<div class="layui-col-md12" style="left: 0;position: fixed;  bottom: 0;margin-bottom: 10px;z-index:999;">
+							  <div class="layui-card">
+								<div class="layui-card-body">
+								  <div class="layui-form-item layui-text-center" style="margin-top: 0px;margin-bottom: 0px;">
+									<button class="layui-btn layui-btn-radius ifView" lay-submit lay-filter="formSubmit">保 存</button>
+									<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+								 </div>
+								</div>
+							  </div>
+							</div>
+						</form>
+					</div>
+				  </div>
+				</div>
+				<div class="layui-col-md12" style="margin-top: 15px;">
+				    <div class="layui-card">
+						<div class="layui-card-header">基本信息</div>
+						<div class="layui-card-body" style="height: 950px;">
+							<form class="layui-form"  lay-filter="detailForm" action="" id="detailForm">
+								<input type="text" name="id" style="display:none;">
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">编号：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="code" name="code" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">名称：</label>
+										<div class="layui-input-block">
+											<input type="text" id="name" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">俗称：</label>
+										<div class="layui-input-block">
+											<input type="text" id="otherName" name="otherName"  placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">英文名：</label>
+										<div class="layui-input-block">
+											<input type="text" id="englishName" name="englishName" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">分子式：</label>
+										<div class="layui-input-block">
+											<input type="text" id="molecularFormula" name="molecularFormula" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">分子量：</label>
+										<div class="layui-input-block">
+											<input type="text" id="molecularWeight" name="molecularWeight" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">化学类别：</label>
+										<div class="layui-input-block">
+											<input type="text" id="chemicalType" name="chemicalType" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">主要成分：</label>
+										<div class="layui-input-block">
+											<textarea id="mainIngredient" name="mainIngredient" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">外观与性状：</label>
+										<div class="layui-input-block">
+											<textarea id="appearanceTraits" name="appearanceTraits"  placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">侵入途径：</label>
+										<div class="layui-input-block">
+											<textarea id="intrusionWay" name="intrusionWay"  placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">特别警示：</label>
+										<div class="layui-input-block">
+											<textarea id="specialWarning" name="specialWarning" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">储运要求：</label>
+										<div class="layui-input-block">
+											<textarea id="storageTransportationMethods" name="storageTransportationMethods" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">废弃处理：</label>
+										<div class="layui-input-block">
+											<textarea id="discardMethods" name="discardMethods" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">用途：</label>
+										<div class="layui-input-block">
+											<textarea id="use" name="use" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">毒理学资料：</label>
+										<div class="layui-input-block">
+											<textarea id="toxicologicalInfo" name="toxicologicalInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">环境资料：</label>
+										<div class="layui-input-block">
+											<textarea id="environmentalInfo" name="environmentalInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">包装方法：</label>
+										<div class="layui-input-block">
+											<textarea id="pack" name="pack" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">避免接触条件：</label>
+										<div class="layui-input-block">
+											<textarea id="avoidContact" name="avoidContact" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">禁忌物：</label>
+										<div class="layui-input-block">
+											<textarea id="incompatibility" name="incompatibility" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">燃烧产物：</label>
+										<div class="layui-input-block">
+											<textarea id="combustionProduct" name="combustionProduct" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								
+						</form>
+						</div>
+				    </div>
+				</div>
+				<div class="layui-col-md12" style="margin-top: 15px;">
+				    <div class="layui-card">
+						<div class="layui-card-header">危险性</div>
+						<div class="layui-card-body" style="height: 420px;">
+							<form class="layui-form"  lay-filter="dangerForm" action="" id="dangerForm">
+								<input type="text" name="id" style="display:none;">
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">危险性类别：</label>
+										<div class="layui-input-block ">
+											<select id="dangerType"  name="dangerType" lay-verify="required" lay-reqtext="危险性类别是必填项，岂能为空？">
+											</select>
+										</div>
+									</div>					
+								</div>
+								<div class="layui-form-item layui-form-text">
+									<label class="layui-form-label">危险性描述：</label>
+									<div class="layui-input-block">
+										<textarea id="dangerCharacteristic" name="dangerCharacteristic" placeholder="请输入内容" class="layui-textarea"></textarea>
+									</div>
+								</div>	
+								<div class="layui-form-item layui-form-text">
+									<label class="layui-form-label">健康危害：</label>
+									<div class="layui-input-block">
+										<textarea id="healthHarm" name="healthHarm" placeholder="请输入内容" class="layui-textarea"></textarea>
+									</div>
+								</div>
+								<div class="layui-form-item layui-form-text">
+									<label class="layui-form-label">环境影响：</label>
+									<div class="layui-input-block">
+										<textarea id="environmentalImpact" name="environmentalImpact" placeholder="请输入内容" class="layui-textarea"></textarea>
+									</div>
+								</div>
+								
+						</form>
+						</div>
+				    </div>
+				</div>
+				
+				<div class="layui-col-md12" style="margin-top: 15px;">
+				    <div class="layui-card">
+						<div class="layui-card-header">应急行动</div>
+						<div class="layui-card-body" style="height: 250px;">
+							<form class="layui-form"  lay-filter="emergencyForm" action="" id="emergencyForm">
+								<input type="text" name="id" style="display:none;">
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">隔离与公共安全：</label>
+										<div class="layui-input-block">
+											<textarea id="isolationSafety" name="isolationSafety" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>	
+								</div>	
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">泄漏处理：</label>
+										<div class="layui-input-block">
+											<textarea id="leakageResponse" name="leakageResponse" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">火灾扑救：</label>
+										<div class="layui-input-block">
+											<textarea id="fireFighting" name="fireFighting" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item layui-form-text">
+										<label class="layui-form-label">急救：</label>
+										<div class="layui-input-block">
+											<textarea id="emergencyRescue" name="emergencyRescue" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>
+								</div>
+						</form>
+						</div>
+				    </div>
+				</div>
+				
+				<div class="layui-col-md12" style="margin-top: 15px;">
+				    <div class="layui-card">
+						<div class="layui-card-header">理化性质</div>
+						<div class="layui-card-body" style="height: 250px;">
+							<form class="layui-form"  lay-filter="physicalForm" action="" id="physicalForm">
+								<input type="text" name="id" style="display:none;">
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">熔点(℃)：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="meltingPoint" name="meltingPoint" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">沸点(℃)：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="boilingPoint" name="boilingPoint" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">相对湿度：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="relativeHumidity" name="relativeHumidity" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">相对密度：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="relativeDensity" name="relativeDensity" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">饱和蒸汽压(kPa)：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="saturatedVaporPressure" name="saturatedVaporPressure" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">临界温度(℃)：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="criticalTemperature" name="criticalTemperature" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs3">
+									<div class="layui-form-item">
+										<label class="layui-form-label">临界压力(Mpa)：</label>
+										<div class="layui-input-block ">
+											<input type="text" id="criticalPressure" name="criticalPressure" placeholder="请输入" autocomplete="off" class="layui-input">
+										</div>
+									</div>					
+								</div>
+								<div class="layui-form-item layui-form-text">
+									<label class="layui-form-label">溶解性：</label>
+									<div class="layui-input-block">
+										<textarea id="solubility" name="solubility" placeholder="请输入内容" class="layui-textarea"></textarea>
+									</div>
+								</div>	
+						</form>
+						</div>
+				    </div>
+				</div>
+				
+				<div class="layui-col-md12" style="margin-top: 15px;margin-bottom: 80px;">
+				    <div class="layui-card">
+						<div class="layui-card-header">防护措施</div>
+						<div class="layui-card-body" style="height: 360px;">
+							<form class="layui-form"  lay-filter="protectForm" action="" id="protectForm">
+								<input type="text" name="id" style="display:none;">
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">呼吸系统防护：</label>
+										<div class="layui-input-block ">
+											<textarea id="respiratory" name="respiratory" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">眼睛防护：</label>
+										<div class="layui-input-block ">
+											<textarea id="eye" name="eye" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">身体防护：</label>
+										<div class="layui-input-block ">
+											<textarea id="body" name="body" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">手防护：</label>
+										<div class="layui-input-block ">
+											<textarea id="hand" name="hand" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>					
+								</div>
+								<div class="layui-col-xs6">
+									<div class="layui-form-item">
+										<label class="layui-form-label">其它：</label>
+										<div class="layui-input-block ">
+											<textarea id="other" name="other" placeholder="请输入内容" class="layui-textarea"></textarea>
+										</div>
+									</div>					
+								</div>
+								
+						</form>
+						</div>
+				    </div>
+				</div>
+			 
+		</div>
+		
+			<script type="text/javascript" src="../../../layui/layui.js" ></script>
+			 <script>
+			  var prefix = "/support/knowledgeInfo";
+			  var parentData;
+			  var form;
+			  layui.use(['form', 'layedit', 'laydate','table'], function(){
+				  form = layui.form;
+				  var table = layui.table,
+				  layer = layui.layer,
+				  laydate = layui.laydate,
+				  $ = layui.$;
+				  
+				  laydate.render({
+					  elem: '#effectiveDate' 
+					  ,type: 'datetime'
+				  });
+				  
+				  getSelectData();
+				  
+				  //回显
+				  if(parent.editDate !=null && parent.editDate !=""){
+					  parentData = parent.editDate;
+					  parent.editDate =null;
+
+		              changeClassByType(); //根据查看或修改，改变按钮和输入框事件
+					  //form初始化赋值
+					  form.val('infoForm', {
+		            	    "id": parentData.id 
+		            	    ,"px": parentData.px 
+		            	    ,"level": parentData.level
+		            	    ,"storagelocation": parentData.storagelocation
+		            	    ,"dept": parentData.dept
+		            	    ,"effectiveDate": parentData.effectiveDate
+		            	    ,"remarks": parentData.remarks
+		            	    ,"enabled": (parentData.enabled =='0')?false:true
+		              }); 
+					  getknowledgeDetails();
+				  }
+				  
+					//表单校验
+					form.verify({
+						storagelocationLong:function(value){ 
+							if(value.length > 120){
+				                 return '保管地点长度大于120！请重新输入';
+				             }
+						},
+						remarksLong:function(value){ 
+							if(value.length > 500){
+				                 return '备注长度大于500！请重新输入';
+				             }
+						}
+					});
+					
+					function isNum(a) {     
+						var reg = /^(-?\d+)(\.\d+)?$/;
+						return reg.test(a); 
+					}
+					
+					function checkKnowledge(){
+						//detail
+						var code = $("#code").val();
+						if(code.length > 32){
+							 layer.alert('编号长度大于32！请重新输入');
+			                 return false;
+			            }
+						var name = $("#name").val();
+						if(name.length == 0){
+							 layer.alert('名称不能为空！请重新输入');
+			                 return false;
+						}else if(name.length > 60){
+							 layer.alert('名称长度大于60！请重新输入');
+			                 return false;
+			            }
+						var molecularFormula = $("#molecularFormula").val();
+						if(molecularFormula.length == 0){
+							 layer.alert('分子式不能为空！请重新输入');
+			                 return false;
+						}
+						var molecularWeight = $("#molecularWeight").val();
+						if(!isNum(molecularWeight)){
+							 layer.alert('分子量不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var mainIngredient = $("#mainIngredient").val();
+						if(mainIngredient.length > 120){
+							 layer.alert('主要成分长度大于120！请重新输入');
+			                 return false;
+			            }
+						var appearanceTraits = $("#appearanceTraits").val();
+						if(appearanceTraits.length > 250){
+							 layer.alert('外观与性状长度大于250！请重新输入');
+			                 return false;
+			            }
+						var intrusionWay = $("#intrusionWay").val();
+						if(intrusionWay.length > 500){
+							 layer.alert('侵入途径长度大于500！请重新输入');
+			                 return false;
+			            }
+						var specialWarning = $("#specialWarning").val();
+						if(specialWarning.length > 250){
+							 layer.alert('侵入途径长度大于250！请重新输入');
+			                 return false;
+			            }
+						var storageTransportationMethods = $("#storageTransportationMethods").val();
+						if(storageTransportationMethods.length > 500){
+							 layer.alert('储运要求长度大于500！请重新输入');
+			                 return false;
+			            }
+						var discardMethods = $("#discardMethods").val();
+						if(discardMethods.length > 500){
+							 layer.alert('废弃处理长度大于500！请重新输入');
+			                 return false;
+			            }
+						var use = $("#use").val();
+						if(use.length > 500){
+							 layer.alert('用途长度大于500！请重新输入');
+			                 return false;
+			            }
+						var toxicologicalInfo = $("#toxicologicalInfo").val();
+						if(toxicologicalInfo.length > 500){
+							 layer.alert('毒理学资料大于500！请重新输入');
+			                 return false;
+			            }
+						var environmentalInfo = $("#environmentalInfo").val();
+						if(environmentalInfo.length > 500){
+							 layer.alert('环境资料大于500！请重新输入');
+			                 return false;
+			            }
+						var pack = $("#pack").val();
+						if(pack.length > 250){
+							 layer.alert('包装方法大于250！请重新输入');
+			                 return false;
+			            }
+						var avoidContact = $("#avoidContact").val();
+						if(avoidContact.length > 250){
+							 layer.alert('避免接触条件大于250！请重新输入');
+			                 return false;
+			            }
+						var incompatibility = $("#incompatibility").val();
+						if(incompatibility.length > 250){
+							 layer.alert('禁忌物大于250！请重新输入');
+			                 return false;
+			            }
+						var combustionProduct = $("#combustionProduct").val();
+						if(combustionProduct.length > 250){
+							 layer.alert('燃烧产物大于250！请重新输入');
+			                 return false;
+			            }
+						
+						//danger
+						var dangerType = $("#dangerType").val();
+						if(dangerType.length > 60){
+							 layer.alert('危险性类别大于60！请重新输入');
+			                 return false;
+			            }
+						var dangerCharacteristic = $("#dangerCharacteristic").val();
+						if(dangerCharacteristic.length > 250){
+							 layer.alert('危险性描述大于250！请重新输入');
+			                 return false;
+			            }
+						var healthHarm = $("#healthHarm").val();
+						if(healthHarm.length > 500){
+							 layer.alert('健康危害大于500！请重新输入');
+			                 return false;
+			            }
+						var environmentalImpact = $("#environmentalImpact").val();
+						if(environmentalImpact.length > 500){
+							 layer.alert('环境影响大于500！请重新输入');
+			                 return false;
+			            }
+						
+						//应急行动
+						var isolationSafety = $("#isolationSafety").val();
+						if(isolationSafety.length > 500){
+							 layer.alert('环境影响大于500！请重新输入');
+			                 return false;
+			            }
+						var leakageResponse = $("#leakageResponse").val();
+						if(leakageResponse.length > 500){
+							 layer.alert('泄漏处理大于500！请重新输入');
+			                 return false;
+			            }
+						var fireFighting = $("#fireFighting").val();
+						if(fireFighting.length > 500){
+							 layer.alert('火灾扑救大于500！请重新输入');
+			                 return false;
+			            }
+						var emergencyRescue = $("#emergencyRescue").val();
+						if(emergencyRescue.length > 500){
+							 layer.alert('急救大于500！请重新输入');
+			                 return false;
+			            }
+						
+						//理化性质
+						var meltingPoint = $.trim($("#meltingPoint").val());
+						if(!!meltingPoint && !isNum(meltingPoint)){
+							 layer.alert('熔点不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var boilingPoint = $.trim($("#boilingPoint").val());
+						if(!!boilingPoint && !isNum(boilingPoint)){
+							 layer.alert('沸点不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var relativeHumidity = $.trim($("#relativeHumidity").val());
+						if(!!relativeHumidity && !isNum(relativeHumidity)){
+							 layer.alert('相对湿度不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var relativeDensity = $.trim($("#relativeDensity").val());
+						if(!!relativeDensity && !isNum(relativeDensity)){
+							 layer.alert('相对密度不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var saturatedVaporPressure = $.trim($("#saturatedVaporPressure").val());
+						if(!!saturatedVaporPressure && !isNum(saturatedVaporPressure)){
+							 layer.alert('饱和蒸汽压不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var criticalPressure = $.trim($("#criticalPressure").val());
+						if(!!criticalPressure && !isNum(criticalPressure)){
+							 layer.alert('临界压力不能含非数字！请重新输入');
+			                 return false;
+			            }
+						var solubility = $.trim($("#solubility").val());
+						if(solubility.length > 120){
+							 layer.alert('溶解性大于120！请重新输入');
+			                 return false;
+			            }
+						
+						//防护措施
+						var respiratory = $("#respiratory").val();
+						if(respiratory.length > 250){
+							 layer.alert('呼吸系统防护大于250！请重新输入');
+			                 return false;
+			            }
+						var eye = $("#eye").val();
+						if(eye.length > 250){
+							 layer.alert('眼睛防护大于250！请重新输入');
+			                 return false;
+			            }
+						var body = $("#body").val();
+						if(eye.length > 250){
+							 layer.alert('身体防护大于250！请重新输入');
+			                 return false;
+			            }
+						var hand = $("#hand").val();
+						if(hand.length > 250){
+							 layer.alert('手防护大于250！请重新输入');
+			                 return false;
+			            }
+						var other = $("#other").val();
+						if(other.length > 250){
+							 layer.alert('其它大于250！请重新输入');
+			                 return false;
+			            }
+						return true;
+					}
+				  
+				  form.on('submit(formSubmit)', function(data){ 
+					  if(!checkKnowledge()){
+							return false;
+					  }
+					  if(parentData != null &&parentData.dataType !=null && parentData.dataType == "edit"){
+				  		 	var o = $(".layui-form-switch");
+				  		 	if(o.find("em").text() =="OFF"){
+					  			data.field.enabled = "0";
+					  	    }else {
+					  			data.field.enabled = "1";
+					  	    }
+				  		 	
+				  		  	$.ajax({   
+		   		                  url: prefix + '/update',       
+		   		                  method:'post',       
+		   		                  data:{
+				 						"info": JSON.stringify(data.field),
+					 					"detail": getFormVal("detailForm"),
+					 					"danger": getFormVal("dangerForm"),
+					 					"emergency": getFormVal("emergencyForm"),
+					 					"physical": getFormVal("physicalForm"),
+					 					"protect": getFormVal("protectForm"),
+				  				  },
+		   		  				  async: false,       
+		   		                  success:function(data){      
+		   		                       if(data.code =='0'){       
+		   		  							var index = parent.layer.getFrameIndex(window.name);
+		   		  							parent.reloadTable();//重载父页表格
+		   		  							parent.layer.msg("修改成功");
+		   		  							parent.layer.close(index);
+		   		                       } else {
+		   		                            var index = parent.layer.getFrameIndex(window.name);
+		   									parent.layer.msg("修改失败");
+		   									parent.layer.close(index); 
+		   		  					   }           
+		   		                  },              
+		   		                  error:function (data) {
+		   		                  		parent.layer.msg("修改失败");
+		   		  				  }           
+		   		           }) ;          
+				  	  }else{
+				  			if(data.field.enabled =="on"){
+					  			data.field.enabled = "1";
+					  	    }else {
+					  			data.field.enabled = "0";
+					  	    }
+				  		  	$.ajax({  
+		 		                  url: prefix + '/save',       
+		 		                  method:'post',       
+		 		                  data:{
+		 			 					"info": JSON.stringify(data.field),
+		 			 					"detail": getFormVal("detailForm"),
+					 					"danger": getFormVal("dangerForm"),
+					 					"emergency": getFormVal("emergencyForm"),
+					 					"physical": getFormVal("physicalForm"),
+					 					"protect": getFormVal("protectForm"),
+		 		  				  },
+		 		  				  async: false,       
+		 		                  success:function(data){      
+		 		                       if(data.code =='0'){       
+		 		  							var index = parent.layer.getFrameIndex(window.name);
+		 		 							parent.reloadTable();//重载父页表格
+		 		  							parent.layer.msg("保存成功");
+		 		  							parent.layer.close(index);
+		 		                       } else {
+		 		                            var index = parent.layer.getFrameIndex(window.name);
+		 									parent.layer.msg(data.msg);
+		 									parent.layer.close(index); 
+		 		  					   }           
+		 		                  },              
+		 		                  error:function (data) {
+		 		                  		parent.layer.msg("保存失败");
+		 		  				  }           
+		 		           }) ;         
+				  	  }
+		                 
+		          }); 
+				  
+				  $("#closeForm").click(function() {
+					  var index = parent.layer.getFrameIndex(window.name);
+					  parent.layer.close(index);
+				  });
+			  });
+			  
+			function getFormVal(formId){
+				var d = {};
+			    var t = $("#"+formId).serializeArray();
+			    $.each(t, function() {
+			      d[this.name] = this.value;
+			    });
+			    return JSON.stringify(d);
+			}
+			
+			function changeClassByType(){
+				if(parentData.dataType !=null && parentData.dataType == "view"){
+					  //====查看样式
+	            	  //$("form input").attr("readonly","readonly").css({"cursor": "not-allowed", "background-color":"#d2d2d2"});
+	            	  $("form input").attr("readonly","readonly").css("cursor", "not-allowed");
+	            	  $("form textarea").attr("disabled","disabled").css("cursor", "not-allowed");
+	            	  $("#enabled").attr('disabled', 'disabled');
+	            	  $(".ifView").attr('disabled', 'disabled').css('cursor', 'not-allowed');
+				}
+			} 
+			
+			function getSelectData(){
+				 $.ajax({   
+			    		url: prefix + '/getDangerType',       
+			        	method:'post',       
+			        	data:{
+			  			},
+			  			async: false,       
+			        	success:function(data){      
+				  			if(data.msg =='true'){       
+				  				if(data.dangerTypeList !=null && data.dangerTypeList !=""){
+				  					var dangerTypeList = data.dangerTypeList;
+				  					var html = '<option value=""></option>';
+				  					for(var i=0;i<dangerTypeList.length;i++){
+				  						html += '<option value="'+dangerTypeList[i].id+'">'+dangerTypeList[i].dangerTypeName+'</option>';
+				  					}
+			  						$("#dangerType").html(html);
+			  					}
+				  				form.render('select', 'dangerForm');
+			  				} else {
+								layer.msg("获取下拉框失败");
+			  				}           
+			       	 	},              
+			       		error:function (data) {
+				  			layer.msg("获取下拉框失败");
+			  			}           
+			      }) ; 
+				
+			}
+			
+			function getknowledgeDetails(){
+				$.ajax({   
+   			    		url: prefix + '/getknowledgeDetails',       
+   			        	method:'post',       
+   			        	data:{
+   				  			"id": parentData.id
+   			  			},
+   			  			async: false,       
+   			        	success:function(data){      
+   				  			if(data.msg =='true'){       
+   				  				if(data.detail !=null && data.detail !=""){
+   				  					var detail = data.detail;
+	   				  				form.val('detailForm', {
+										"id": detail.id,
+										"code": detail.code,
+										"name": detail.name,
+										"otherName": detail.otherName,
+										"englishName": detail.englishName,
+										"molecularFormula": detail.molecularFormula,
+										"molecularWeight": detail.molecularWeight,
+										"chemicalType": detail.chemicalType,
+										"mainIngredient": detail.mainIngredient,
+										"appearanceTraits": detail.appearanceTraits,
+										"intrusionWay": detail.intrusionWay,
+										"specialWarning": detail.specialWarning,
+										"storageTransportationMethods": detail.storageTransportationMethods,
+										"discardMethods": detail.discardMethods,
+										"use": detail.use,
+										"toxicologicalInfo": detail.toxicologicalInfo,
+										"environmentalInfo": detail.environmentalInfo,
+										"pack": detail.pack,
+										"avoidContact": detail.avoidContact,
+										"incompatibility": detail.incompatibility,
+										"combustionProduct": detail.combustionProduct
+					              	});
+   			  					}
+   				  				if(data.danger !=null && data.danger !=""){
+   				  					var danger = data.danger;
+	   				  				form.val('dangerForm', {
+										"id": danger.id,
+										"dangerType": danger.dangerType,
+										"dangerCharacteristic": danger.dangerCharacteristic,
+										"healthHarm": danger.healthHarm,
+										"environmentalImpact": danger.environmentalImpact
+					              	});
+   			  					}
+   				  				if(data.emergency !=null && data.emergency !=""){
+   				  					var emergency = data.emergency;
+	   				  				form.val('emergencyForm', {
+										"id": emergency.id,
+										"isolationSafety": emergency.isolationSafety,
+										"leakageResponse": emergency.leakageResponse,
+										"fireFighting": emergency.fireFighting,
+										"emergencyRescue": emergency.emergencyRescue
+					              	});
+   			  					}
+   				  				if(data.physical !=null && data.physical !=""){
+   				  					var physical = data.physical;
+	   				  				form.val('physicalForm', {
+										"id": physical.id,
+										"meltingPoint": physical.meltingPoint,
+										"boilingPoint": physical.boilingPoint,
+										"relativeHumidity": physical.relativeHumidity,
+										"relativeDensity": physical.relativeDensity,
+										"saturatedVaporPressure": physical.saturatedVaporPressure,
+										"criticalTemperature": physical.criticalTemperature,
+										"criticalPressure": physical.criticalPressure,
+										"solubility": physical.solubility,
+										"remarks": physical.remarks
+					              	});
+   			  					}
+   				  				if(data.protect !=null && data.protect !=""){
+   				  					var protect = data.protect;
+	   				  				form.val('protectForm', {
+										"id": protect.id,
+										"respiratory": protect.respiratory,
+										"eye": protect.eye,
+										"body": protect.body,
+										"hand": protect.hand,
+										"other": protect.other,
+										"remarks": protect.remarks
+					              	});
+   			  					}
+   			  				} else {
+   								layer.msg("获取去详情信息失败");
+   			  				}           
+   			       	 	},              
+   			       		error:function (data) {
+   				  			layer.msg("获取去详情信息失败");
+   			  			}           
+   			      }) ; 
+			}
+			  
+		</script>
+	</body>
+</html>

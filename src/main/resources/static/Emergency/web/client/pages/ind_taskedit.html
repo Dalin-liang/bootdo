@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="../layui/layui.all.js" ></script>
+		<script type="text/javascript" src="../../backend/js/common.js"></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+			.layui-input{
+				background: #093661;
+				color: white;
+				border:0;
+				height: 34px;
+				border-radius: 4px;
+			}
+			.layui-form-select .layui-edge{
+				border-left-width:3px;
+				border-right-width:3px;
+				border-top-color:white;
+				right: 7px;
+			}
+			.layui-form-selected dl{
+				background-color:#093661;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn" style="height: 500px;">
+				<br /><br />
+				<div class="pad10 ind_cont clearfix">
+					<div class="col-xs-12">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								指令简介 :
+							</div>
+							<div class="col-xs-10 pad0">
+								<input class="form-control" type="text" name="name" id="name" placeholder="请输入指令简介" />
+							</div>
+						</div>						
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								指令内容 :
+							</div>
+							<div class="col-xs-10 pad0">
+								<textarea class="form-control" name="content" rows="4" cols="" id="content"></textarea>
+								
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								接受对象类型:
+							</div>
+							<div class="col-xs-10 pad0">
+								<div class="dropdown com_dropdown ">
+								    <select class="form-control" name="type" id="type">
+										<option value="1">个人</option>
+										<option value="2">应急队伍</option>
+										<option value="3">部门</option>
+										<option value="4">专家</option>
+									</select>
+								</div>
+							</div>								
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								负责对象:
+							</div>
+							<div class="col-xs-10 pad0">
+								<form class="layui-form">
+									<select id="liabilityId" lay-search lay-filter="people">
+
+									</select>
+								</form>
+							</div>
+						</div>			
+					</div>
+					<div class="col-xs-12 mt10" id="team" style="display: none;">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								发送对象:
+							</div>
+							<div class="col-xs-10 pad0">
+								<form class="layui-form">
+									<select id="person" name="person" lay-search lay-filter="a">
+
+									</select>
+								</form>
+							</div>
+						</div>
+					</div>
+					<input type="hidden" name="liabilityId" id="lid">
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								联系电话 :
+							</div>
+							<div class="col-xs-10 pad0">
+								<input class="form-control" type="text" name="mobile" id="mobile" placeholder="请输入联系电话" />
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								任务状态:
+							</div>
+							<div class="col-xs-10 pad0">
+								<select name="actionStatus" id="actionStatus" class="form-control">
+									<option value="1">已接收到任务</option>
+									<option value="2">开始执行中</option>
+									<option value="3">执行遇到困难</option>
+									<option value="4">执行完成</option>
+								</select>
+							</div>
+						</div>
+					</div>-->
+					<div class="clearfix"></div>
+					<div class="text-center mt20 clearfix">
+						<button class="btn btn-info" id="submit">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			var form;
+			layui.use(['form'], function(){
+			   	form=layui.form;
+			   	form.on('select(people)',function(data){
+			   	    $("#lid").val($("#liabilityId").val());
+			   	    if($("#type").val()=="2"){
+                        $("#team").show();
+                        $.ajax({
+							url:'/team/getTeamMate',
+							dataType:'json',
+							type:'post',
+							data:{
+							    id:$("#liabilityId").val()
+							},
+							success:function(data){
+							    $("#person").empty();
+							    $("#person").append("<option value=''>请选择</option>");
+							    for(var i in data){
+							        $("#person").append("<option value='"+data[i].mobile+"'>"+data[i].NAME+"</option>")
+								}
+								form.render()
+							}
+						})
+					}else{
+			   	        $("#team").hide();
+			   	        $("#mobile").val($("#liabilityId option").eq(data.elem.selectedIndex).attr("dataM"));
+					}
+				})
+				form.on('select(a)',function(data) {
+				    $("#mobile").val($("#person").val());
+                })
+            })
+			var selectedType=1;
+			var selectArr;
+			var edit,editData;
+            var taskTable;
+            $.ajax({
+                url:'/actionprogramManage/dispatchTask/getSelectData',
+                dataType:'json',
+                type:'post',
+				async:false,
+                success:function(data){
+                    selectArr=data;
+                }
+            })
+			loadSelect(selectedType);
+            $("#type").on("change",function(){
+			    selectedType=$(this).val();
+			    loadSelect(selectedType);
+			})
+			function loadSelect(type){
+                $("#liabilityId").empty();
+                console.log(selectArr);
+                switch(parseInt(type)){
+					case 1:
+					    $("#liabilityId").append("<option value=''>请选择</option>");
+						for(var i in selectArr.personList){
+					    	$("#liabilityId").append("<option value='"+selectArr.personList[i].id+"' dataM='"+selectArr.personList[i].mobile+"'>"+selectArr.personList[i].name+"</option>")
+						}
+						$("#mobile").val(selectArr.personList[0].mobile);
+					break;
+					case 2:
+					    $("#liabilityId").append("<option value=''>请选择</option>");
+					    for(var i in selectArr.teamList){
+					    	$("#liabilityId").append("<option value='"+selectArr.teamList[i].id+"' dataM='"+selectArr.teamList[i].mobile+"'>"+selectArr.teamList[i].name+"</option>")
+						}
+						$("#mobile").val(selectArr.teamList[0].mobile);
+					break;
+					case 3:
+					    $("#liabilityId").append("<option value=''>请选择</option>");
+					    for(var i in selectArr.dpetList){
+					    	$("#liabilityId").append("<option value='"+selectArr.dpetList[i].id+"' dataM='"+selectArr.dpetList[i].mobile+"'>"+selectArr.dpetList[i].name+"</option>")
+						}
+						$("#mobile").val(selectArr.dpetList[0].mobile);
+					break;
+					case 4:
+					    $("#liabilityId").append("<option value=''>请选择</option>");
+					    for(var i in selectArr.expertList){
+					    	$("#liabilityId").append("<option value='"+selectArr.expertList[i].id+"' dataM='"+selectArr.expertList[i].mobile+"'>"+selectArr.expertList[i].name+"</option>")
+						}
+						$("#mobile").val(selectArr.expertList[0].mobile);
+					break;
+				}
+				form.render();
+			}
+            taskTable = sessionStorage.getItem("taskTable");
+			if(sessionStorage.getItem("edit")=="true"){
+			    	edit=sessionStorage.getItem("edit");
+				    var data=editData=JSON.parse(sessionStorage.getItem("editData"));
+			    	sessionStorage.removeItem("edit");
+			    	sessionStorage.removeItem("editData");
+			    	console.log(data);
+			    	$("#name").val(data.name);
+			    	$("#content").val(data.content);
+			    	$("#type").val(data.type);
+			    	$("#mobile").val(data.mobile);
+			    	loadSelect(data.type);
+			    	$("#liabilityId").val(data.liability_id);
+				}
+
+			$("#submit").on("click",function(){
+			    $("#submit").addClass("disabled");
+
+				if(edit=="true"){
+                    var obj=new Object();
+                    obj.actionprogramId=editData.actionprogram_id;
+                    obj.flag=JSON.parse(sessionStorage.getItem("contactData")).flag;
+                    obj.name=$("#name").val();
+                    obj.content=$("#content").val();
+                    obj.type=$("#type").val();
+                    obj.liabilityId=$("#liabilityId").val();
+                    obj.mobile=$("#mobile").val();
+                    obj.id=editData.id;
+                    $.ajax({
+						url:'/dispatch/center/taskStep/update',
+						type:'post',
+						dataType:'json',
+						data:{
+						    entityJsonStr:JSON.stringify(obj)
+                        },
+						success:function(data){
+						    if(taskTable=="true"){
+
+							}else {
+                                parent.loadStep(editData.actionprogram_id);
+                            }
+						    closeFrame();
+						}
+					})
+				}else{
+				    var obj=new Object();
+                    obj.actionprogramId=sessionStorage.getItem("actionId");
+                    console.log("taskTable2:"+taskTable)
+                    if(taskTable=="true"){
+                        obj.dispatchPlanmainId=sessionStorage.getItem("dispatchPlanmainId");
+                    }else {
+                        obj.dispatchPlanmainId=sessionStorage.getItem("planId")
+                    }
+                    ;
+                    obj.name=$("#name").val();
+                    obj.flag='task';
+                    obj.content=$("#content").val();
+                    obj.type=$("#type").val();
+                    obj.liabilityId=$("#liabilityId").val();
+                    obj.mobile=$("#mobile").val();
+				    $.ajax({
+						url:'/dispatch/center/taskStep/create',
+						type:'post',
+						dataType:'json',
+						data:{
+						    entityJsonStr:JSON.stringify(obj)
+						},
+						success:function(data){
+                            console.log("taskTable3:"+taskTable)
+                            if(taskTable=="true"){
+
+                            }else {
+                                parent.loadStep(sessionStorage.getItem("actionId"));
+                            }
+						    closeFrame();
+						}
+					})
+				}
+			})
+		</script>
+	</body>
+</html>

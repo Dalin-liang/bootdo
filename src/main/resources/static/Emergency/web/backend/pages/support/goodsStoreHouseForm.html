@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+            <form class="layui-form" lay-filter="component-form-group">
+                <input type="hidden" name="id">
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">存储库名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" lay-verify="required" lay-reqtext="存储库名称是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+				<div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">存储库编号：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" id="code" lay-verify="required" lay-reqtext="存储库名称是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系人：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="contact" lay-verify="required" lay-reqtext="联系人是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                     <label class="layui-form-label">联系人电话：</label>
+                     <div class="layui-input-block">
+                         <input type="text" name="mobile" lay-verify="required" lay-reqtext="联系人电话是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                 </div>
+                </div>
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">存储库地址：</label>
+				    <div class="layui-input-block">
+                        <input type="text" name="addr" lay-verify="required" lay-reqtext="存储库地址是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+			 	</div>
+			</form>
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				if(sessionStorage.getItem("edit")=="true"){
+				    var temp=sessionStorage.getItem("row");
+				    var edit=sessionStorage.getItem("edit");
+				    sessionStorage.removeItem("edit");
+				    sessionStorage.removeItem("row");
+				    rowData=$.parseJSON(temp);
+					for(var key in rowData){
+					    $("*[name="+key+"]").val(rowData[key]);
+					}
+				}else{
+					$("#code").val(getPlanmainCode());
+				}
+			  layui.use(['form', 'layer','element','laydate'], function(){
+				  var form = layui.form
+					  ,layer = layui.layer
+					  ,element=layui.element
+					  ,laydate=layui.laydate
+				  form.render();
+				  laydate.render({
+					  type:'datetime',
+					  elem:'#pushdate'
+				  })
+				  form.on('submit(submit)',function(data){
+				      if(edit=="true"){
+                          console.log(111);
+                          $.ajax({
+                              url:'/support/goodsstorehouse/update',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs.code=="0"){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/support/goodsstorehouse/list");
+								 }
+                              }
+                          })
+					  }else{
+                          $.ajax({
+                              url:'/support/goodsstorehouse/save',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs.code=="0"){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/support/goodsstorehouse/list");
+								 }
+                              }
+                          })
+					  }
+				  })
+			  })
+
+			  //生成16位的编码: 年月日（8位）+ 随机数（8位）  
+			function getPlanmainCode(){
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = (date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+				var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+				var code = ""+year+month+day;
+				var len = 16-code.length;
+				for(var i=0;i<len;i++){
+					code += Math.floor(Math.random()*10);   
+				}   
+				return code;
+			}
+		</script>
+	</body>
+</html>

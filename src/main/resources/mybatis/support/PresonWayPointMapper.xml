@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.PresonWayPointDao">
+
+	<select id="get" resultType="com.bootdo.support.entity.PresonWayPointDO">
+		select `id`,`create_time`,`latitude`,`longitude`,`user_id` from t_preson_way_point where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.entity.PresonWayPointDO">
+		select tp.`id`,tp.`create_time`,tp.`latitude`,tp.`longitude`,tp.`user_id`, sd.name as "person.name" from t_preson_way_point tp left join safeguard_deptperson sd
+		on tp.user_id=sd.id
+        <where>  
+		  		  <if test="id != null and id != ''"> and tp.id = #{id} </if>
+		  		  <if test="createTime != null and createTime != ''"> and tp.create_time = #{createTime} </if>
+		  		  <if test="latitude != null and latitude != ''"> and tp.latitude = #{latitude} </if>
+		  		  <if test="longitude != null and longitude != ''"> and tp.longitude = #{longitude} </if>
+		  		  <if test="userId != null and userId != ''"> and tp.user_id = #{userId} </if>
+			      <if test="username != null and username != ''"> and sd.name like concat('%',#{username}, '%') </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by create_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from t_preson_way_point
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="latitude != null and latitude != ''"> and latitude = #{latitude} </if>
+		  		  <if test="longitude != null and longitude != ''"> and longitude = #{longitude} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.entity.PresonWayPointDO">
+		insert into t_preson_way_point
+		(
+			`id`, 
+			`create_time`, 
+			`latitude`, 
+			`longitude`, 
+			`user_id`
+		)
+		values
+		(
+			#{id}, 
+			#{createTime}, 
+			#{latitude}, 
+			#{longitude}, 
+			#{userId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.PresonWayPointDO">
+		update t_preson_way_point 
+		<set>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="latitude != null">`latitude` = #{latitude}, </if>
+			<if test="longitude != null">`longitude` = #{longitude}, </if>
+			<if test="userId != null">`user_id` = #{userId}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from t_preson_way_point where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from t_preson_way_point where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

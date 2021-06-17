@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.SourceDao">
+
+	<select id="get" resultType="com.bootdo.support.entity.SourceDO">
+		select `id`,`name`,`source_label`,`source_type`,`enabled`,`sort_no`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date` from watch_source where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.entity.SourceDO">
+		select `id`,`name`,`source_label`,`source_type`,`enabled`,`sort_no`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date` from watch_source
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+			      <if test="sourceLabel != null and sourceLabel != ''"> and source_label = #{sourceLabel} </if>
+			      <if test="sourceType != null and sourceType != ''"> and source_type = #{sourceType} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from watch_source
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		</where>
+	</select>
+
+	<select id="getAllSource" resultType="com.bootdo.support.entity.SourceDO">
+		select `id`,`name`,`source_label`,`source_type`,`enabled`,`sort_no`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date`
+		from watch_source
+		WHERE enabled = '1'
+		ORDER BY sort_no ASC
+	</select>
+
+	<select id="getSourceNotInSendConfig" resultType="com.bootdo.support.entity.SourceDO">
+		SELECT `id`,`name`,`source_label`,`source_type`,`enabled`,`sort_no`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date`
+		FROM watch_source
+		WHERE enabled = '1' AND id NOT IN (
+				SELECT c.targetId
+				FROM sms_send_config c
+				WHERE c.type = '3'
+			)
+		ORDER BY sort_no ASC
+	</select>
+
+	<select id="getSourceInMenu" resultType="com.bootdo.support.entity.SourceDO">
+		select `id`,`name`,`source_label`,`source_type`,`enabled`,`sort_no`,`remarks`,`create_by`,`create_date`,`update_by`,`update_date`
+		FROM watch_source
+		WHERE id IN (
+			SELECT DISTINCT m.watch_source_id
+			FROM watch_source_menu m
+		) and enabled = '1'
+		ORDER BY sort_no ASC
+	</select>
+
+	<insert id="save" parameterType="com.bootdo.support.entity.SourceDO">
+		insert into watch_source
+		(
+			`id`, 
+			`name`,
+			`source_label`,
+			`source_type`,
+			`enabled`, 
+			`sort_no`, 
+			`remarks`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`,
+			`is_start`
+		)
+		values
+		(
+			#{id}, 
+			#{name},
+			#{sourceLabel},
+			#{sourceType},
+			#{enabled}, 
+			#{sortNo}, 
+			#{remarks}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate},
+			#{isStart}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.entity.SourceDO">
+		update watch_source 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="sourceLabel != null">`source_label` = #{sourceLabel}, </if>
+			<if test="sourceType != null">`source_type` = #{sourceType}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate},</if>
+			<if test="isStart != null">`is_start` = #{isStart}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from watch_source where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from watch_source where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="getSourceByType" resultType="com.bootdo.support.entity.SourceDO">
+		select `id`,`name`,`source_label`,`source_type`,`enabled`,is_start from watch_source
+		where source_type=0
+		<if test="id != null and id != ''"> and id = #{id} </if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+</mapper>

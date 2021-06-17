@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/page/common.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgb(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="title">
+					事件列表---共有 <span class="colorred">25</span> 条未处理事件
+					
+				</div>
+				<div class="srcollcom" style="height: 418px;">
+					<div class="pad10" id="warnList">
+						<!--<div class="dialog1 warn_li">
+							<div class="warn_li_tl colornum clearfix">
+								ID：2019060600001001
+								<a class="font16 pull-right">
+									<i class="fa fa-plus-circle"></i>
+								</a>
+							</div>
+							<div class="pad5 line-clamp mt10">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="warn_li_b font12 mt10">
+								报告单位：镇三防指挥所   [2019/06/06 15:15:00]
+							</div>
+						</div>
+						<div class="dialog1 warn_li mt10">
+							<div class="warn_li_tl colornum clearfix">
+								ID：2019060600001001
+								<a class="font16 pull-right">
+									<i class="fa fa-plus-circle"></i>
+								</a>
+							</div>
+							<div class="pad5 line-clamp mt10">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="warn_li_b font12 mt10">
+								报告单位：镇三防指挥所   [2019/06/06 15:15:00]
+							</div>
+						</div>
+						<div class="dialog1 warn_li mt10">
+							<div class="warn_li_tl colornum clearfix">
+								ID：2019060600001001
+								<a class="font16 pull-right">
+									<i class="fa fa-plus-circle"></i>
+								</a>
+							</div>
+							<div class="pad5 line-clamp mt10">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="warn_li_b font12 mt10">
+								报告单位：镇三防指挥所   [2019/06/06 15:15:00]
+							</div>
+						</div>-->
+					</div>
+				</div>
+				<div class="warn_b unevent_b">
+					<div class="col-xs-1">
+						<a class="font18" id="refresh">
+							<i class="fa fa-refresh"></i>
+						</a>								
+					</div>
+					<div class="col-xs-10 pull-right">
+						<div class="input-group">
+							<input class="form-control" id="searchText"/>
+							<a class="input-group-addon" id="search">
+								<i class="fa fa-search"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			var data=JSON.parse(sessionStorage.getItem("uneventData")).data;
+			console.log(data);
+			var count=0;
+			var dataArr=[];
+			for(var i in data){
+			    if(!data[i].actionProgramId){
+			        dataArr.push(data[i]);
+				}
+			}
+			console.log(dataArr);
+
+			loadList(dataArr);
+			var s1=new Scroll1($("#warnList"));
+            s1.start1();
+
+			$("#search").on("click",function(){
+					var searchText=$("#searchText").val();
+					search(searchText);
+			})
+			$("#searchText").on('change',function(){
+			    var searchText=$("#searchText").val();
+			    if(searchText==""){
+					search(searchText);
+				}
+			})
+			$("#refresh").on("click",function(){
+			    console.log(dataArr);
+			    loadList(dataArr);
+			})
+
+			var search=function(text){
+			    	dataArr=[];
+					var data=JSON.parse(sessionStorage.getItem("uneventData")).data;
+						for(var i in data){
+							if(data[i].eventDesc.indexOf(text)>-1){
+							    dataArr.push(data[i]);
+							}
+						}
+						loadList(dataArr)
+			}
+
+		function loadList(dataArr){
+				$(".colorred").text(dataArr.length);
+				$("#warnList").empty();
+
+				for(var i in dataArr){
+			    if(i==0){
+			        $("#warnList").append("<div class='dialog1 warn_li'><div class='warn_li_tl colornum clearfix'>ID："+ dataArr[i].eventId+
+								"<a class='font16 pull-right process'><i class='fa fa-plus-circle'></i></a></div>"+
+								"<div class='pad5 line-clamp mt10'>"+dataArr[i].eventDesc+"</div>"+
+								"<div class='warn_li_b font12 mt10'>报告单位："+dataArr[i].repDept+"   ["+dataArr[i].repTime+"] </div> </div>")
+
+				}else{
+			        $("#warnList").append("<div class='dialog1 warn_li mt10'><div class='warn_li_tl colornum clearfix'>ID："+ dataArr[i].eventId+
+								"<a class='font16 pull-right process'><i class='fa fa-plus-circle'></i></a></div>"+
+								"<div class='pad5 line-clamp mt10'>"+dataArr[i].eventDesc+"</div>"+
+								"<div class='warn_li_b font12 mt10'>报告单位："+dataArr[i].repDept+"   ["+dataArr[i].repTime+"] </div> </div>")
+				}
+			}
+		}
+			$("#warnList").on("click",'.process',function(){
+			    	var index=$(this).parents(".dialog1").index();
+			    	var id=JSON.parse(sessionStorage.getItem("uneventData")).data[index].eventId;
+			    	$.ajax({
+						url:'/dispatch/center/startProcessing',
+						data:{
+							eventId:id
+						},
+						type:'post',
+						dataType:'json',
+						success:function(data){
+						    var data1=JSON.parse(sessionStorage.getItem("uneventData"));
+                            dataArr=data1.data;
+							/*var eventData=JSON.parse(sessionStorage.getItem("data"));
+							eventData.data.push(removed);
+							sessionStorage.setItem("data",eventData);
+						    loadEventP(JSON.parse(sessionStorage.getItem("data")).data);*/
+						}
+					})
+			})
+
+			$("#warnList").on("click",'.dialog1',function(){
+			    var index=$(this).index();
+			    console.log(index);
+			    sessionStorage.setItem("nowCenter",JSON.stringify(JSON.parse(sessionStorage.getItem("uneventData")).data[index].location));
+				parent.getWarnCenter(JSON.parse(sessionStorage.getItem("uneventData")).data[index]);
+			})
+			$("body").on('mouseover','#warnList',function(e){
+			    e.stopPropagation()
+				    var s1=new Scroll1($("#warnList"));
+				    s1.stop1();
+				})
+			$("body").on('mouseout','#warnList',function(e){
+			    e.stopPropagation()
+				    var s1=new Scroll1($("#warnList"));
+				    s1.start1();
+			})
+		</script>
+	</body>
+</html>

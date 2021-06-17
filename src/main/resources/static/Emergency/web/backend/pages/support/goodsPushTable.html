@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+    <link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/popper.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<style type="text/css">
+		body {
+			background-color:#f2f2f2!important;
+		}
+		table {
+			background-color:#FFFFFF!important;
+		}
+	</style>
+</head>
+<body>
+    <div class="layui-pad10">
+        <div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+  		  <form class="layui-form" action="">
+		  <div class="layui-form-item">
+		    <div class="layui-inline">
+		      <label class="layui-form-label">物资名称</label>
+		      <div class="layui-input-inline">
+		        <select id="goodsinfo_id">
+		        </select>
+		      </div>
+		    </div>
+		    <div class="layui-inline">
+		      <label class="layui-form-label">储备库</label>
+		      <div class="layui-input-inline">
+		        <select id="goodsstorehouse_id">
+		        </select>
+		      </div>
+		    </div>
+		    <div class="layui-inline" style="margin-bottom: 10px;">
+		        &emsp;<button type="button" id="search" class="layui-btn">查 询</button>
+            	<button type="button" class="layui-btn layui-btn-danger">高级查询</button>
+		    </div>
+		  </div>
+		  </form>
+		</div>
+        <div class="layui-mt10" id="LAY-component-layer-special-demo">
+			<div class="layadmin-layer-demo">
+                <button type="button" data-method="add" data-type="auto"  id="add" class="layui-btn layui-btn-normal">新增</button>
+			</div>
+		</div>
+        <div class="layui-mt10">
+            <table id="ArbetTable"></table>
+        </div>
+
+
+    </div>
+
+</body>
+<script>
+	layui.use(['form','element'], function(){
+		var form = layui.form;
+	});
+	$.ajax({
+	    url:'/goodsPush/getAllStoreHouseAndGoods',
+	    type:'post',
+	    dataType:'json',
+		async:false,
+	    success:function (rs) {
+	        if(rs.storeHouseList !=null && rs.storeHouseList !=""){
+            	$("#goodsstorehouse_id").empty();
+            	var storeHouseList = rs.storeHouseList;
+            	for(var i in storeHouseList){
+	                $("#goodsstorehouse_id").append("<option value='''></option><option value='"+storeHouseList[i].id+"'>"+storeHouseList[i].name+"</option>")
+	            }
+            }
+            if(rs.goodsList !=null && rs.goodsList !=""){
+            	$("#goodsinfo_id").empty();
+	            var goodsList = rs.goodsList;
+	            for(var i in goodsList){
+	                $("#goodsinfo_id").append("<option value='''></option><option value='"+goodsList[i].id+"'>"+goodsList[i].goodsname+"</option>")
+	            }
+            }
+	    }
+	});
+	
+    var Table=function(){
+        var oTable=new Object();
+        oTable.Init=function(url){
+            $("#ArbetTable").bootstrapTable("destroy");
+            $("#ArbetTable").bootstrapTable({
+                url:url,
+                method:'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc",
+                queryParams:oTable.queryParams,
+                sidePagination: "server",
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 25, 50, 100],
+                clickToSelect: true,
+                uniqueId: "id",
+                columns:[
+                    {
+                        field:'goodsname',
+                        title:'物资名称',
+                        align:'center'
+                    },{
+                        field:'storehousename',
+                        title:'储备库',
+                        align:'center'
+                    },{
+                        field:'supplier',
+                        title:'供应商',
+                        align:'center'
+                    },{
+                        field:'goodsbrand',
+                        title:'物资品牌',
+                        align:'center'
+                    },{
+                        field:'pushnum',
+                        title:'入库数量',
+                        align:'center'
+                    },{
+                        field:'pushdate',
+                        title:'入库时间',
+                        align:'center'
+                    },{
+                        field:'remarks',
+                        title:'备注',
+                        align:'center'
+                    },{
+                        field:'option',
+                        title:'操作',
+                        align:'center',
+                        formatter:rowOption
+                    }
+                ],
+                rowStyle:function(row,index){
+                    var classesArr = ['success', 'info'];
+                    var strclass = "";
+                    if (index % 2 === 0) {//偶数行
+                        strclass = classesArr[0];
+                    } else {//奇数行
+                        strclass = classesArr[1];
+                    }
+                    return { classes: strclass };
+                }
+            })
+        }
+
+        oTable.queryParams=function(params){
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: this.pageSize,   //页面大小
+                pageNumber:this.pageNumber, //页码
+                goodsstorehouse_id:$("#goodsstorehouse_id").val(),
+                goodsinfo_id:$("#goodsinfo_id").val()
+            };
+            return temp;
+        };
+
+        return oTable;
+    };
+
+    function rowOption(value, row, index){
+          return [
+              '<button class="layui-btn layui-btn-primary layui-btn-sm" class="edit" onclick="edit(\''+row.id+'\')">修改</button>' +
+              '<button class="layui-btn layui-btn-danger layui-btn-sm" class="delete" onclick="removeItem(\''+row.id+'\')">删除</button>'
+          ]
+    }
+
+    var t=new Table();
+    t.Init("/goodsPush/query");
+    layui.use(['layer'],function(){
+        var leyer=layui.layer;
+            $("#add").on("click",function(){
+            layer.open({
+                type: 2,
+                title: '新增',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['1000px', '400px'],
+                content: 'goodsPushForm.html'
+            });
+        })
+    })
+    function edit(_this){
+        var row=$("#ArbetTable").bootstrapTable("getRowByUniqueId",_this);
+        sessionStorage.setItem("edit","true");
+        sessionStorage.setItem("row",JSON.stringify(row));
+        layer.open({
+                type: 2,
+                title: '编辑',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['1000px', '400px'],
+                content: 'goodsPushForm.html'
+            });
+    }
+
+    function removeItem(_this){
+        swal({
+            title:'删除',
+            text:'您确定要删除该数据吗？',
+            type:'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            closeOnCancel: false,
+            customClass: "custom_swal"
+        },function (isConfirm) {
+            if(isConfirm){
+                $.ajax({
+                    url:'/goodsPush/delete',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        'id':_this
+                    },
+                    success:function(rs){
+                        console.log(rs)
+                        if(rs==1){
+                            swal("删除成功","删除成功","success");
+                            t.Init("/goodsPush/query");
+                        }
+                    }
+                })
+                swal.close();
+            }else{
+                swal.close()
+            }
+        })
+    }
+
+    $("#search").on("click",function(){
+        $("#ArbetTable").bootstrapTable("destroy");
+        t.Init("/goodsPush/query")
+    })
+
+
+</script>
+</html>

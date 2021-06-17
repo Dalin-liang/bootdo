@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title></title>
+		<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+
+		<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!--<link rel="stylesheet" href="css/table.css" />-->
+		<link rel="stylesheet" type="text/css" href="css/part1.css" />
+
+		<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/echarts.js"></script>
+		<!--<script type="text/javascript" src="administration.js"></script>-->
+	</head>
+
+	<body>
+		<div class="map">
+			<div class="example-map" style="background-image: url(images/map.png)"></div>
+		</div>
+		<div class="header flex flex-m">
+			<div class="title PangMen">正果镇城市生态</div>
+		</div>
+
+		<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/15.png" />
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/14.png" />
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/10.png" />
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/05.png" />
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/09.png" />
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/04.png" />
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/13.png" />
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/12.png" />
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/11.png" />
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/03.png" />
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png" />
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png" />
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png" />
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/16.png" />
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/02.png" />
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/06.png" />
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/07.png" />
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/02.png" />
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="cont pad10">
+			<div class="col-12" style="height: 60%;">
+				<div class="col-7 pull-left" style="height: 100%;">
+					<div class="comborder" style="height: 100%;">
+						<div class="border">
+							<div class="col-7 pull-left">
+								<div class="table_aqi">
+									<div class="aqi_pointer"></div>
+
+									<div class="aqi_detail">
+										<p>空气质量</p>
+										<p class="aqi_detail_num"></p>
+										<p class="aqi_detail_class"></p>
+									</div>
+								</div>
+								<div class="table_aqi_n">
+									<span class="">无需带口罩</span>
+									<span class="">关闭净化器</span>
+									<span class="">适宜外出</span>
+									<span class="">适宜开窗</span>
+								</div>
+								<p class="text-center">
+									空气令人满意，可以正常参加户外活动
+								</p>
+							</div>
+							<div class="col-5 pull-left" style="padding-top: 100px;">
+								<div id="aqi_index">
+									<!--<div class="progress_li">
+										<span>PM2.5</span> 
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuecolor="#c1d502" aria-valuemax="100">
+												<span class="progress_num">100</span>
+											</div>
+										</div>						
+									</div>
+									<div class="progress_li">
+										<span>PM10</span>	
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuecolor="#eac700" aria-valuemax="100">
+												<span class="progress_num">49</span>
+											</div>
+										</div>										
+									</div>
+									<div class="progress_li">
+										<span>O<sub class="sub">3</sub></span>
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuecolor="#e98100" aria-valuemax="100">
+												<span class="progress_num">49</span>
+											</div>
+										</div>										
+									</div>
+									<div class="progress_li">
+										<span>NO<sub>2</sub></span>	
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuecolor="#eac700" aria-valuemax="100">
+												<span class="progress_num">49</span>
+											</div>
+										</div>										
+									</div>
+									<div class="progress_li">
+										<span>SO<sub>2</sub></span>	
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuecolor="#c1d502" aria-valuemax="100">
+												<span class="progress_num">49</span>
+											</div>
+										</div>										
+									</div>
+									<div class="progress_li">
+										<span>CO</span>	
+										<div class="progress">
+											<div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuecolor="#8dce06" aria-valuemax="100">
+												<span class="progress_num">49</span>
+											</div>
+										</div>										
+									</div>-->
+								</div>
+								<div class="table_option text-center colorblue mt15">
+									<span style="font-size: 18px;">指数排行榜</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-5 pull-left" style="height: 100%;">
+					<div class="comborder" style="height: 100%;">
+						<div class="border">
+							<div class="" id="container4" style="height: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 mt15" style="height: calc(40% - 15px)">
+				<div class="col-4 pull-left" style="height: 100%;">
+					<div class="comborder1" style="height: 100%;">
+						<div class="title">
+							大气成分图
+						</div>
+						<div class="border">
+							<div class="" id="container1" style="height: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 pull-left" style="height: 100%;">
+					<div class="comborder1" style="height: 100%;">
+						<div class="title">
+							水质成分图
+						</div>
+						<div class="border">
+							<div class="" id="container2" style="height: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 pull-left" style="height: 100%;">
+					<div class="comborder1" style="height: 100%;">
+						<div class="title">
+							气象趋势图
+						</div>
+						<div class="border">
+							<div class="" id="container3" style="height: 100%;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script>
+		$(document).ready(function() {
+			var t = setTimeout("loadAqiEffect()", 200);
+
+			initChart1();
+			initChart2();
+			initChart3();
+			initChart4();
+		})
+
+		function loadAqiEffect() {
+
+			$.ajax({
+				url: '/api/aqi/aqiHourData/getLatestData',
+				dataType: 'json',
+				type: 'get',
+				success: function(result) {
+					$.each(result.data, function(index, item) {
+						$.each(item, function(idx, itm) {
+							if(itm.type == "AQI") {
+								$(".aqi_detail_num").text(itm.data)
+								var level = parseInt(itm.data)
+								switch(true) {
+									case 0 < level < 51:
+										$(".aqi_detail").css("color", "#88cd06")
+										$(".aqi_detail_class").text("优")
+										break;
+									case 51 < level < 101:
+										$(".aqi_detail").css("color", "#e6db00")
+										$(".aqi_detail_class").text("良")
+										break;
+									case 101 < level < 151:
+										$(".aqi_detail").css("color", "#e85a00")
+										$(".aqi_detail_class").text("轻度污染")
+										break;
+									case 151 < level < 201:
+										$(".aqi_detail").css("color", "#b82821")
+										$(".aqi_detail_class").text("中度污染")
+										break;
+									case 201 < level < 301:
+										$(".aqi_detail").css("color", "#3f0c59")
+										$(".aqi_detail_class").text("重度污染")
+										break;
+									case 301 < level < 500:
+										$(".aqi_detail").css("color", "#340726")
+										$(".aqi_detail_class").text("极度污染")
+										break;
+								}
+								var deg = (360 / 500) * level - 150
+								$(".aqi_pointer").css({
+									"transform": "rotate(" + deg + "deg)",
+									"-webkit-transform": "rotate(" + deg + "deg)"
+								})
+								return false;
+							}
+						})
+					});
+					$("#aqi_index").empty();
+					$.each(result.data.正果镇探测点, function(index, item) {
+						$("#aqi_index").append('<div class="progress_li">' +
+							'<span>' + item.type + '</span>' +
+							'<div class="progress">' +
+							'<div class="progress-bar" role="progressbar" aria-valuenow="' + item.data + '" aria-valuecolor="#c1d502" aria-valuemax="100">' +
+							'<span class="progress_num">' + item.data + '</span>' +
+							'</div>' +
+							'</div>' +
+							'</div>')
+						if((index + 1) == result.data.正果镇探测点.length) {
+							tranindex()
+						}
+					});
+				}
+			})
+
+			//			//			aqi动画效果
+			//			$(".aqi_pointer").css({
+			//				"transform": "rotate(477deg)",
+			//				"-webkit-transform": "rotate(477deg)"
+			//			})
+			function tranindex() {
+				var barcolor, barwidth;
+				$(".progress-bar").each(function() {
+					barcolor = $(this).attr("aria-valuecolor");
+					barwidth = ($(this).attr("aria-valuenow") / $(this).attr("aria-valuemax")) * 100;
+					$(this).css({
+						"width": barwidth + "%",
+						"background": barcolor
+					})
+				})
+			}
+
+		}
+
+		function initChart1() {
+			var dom = document.getElementById("container1");
+			var myChart = echarts.init(dom);
+			var app = {};
+			var option = null;
+			Date.prototype.Format = function(fmt) { //author: meizz
+				var o = {
+					"M+": this.getMonth() + 1, //月份   
+					"d+": this.getDate(), //日   
+					"h+": this.getHours(), //小时   
+					"m+": this.getMinutes(), //分   
+					"s+": this.getSeconds(), //秒   
+					"q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+					"S": this.getMilliseconds() //毫秒   
+				};
+				if(/(y+)/.test(fmt))
+					fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				for(var k in o)
+					if(new RegExp("(" + k + ")").test(fmt))
+						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				return fmt;
+			};
+
+			var pm25 = [];
+			var o3 = [];
+			var so2 = [];
+			var no2 = [];
+			var pm10 = [];
+			var co = [];
+
+			function Data(rawData) {
+				var xtime = [];
+
+				var pm25_values = [];
+				var o3_values = [];
+				var so2_values = [];
+				var no2_values = [];
+				var pm10_values = [];
+				var co_values = [];
+
+				for(var i = 0; i < rawData.length; i++) {
+					xtime.push(new Date(rawData[i]["6"]).Format("yyyy-MM-dd hh:mm:ss"));
+
+					pm25_values.push(rawData[i][5]);
+					o3_values.push(rawData[i][0]);
+					so2_values.push(rawData[i][2]);
+					no2_values.push(rawData[i][3]);
+					pm10_values.push(rawData[i][1]);
+					co_values.push(rawData[i][4]);
+
+					pm25.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][5]]);
+					o3.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][0]]);
+					so2.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][2]]);
+					no2.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][3]]);
+					pm10.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][1]]);
+					co.push([new Date(rawData[i][6]).Format("yyyy-MM-dd hh:mm"), rawData[i][4]]);
+
+				}
+				return {
+					xtime: xtime,
+					pm25_values: pm25_values,
+					o3_values: o3_values,
+					so2_values: so2_values,
+					no2_values: no2_values,
+					pm10_values: pm10_values,
+					co_values: co_values
+				};
+			}
+
+					var rawData = [];
+//					$.each(result.data.正果镇探测点.data, function(index, item) {
+//						rawData.push(item)
+//					});
+			var data = Data(rawData);
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					//						text: '大气成分图',    //标题
+
+					textStyle: {
+						fontWeight: 'normal', //标题颜色
+						//							fontSize: '88px',  
+						//							color: '#fff'
+					},
+					x: "left"
+				},
+				color: ['#763ef6', '#fc1c1c', '#fe7878', '#80f63e', '#f63ec2', '#fefc3e'], //折线颜色//, 
+				legend: {
+					show: true,
+					type: 'scroll',
+					data: ["o3", "pm10", "so2", "no2", "co", "pm2.5"], //
+					selected: {
+						"PM2.5": true,
+						"PM10": true,
+						"SO2": true,
+						"NO2": true,
+						"CO": true,
+						"O3": true
+					},
+					pageIconColor: "#24abe2",
+					pageIconInactiveColor: "#678691",
+					icon: "roundRect",
+					top: "40",
+					textStyle: {
+						fontWeight: 'normal',
+						color: '#bdd8e4'
+					},
+				},
+				tooltip: {
+					backgroundColor: 'rgba(50,50,50,0.8)',
+					trigger: 'axis',
+
+					axisPointer: {
+						animation: false
+					}
+				},
+				grid: {
+					containLabel: true,
+					top: "80",
+					left: "55",
+					right: "35",
+					bottom: "10"
+				},
+				xAxis: {
+					boundaryGap: false,
+					axisLine: {
+						lineStyle: {
+							opacity: 0.8,
+							color: 'yellow',
+							width: 2
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							opacity: 0.2
+						}
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 14
+						}
+					},
+					type: "category"
+
+				},
+				dataZoom: [{
+					type: 'inside',
+					xAxisIndex: 0,
+					minSpan: 5
+				}],
+				yAxis: [{
+					type: "value",
+					axisLine: {
+						lineStyle: {
+							color: '#fefc3e',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					nameLocation: 'end',
+					nameRotate: 60,
+					position: 'left'
+				}, {
+					type: "value",
+					name: "数值轴二（ppn）",
+					axisLine: {
+						lineStyle: {
+							color: '#f63ec2',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 50,
+					nameLocation: 'm',
+					nameRotate: 90,
+					position: 'left',
+					offset: 50,
+					min: function(value) {
+						return Math.floor(value.min) - 30;
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 200;
+					}
+				}, {
+					type: "value",
+					name: "数轴值一(μm/m³)",
+					axisLine: {
+						lineStyle: {
+							color: '#fe7878',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					position: 'right',
+					nameLocation: 'm',
+					nameRotate: 90,
+					min: function(value) {
+						return Math.floor(value.min) - 10;
+					},
+					max: function(value) {
+						return Math.ceil(value.max);
+					}
+				}, {
+					type: "value",
+					name: "数轴值一(%)",
+					axisLine: {
+						lineStyle: {
+							color: '#80f63e',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					position: 'right',
+					nameLocation: 'm',
+					nameRotate: 90,
+					position: 'right',
+					offset: 50,
+					min: function(value) {
+						return Math.floor(value.min);
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 8;
+					}
+				}],
+				series: [{
+					name: "o3",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: o3,
+					yAxisIndex: 1,
+					encode: {
+						x: data.xtime,
+						y: data.o3_values
+					}
+				}, {
+					name: "pm10",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 1,
+					encode: {
+						x: data.xtime,
+						y: data.pm10_values
+					},
+					data: pm10
+				}, {
+					name: "so2",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: so2,
+					yAxisIndex: 1,
+					encode: {
+						x: data.xtime,
+						y: data.so2_values
+					}
+				}, {
+					name: "no2",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 2,
+					encode: {
+						x: data.xtime,
+						y: data.n02_values
+					},
+					data: no2
+				}, {
+					name: "co",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 3,
+
+					data: co
+				}, {
+					name: "pm2.5",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 2,
+					encode: {
+						x: data.xtime,
+						y: data.pm25_values
+					},
+					data: pm25
+				}]
+			};
+			if(option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+			
+			$.ajax({
+				url: '/api/aqi/aqiHourData/getCompositionData',
+				dataType: 'json',
+				type: 'get',
+				success: function(result) {
+					console.log("daqi")
+					console.log(result)
+					var data = Data(result.data.正果镇探测点.data);
+					myChart.setOption({
+						series: [{
+							name: "o3",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: o3,
+							yAxisIndex: 1,
+							encode: {
+								x: data.xtime,
+								y: data.o3_values
+							}
+						}, {
+							name: "pm10",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 1,
+							encode: {
+								x: data.xtime,
+								y: data.pm10_values
+							},
+							data: pm10
+						}, {
+							name: "so2",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: so2,
+							yAxisIndex: 1,
+							encode: {
+								x: data.xtime,
+								y: data.so2_values
+							}
+						}, {
+							name: "no2",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 2,
+							encode: {
+								x: data.xtime,
+								y: data.n02_values
+							},
+							data: no2
+						}, {
+							name: "co",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 3,
+		
+							data: co
+						}, {
+							name: "pm2.5",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 2,
+							encode: {
+								x: data.xtime,
+								y: data.pm25_values
+							},
+							data: pm25
+						}]
+					})
+//					var data = Data(rawData);
+				}
+			})
+
+		}
+
+		function initChart2() {
+			var dom = document.getElementById("container2");
+			var myChart = echarts.init(dom);
+			var app = {};
+			var option = null;
+			var rawData = [
+				["2019-05-01 00:30", 18.346, 7.4, 522.85, 8.4, 5.23],
+				["2019-05-01 01:00", 18.307, 7.41, 522.58, 8.35, 9.68],
+				["2019-05-01 01:30", 18.287, 7.46, 521.89, 8.68, 6.2],
+				["2019-05-01 02:00", 18.28, 7.42, 522.03, 8.51, 9.42],
+				["2019-05-14 11:00", 23.312, 8.34, 462, 9.27, 73.73],
+				["2019-05-14 11:30", 23.323, 8.32, 463.95, 9.13, 77.89],
+				["2019-05-14 12:00", 23.5, 8.27, 463.72, 8.92, 80.36],
+				["2019-05-14 12:30", 23.5, 8.34, 465.82, 9.21, 57.95],
+				["2019-05-14 13:00", 23.492, 8.37, 464.66, 9.29, 49.38],
+				["2019-05-14 13:30", 23.504, 8.38, 466.27, 9.34, 80.53],
+				["2019-05-14 14:00", 23.603, 8.43, 468.34, 9.57, 41.92]
+			];
+			//	时间                                                                水温               ph      电导率             溶解氧           浊度 
+//			0: "上报时间"
+//			1: "溶解氧"
+//			2: "高锰酸盐指数"
+//			3: "化学需氧量"
+//			4: "氨氮"
+//			5: "总磷"
+//			6: "站房温度"
+//			7: "站房湿度"
+//			8: "PH值"
+//			9: "水温"
+//			10: "悬浮物"
+//			11: "电导率"
+			
+			var sw = [];
+			var ph = [];
+			var ddl = [];
+			var rjy = [];
+			var zd = [];
+
+			function Data(rawData) {
+				var xtime = [];
+
+				var sw_values = [];
+				var ph_values = [];
+				var ddl_values = [];
+				var rjy_values = [];
+				var zd_values = [];
+
+				for(var i = 0; i < rawData.length; i++) {
+					xtime.push(rawData[i][0]);
+
+					sw_values.push(rawData[i][9]);
+					ph_values.push(rawData[i][8]);
+					ddl_values.push(rawData[i][11]);
+					rjy_values.push(rawData[i][1]);
+					zd_values.push(rawData[i][10]);
+
+					sw.push([rawData[i][0], rawData[i][9]]);
+					ph.push([rawData[i][0], rawData[i][8]]);
+					ddl.push([rawData[i][0], rawData[i][11]]);
+					rjy.push([rawData[i][0], rawData[i][1]]);
+					zd.push([rawData[i][0], rawData[i][10]]);
+
+				}
+				return {
+					xtime: xtime,
+					sw_values: sw_values,
+					ph_values: ph_values,
+					ddl_values: ddl_values,
+					rjy_values: rjy_values,
+					zd_values: zd_values
+				};
+			}
+
+//			var data = Data(rawData);
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					//						text: '大气成分图',    //标题
+					
+					textStyle: {
+						fontWeight: 'normal', //标题颜色
+						//							fontSize: '88px',  
+						//							color: '#fff'
+					},
+					x: "left"
+				},
+				color: ['#763ef6', '#fc1c1c', '#fe7878', '#80f63e', '#f63ec2', '#fefc3e'], //折线颜色//, 
+				legend: {
+					show: true,
+					type: 'scroll',
+					data: ["水温", "ph", "电导率", "溶解氧", "悬浮物"], //
+					selected: {
+						"水温": true,
+						"ph": true,
+						"电导率": true,
+						"溶解氧": true,
+						"悬浮物": true
+					},
+					pageIconColor: "#24abe2",
+					pageIconInactiveColor: "#678691",
+					icon: "roundRect",
+					top: "40",
+					textStyle: {
+						fontWeight: 'normal',
+						color: '#bdd8e4'
+					}
+				},
+				tooltip: {
+					backgroundColor: 'rgba(50,50,50,0.8)',
+					trigger: 'axis',
+
+					axisPointer: {
+						animation: false
+					}
+				},
+				grid: {
+					containLabel: true,
+					top: "80",
+					left: "55",
+					right: "35",
+					bottom: "10"
+				},
+				xAxis: {
+					boundaryGap: false,
+					axisLine: {
+						lineStyle: {
+							opacity: 0.8,
+							color: 'yellow',
+							width: 2
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							opacity: 0.2
+						}
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 14
+						}
+					},
+					type: "category"
+
+				},
+				dataZoom: [{
+					type: 'inside',
+					xAxisIndex: 0,
+					minSpan: 5
+				}],
+				yAxis: [{
+					type: "value",
+					name: "悬浮物",
+					axisLine: {
+						lineStyle: {
+							color: '#fefc3e',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					nameLocation: 'end',
+					nameRotate: 60,
+					position: 'left',
+					min: function(value) {
+						return Math.floor(value.min) - 5;
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 5;
+					}
+				}, {
+					type: "value",
+					name: "水温(℃)",
+					axisLine: {
+						lineStyle: {
+							color: '#763ef6',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					nameLocation: 'end',
+					nameRotate: 60,
+					position: 'left',
+					offset: 50,
+					min: function(value) {
+						return Math.floor(value.min) - 5;
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 5;
+					}
+				}],
+				series: [{
+					name: "水温",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: sw,
+					yAxisIndex: 1,
+					data: sw
+				}, {
+					name: "ph",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 0,
+
+					data: ph
+				}, {
+					name: "电导率",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: ddl,
+					yAxisIndex: 0
+
+				}, {
+					name: "溶解氧",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 0,
+
+					data: rjy
+				}, {
+					name: "悬浮物",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 0,
+
+					data: zd
+				}]
+			};
+			
+			if(option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+			$.ajax({
+	            url: '/api/st/composition/getData',
+	            dataType: 'json',
+	            type: 'get',
+	            success: function (result) {
+//	            	result.msg[0].水美村.data
+	            	var data = Data(result.msg[0].水美村.data);
+	            	myChart.setOption({
+						series: [{
+							name: "水温",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: sw,
+							yAxisIndex: 1,
+						}, {
+							name: "ph",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 0,
+		
+							data: ph
+						}, {
+							name: "电导率",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: ddl,
+							yAxisIndex: 0
+		
+						}, {
+							name: "溶解氧",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 0,
+		
+							data: rjy
+						}, {
+							name: "悬浮物",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 0,
+		
+							data: zd
+						}]
+	                });
+	            }
+			})
+		}
+
+		
+		function initChart3() {
+			var dom = document.getElementById("container3");
+			var myChart = echarts.init(dom);
+			var app = {};
+			option = null;
+			//temp：温度  1 ，humidity:湿度  11，  pressure：压强   7，winds2m：风速  4
+			//"temp":19.6,"hourr":0.0,"windd1mMax":9,"dayMinTemp":19.5,"winds2m":4.1,"dayMaxTemp":21.1,"pressure":1010.5,"winds10mMax":7.9,"winds1mMax":9.5,"dewTemp":16.8,"windd2m":146,"humidity":84.0,"dayMinHumidity":82.0,"windd10mMax":7,"timestamp":1557763500000],
+			var rawData = [
+				[0.0, 19.6, 0.0, 9, 19.5, 4.1, 21.1, 1010.5, 7.9, 9.5, 16.8, 146, 84.0, 82.0, 7, 1557763500000],
+				[0.0, 20.3, 0.0, 9, 18.9, 3.2, 21.1, 1012.1, 7.9, 9.5, 16.5, 161, 79.0, 78.0, 7, 1557801300000],
+				[0.0, 20.5, 0.0, 9, 18.9, 3.4, 21.1, 1012.2, 7.9, 9.5, 16.9, 160, 80.0, 77.0, 7, 1557801600000],
+				[0.0, 20.4, 0.0, 9, 18.9, 3.0, 21.1, 1012.1, 7.9, 9.5, 16.4, 151, 78.0, 77.0, 7, 1557802500000],
+				[0.0, 20.4, 0.0, 9, 18.9, 3.3, 21.1, 1012.0, 7.9, 9.5, 16.6, 161, 79.0, 77.0, 7, 1557802800000]
+			];
+
+			Date.prototype.Format = function(fmt) { //author: meizz   
+				var o = {
+					"M+": this.getMonth() + 1, //月份   
+					"d+": this.getDate(), //日   
+					"h+": this.getHours(), //小时   
+					"m+": this.getMinutes(), //分   
+					"s+": this.getSeconds(), //秒   
+					"q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+					"S": this.getMilliseconds() //毫秒   
+				};
+				if(/(y+)/.test(fmt))
+					fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				for(var k in o)
+					if(new RegExp("(" + k + ")").test(fmt))
+						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				return fmt;
+			};
+			var temp = [];
+			var humidity = [];
+			var pressure = [];
+			var winds2m = [];
+			var wind = [];
+
+			function Data(rawData) {
+				var xtime = [];
+
+				var temp_values = [];
+				var humidity_values = [];
+				var pressure_values = [];
+//				var winds2m_values = [];
+//				var wind_values = [];
+
+				for(var i = 0; i < rawData.length; i++) {
+					xtime.push(new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm:ss"));
+
+					temp_values.push(rawData[i][0]);
+					humidity_values.push(rawData[i][1]);
+					pressure_values.push(rawData[i][2]);
+//					winds2m_values.push(rawData[i][3]);
+//					wind_values.push("东南风");
+
+					temp.push([new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm"), rawData[i][0]]);
+					humidity.push([new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm"), rawData[i][1]]);
+					pressure.push([new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm"), rawData[i][2]]);
+//					winds2m.push([new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm"), rawData[i][3]], "东南风");
+//					wind.push([new Date(rawData[i][10]).Format("yyyy-MM-dd hh:mm"), "东南风"]);
+
+				}
+				return {
+					xtime: xtime,
+					temp_values: temp_values,
+					humidity_values: humidity_values,
+					pressure_values: pressure_values,
+//					winds2m_values: winds2m_values,
+//					wind_values: wind_values
+				};
+			}
+        	var rawData=[];
+//	            	$.each(result.data.正果镇探测点.data,function(index,item){
+//	            		rawData.push(item)
+//	            	})
+        	var data = Data(rawData);
+//	            	console.log(data)
+			// 指定图表的配置项和数据
+			var option = {
+				title: {
+					textStyle: {
+						fontWeight: 'normal', //标题颜色
+						//							fontSize: '88px',  
+						//							color: '#fff'
+					},
+					x: "left"
+				},
+				color: ['#763ef6', '#fc1c1c', '#fefc3e', '#80f63e', '#f63ec2', '#fefc3e'], //折线颜色//, 
+				legend: {
+					show: true,
+					type: 'scroll',
+					data: ["风向", "风速", "气压"], //
+					selected: {
+						"风向": true,
+						"风速": true,
+						"气压": true
+					},
+					pageIconColor: "#24abe2",
+					pageIconInactiveColor: "#678691",
+					icon: "roundRect",
+					top: "40",
+					textStyle: {
+						fontWeight: 'normal',
+						color: '#bdd8e4'
+					}
+				},
+				
+				tooltip: {
+					backgroundColor: 'rgba(50,50,50,0.8)',
+					trigger: 'axis',
+//							formatter: function(datas) {
+//								var res = datas[0].name + '<br/>';
+//								res += '<span style="margin-right:5px;display:inline-block;width:10px;height:10px;border-radius:5px;background-color: #763ef6;"></span>' +
+//									'<span style=color:#763ef6;">' + datas[0].seriesName + '：' + datas[0].value + '<br/></span>';
+//								res += '<span style="margin-right:5px;display:inline-block;width:10px;height:10px;border-radius:5px;background-color: #fc1c1c;"></span>' +
+//									'<span style=color:#fc1c1c;">' + datas[1].seriesName + '：' + datas[1].value + '<br/></span>';
+//								res += '<span style="margin-right:5px;display:inline-block;width:10px;height:10px;border-radius:5px;background-color: #fefc3e;"></span>' +
+//									'<span style=color:#fefc3e;">' + datas[2].seriesName + '：' + datas[2].value + '<br/></span>';
+//								return res;
+//							},
+
+					axisPointer: {
+						animation: false
+					}
+				},
+				grid: {
+					containLabel: true,
+					top: "80",
+					left: "55",
+					right: "35",
+					bottom: "10"
+				},
+				xAxis: {
+					boundaryGap: false,
+					axisLine: {
+						lineStyle: {
+							opacity: 0.8,
+							color: 'yellow',
+							width: 2
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							opacity: 0.2
+						}
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 14
+						}
+					},
+					type: "category",
+					data: data.xtime
+
+				},
+				dataZoom: [{
+					type: 'inside',
+					xAxisIndex: 0,
+					minSpan: 5
+				}],
+				yAxis: [{
+					type: "value",
+					name: "风向",
+					axisLine: {
+						lineStyle: {
+							color: '#763ef6',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					nameLocation: 'end',
+					nameRotate: 60,
+					position: 'left',
+					min: function(value) {
+						return Math.floor(value.min) - 5;
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 2;
+					}
+				}, {
+					type: "value",
+					name: "风速",
+					axisLine: {
+						lineStyle: {
+							color: '#80f63e',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					nameLocation: 'end',
+					nameRotate: 60,
+					position: 'left',
+					offset: 50,
+					min: 0,
+					max: 10
+				}, {
+					type: "value",
+					name: "气压",
+					axisLine: {
+						lineStyle: {
+							color: '#fefc3e',
+							width: 2
+						}
+					},
+					axisLabel: {
+						show: true
+					},
+					axisTick: {
+						show: true
+					},
+					splitLine: {
+						show: false
+					},
+					nameGap: 4,
+					position: 'left',
+					nameLocation: 'end',
+					nameRotate: 60,
+					offset: 90,
+					min: function(value) {
+						return Math.floor(value.min) - 10;
+					},
+					max: function(value) {
+						return Math.ceil(value.max) + 5;
+					}
+				}],
+				//temp：温度  0 ，humidity:湿度  11，  pressure：压强   7，winds2m：风速  4
+				series: [{
+					name: "风向",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: data.temp_values,
+					yAxisIndex: 0
+				}, {
+					name: "风速",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					yAxisIndex: 1,
+					data: data.humidity_values
+				}, {
+					name: "气压",
+					type: "line",
+					smooth: true,
+					showSymbol: false,
+					hoverAnimation: false,
+					data: data.pressure_values,
+					yAxisIndex: 2
+
+				}]
+			};
+			if(option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+			$.ajax({
+	            url: '/api/aqi/aqiDeviceData/getTrendData',
+	            dataType: 'json',
+	            type: 'get',
+	            success: function (result) {
+	            	var data = Data(result.data.正果镇探测点.data);
+					myChart.setOption({
+						xAxis: {
+							data: data.xtime
+						},
+						series: [{
+							name: "风向",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: data.temp_values,
+							yAxisIndex: 0
+						}, {
+							name: "风速",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							yAxisIndex: 1,
+							data: data.humidity_values
+						}, {
+							name: "气压",
+							type: "line",
+							smooth: true,
+							showSymbol: false,
+							hoverAnimation: false,
+							data: data.pressure_values,
+							yAxisIndex: 2
+		
+						}]
+					})
+	            }
+	    	})
+	    	
+			
+		}
+
+		function initChart4() {
+
+			var dom = document.getElementById("container4");
+			var myChart = echarts.init(dom);
+			var app = {};
+			option = null;
+			//Schema:
+			//date,AQIindex,PM2.5,PM10,CO,NO2,SO2
+
+			var dataGZ = [];
+
+			var lineStyle = {
+				normal: {
+					width: 1,
+					opacity: 0.5
+				}
+			};
+
+			var option = {
+				title: {
+					text: '正果镇空气质量维图',
+					left: 'center',
+					top: "5",
+					textStyle: {
+						fontWeight: 'normal', //标题颜色
+						fontSize: '20',
+						color: '#bdd8e4',
+					},
+				},
+				tooltip: {
+					trigger: 'item',
+					backgroundColor: 'rgba(0,0,250,0.2)'
+				},
+				grid: {
+					top: 100
+				},
+				legend: {
+					bottom: 5,
+					data: ['正果镇'],
+					itemGap: 20,
+					textStyle: {
+						color: '#fff',
+						fontSize: 14
+					},
+					selectedMode: 'single'
+				},
+				radar: {
+					indicator: [],
+					shape: 'circle',
+					splitNumber: 5,
+					name: {
+						textStyle: {
+							color: 'rgb(238, 197, 102)'
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							color: [
+								'rgba(238, 197, 102, 0.1)', 'rgba(238, 197, 102, 0.2)',
+								'rgba(238, 197, 102, 0.4)', 'rgba(238, 197, 102, 0.6)',
+								'rgba(238, 197, 102, 0.8)', 'rgba(238, 197, 102, 1)'
+							].reverse()
+						}
+					},
+					splitArea: {
+						show: false
+					},
+					axisLine: {
+						lineStyle: {
+							color: 'rgba(238, 197, 102, 0.5)'
+						}
+					}
+				},
+				series: [{
+					name: '正果镇',
+					type: 'radar',
+					lineStyle: lineStyle,
+					data: dataGZ,
+					symbol: 'none',
+					itemStyle: {
+						normal: {
+							color: '#B3E4A1'
+						}
+					},
+					areaStyle: {
+						normal: {
+							opacity: 0.05
+						}
+					}
+				}]
+			};
+			if(option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+			$.ajax({
+				url: '/api/aqi/aqiHourData/getDimensionData',
+				dataType: 'json',
+				type: 'get',
+				success: function(result) {
+					var chardata = [];
+					var radardata = [];
+					$.each(result.data.正果镇探测点.name, function(idx, itm) {
+						radardata.push({
+							"name": itm
+						});
+					})
+					$.each(result.data.正果镇探测点.data, function(idx, itm) {
+						chardata.push(itm);
+						if(idx + 1 == result.data.正果镇探测点.data.length) {
+							
+							myChart.setOption({
+								radar: {
+									indicator: radardata
+								},
+								series: [{
+									data: chardata
+								}]
+							});
+						}
+					})
+				}
+			})
+		}
+
+		$(document).ready(function() {
+			$(".toggle_nav_btn").click(function() {
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+	</script>
+
+</html>

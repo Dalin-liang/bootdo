@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="title">
+					应急值守人员列表
+				</div>
+				<div class="srcollcom" style="height: 360px;">
+					<div class="pad10" id="watchList">
+						<div class="dialog1 active">
+							<div class="clearfix">
+								<div class="col-xs-4 text-center pad0">
+									<img src="../img/2_03.png" class="mt10" width="60px" />
+									<p class="mt10">姓名：黄义久</p>
+								</div>
+								<div class="col-xs-8">
+									<p>&emsp;&emsp;职务：成员</p>
+									<p>&emsp;&emsp;手机：11111111</p>
+									<p>&emsp;&emsp;电话：11111111</p>
+									<p>办公电话：11111111</p>
+									<p>家庭电话：11111111</p>
+								</div>
+							</div>
+						</div>
+						<div class="dialog1 mt10">
+							<div class="clearfix">
+								<div class="col-xs-4 text-center pad0">
+									<img src="../img/2_03.png" class="mt10" width="60px" />
+									<p class="mt10">姓名：黄义久</p>
+								</div>
+								<div class="col-xs-8">
+									<p>&emsp;&emsp;职务：成员</p>
+									<p>&emsp;&emsp;手机：11111111</p>
+									<p>&emsp;&emsp;电话：11111111</p>
+									<p>办公电话：11111111</p>
+									<p>家庭电话：11111111</p>
+								</div>
+							</div>
+						</div>
+						<div class="dialog1 mt10">
+							<div class="clearfix">
+								<div class="col-xs-4 text-center pad0">
+									<img src="../img/2_03.png" class="mt10" width="60px" />
+									<p class="mt10">姓名：黄义久</p>
+								</div>
+								<div class="col-xs-8">
+									<p>&emsp;&emsp;职务：成员</p>
+									<p>&emsp;&emsp;手机：11111111</p>
+									<p>&emsp;&emsp;电话：11111111</p>
+									<p>办公电话：11111111</p>
+									<p>家庭电话：11111111</p>
+								</div>
+							</div>
+						</div>
+						<div class="dialog1 mt10">
+							<div class="clearfix">
+								<div class="col-xs-4 text-center pad0">
+									<img src="../img/2_03.png" class="mt10" width="60px" />
+									<p class="mt10">姓名：黄义久</p>
+								</div>
+								<div class="col-xs-8">
+									<p>&emsp;&emsp;职务：成员</p>
+									<p>&emsp;&emsp;手机：11111111</p>
+									<p>&emsp;&emsp;电话：11111111</p>
+									<p>办公电话：11111111</p>
+									<p>家庭电话：11111111</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$.ajax({
+				url:'/dispatch/res/watchman',
+				dataType:'json',
+				type:'get',
+				success:function(data){
+				    $("#watchList").empty();
+				    for(var i in data.data){
+				        if(i==0){
+				            $("#watchList").append("<div class='dialog1 active'><div class='clearfix'>"+
+								"<div class='col-xs-4 text-center pad0'><img src='../img/2_03.png' class='mt10' width='60px' />"+
+								"<p class='mt10'>姓名："+data.data[i].name+"</p></div>"+
+								"<div class='col-xs-8'><p>&emsp;&emsp;职务："+data.data[i].resTypeName+"</p><p>&emsp;&emsp;手机："+data.data[i].mobile+"</p>"+
+								"<p>&emsp;&emsp;单位："+data.data[i].deptName+"</p></div></div></div>"
+							)
+						}else{
+				            $("#watchList").append("<div class='dialog1 mt10'><div class='clearfix'>"+
+								"<div class='col-xs-4 text-center pad0'><img src='../img/2_03.png' class='mt10' width='60px' />"+
+								"<p class='mt10'>姓名："+data.data[i].name+"</p></div>"+
+								"<div class='col-xs-8'><p>&emsp;&emsp;职务："+data.data[i].resTypeName+"</p><p>&emsp;&emsp;手机："+data.data[i].mobile+"</p>"+
+								"<p>&emsp;&emsp;单位："+data.data[i].deptName+"</p></div></div></div>"
+							)
+						}
+					}
+				}
+			})
+			$("#watchList").on("click",'.dialog1',function(){
+			    $("#watchList .dialog1").removeClass("active");
+			    $(this).addClass("active");
+			})
+		</script>
+	</body>
+</html>

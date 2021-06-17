@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${dutyPerson.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">工程名称：</label>
+								<div class="col-sm-8">
+									<input id="wname" name="wname" th:value="${dutyPerson.wname}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">防汛责任人职位：</label>
+								<div class="col-sm-8">
+									<input id="ajob" name="ajob" th:value="${dutyPerson.ajob}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">防汛责任人：</label>
+								<div class="col-sm-8">
+									<input id="aname" name="aname" th:value="${dutyPerson.aname}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">防汛责任人联系电话：</label>
+								<div class="col-sm-8">
+									<input id="amobile" name="amobile" th:value="${dutyPerson.amobile}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">技术责任人职位：</label>
+								<div class="col-sm-8">
+									<input id="bjob" name="bjob" th:value="${dutyPerson.bjob}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">技术责任人：</label>
+								<div class="col-sm-8">
+									<input id="bname" name="bname" th:value="${dutyPerson.bname}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">技术责任人电话：</label>
+								<div class="col-sm-8">
+									<input id="bmobile" name="bmobile" th:value="${dutyPerson.bmobile}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">巡查责任人职位：</label>
+								<div class="col-sm-8">
+									<input id="cjob" name="cjob" th:value="${dutyPerson.cjob}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">巡查责任人：</label>
+								<div class="col-sm-8">
+									<input id="cname" name="cname" th:value="${dutyPerson.cname}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">巡查责任人电话：</label>
+								<div class="col-sm-8">
+									<input id="cmobile" name="cmobile" th:value="${dutyPerson.cmobile}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">删除标记：</label>
+								<div class="col-sm-8">
+									<input id="deleted" name="deleted" th:value="${dutyPerson.deleted}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">插入时间：</label>
+								<div class="col-sm-8">
+									<input id="submitdate" name="submitdate" th:value="${dutyPerson.submitdate}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">备注：</label>
+								<div class="col-sm-8">
+									<input id="remarks" name="remarks" th:value="${dutyPerson.remarks}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/system/dutyPerson/edit.js">
+	</script>
+</body>
+</html>

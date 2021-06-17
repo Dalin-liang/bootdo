@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+    <link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/popper.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<style type="text/css">
+		body {
+			background-color:#f2f2f2!important;
+		}
+		table {
+			background-color:#FFFFFF!important;
+		}
+    </style>
+
+</head>
+<body>
+    <div class="layui-pad10">
+        <div class="layui-mt10">
+            <table id="ArbetTable"></table>
+        </div>
+    </div>
+</body>
+<script>
+    layui.use(['form','element','layer'], function(){
+		var form = layui.form,
+		layer=layui.layer
+	});
+    var Table=function(){
+        var oTable=new Object();
+        oTable.Init=function(url){
+            $("#ArbetTable").bootstrapTable("destroy");
+            $("#ArbetTable").bootstrapTable({
+                url:url,
+                method:'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc",
+                queryParams:oTable.queryParams,
+                sidePagination: "server",
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 25, 50, 100],
+                clickToSelect: true,
+                uniqueId: "id",
+                columns:[
+                    {
+                        field:'name',
+                        title:'预案名称',
+                        align:'center'
+                    },{
+                        field:'start_condition',
+                        title:'储备库',
+                        align:'center'
+                    },{
+                        field:'emergency',
+                        title:'应急能力',
+                        align:'center'
+                    },{
+                        field:'timely',
+                        title:'及时性',
+                        align:'center'
+                    },{
+                        field:'effective',
+                        title:'有效性',
+                        align:'center'
+                    },{
+                        field:'person',
+                        title:'评估人',
+                        align:'center'
+                    },{
+                        field:'time',
+                        title:'评估时间',
+                        align:'center'
+                    },{
+                        field:'option',
+                        title:'操作',
+                        align:'center',
+                        formatter:rowOption
+                    }
+                ],
+                rowStyle:function(row,index){
+                    var classesArr = ['success', 'info'];
+                    var strclass = "";
+                    if (index % 2 === 0) {//偶数行
+                        strclass = classesArr[0];
+                    } else {//奇数行
+                        strclass = classesArr[1];
+                    }
+                    return { classes: strclass };
+                }
+            })
+        }
+
+        oTable.queryParams=function(params){
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: this.pageSize,   //页面大小
+                pageNumber:this.pageNumber //页码
+            };
+            return temp;
+        };
+
+        return oTable;
+    };
+
+    function rowOption(value, row, index){
+        if(!row.emergency){
+           return [
+              '<button class="layui-btn layui-btn-primary layui-btn-sm" class="edit" onclick="appraise(\''+row.actionprogram_id+'\')">指标管理</button>'
+          ]
+        }
+        return "";
+    }
+
+    function appraise(id){
+        sessionStorage.setItem("dataid",id);
+        layer.open({
+                type: 2,
+                title: '指标管理',
+                shadeClose: true,
+                shade: 0.4,
+                area: ['800px', '500px'],
+                content: 'appraiseManageAdd.html'
+            });
+    }
+
+    var t=new Table();
+    t.Init("/appraise/appraiseManage/list")
+</script>
+</html>

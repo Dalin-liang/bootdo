@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgeInfoDao">
+	
+	<sql id="knowledgeInfoColumns">
+		t.`id` AS id,
+		t.`level` AS level,
+		t.`storageLocation` AS storagelocation,
+		t.`dept` AS dept,
+		t.`px` AS px,
+		t.`enabled` AS enabled,
+		t.`remarks` AS remarks,
+		t.`effective_date` AS effectiveDate,
+		t.`create_by` AS create_by,
+		t.`create_date` AS createDate,
+		
+		detail.code As detailCode,
+		detail.name As detailName,
+		detail.molecular_formula As detailMolecularFormula,
+		danger.danger_type As dangerType,
+		dangerTypeTable.dangerTypeName As dangerTypeName
+	</sql>
+	
+	<sql id="knowledgeInfoJoins">
+		LEFT JOIN safeguard_knowledge_detail detail ON detail.knowledge_info_Id = t.id
+		LEFT JOIN safeguard_knowledge_danger  danger ON danger.knowledge_info_Id = t.id
+		LEFT JOIN safeguard_knowledge_dangertype  dangerTypeTable ON danger.danger_type = dangerTypeTable.id
+	</sql>
+
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgeInfoDO">
+		select 
+			<include refid="knowledgeInfoColumns"/>
+		from safeguard_knowledge_info t
+		<include refid="knowledgeInfoJoins"/>
+		where t.id = #{value}
+	</select>
+	
+	<select id="getKnowledgeInfoIdsByParam" resultType="java.lang.String">
+		SELECT t.id 
+		FROM safeguard_knowledge_info t
+		INNER JOIN safeguard_knowledge_detail d ON t.id = d.knowledge_info_Id
+		INNER JOIN safeguard_knowledge_danger g ON t.id = g.knowledge_info_Id
+		INNER JOIN safeguard_knowledge_dangertype ty ON ty.id = g.danger_type
+		<where>  
+	  		  <if test="code != null and code != ''"> and d.code like concat('%',#{code},'%') </if>
+	  		  <if test="name != null and name != ''"> and d.name like concat('%',#{name},'%') </if>
+	  		  <if test="otherName != null and otherName != ''"> and d.other_name like concat('%',#{otherName},'%') </if>
+	  		  <if test="dangerType != null and dangerType != ''"> and ty.dangerTypeName like concat('%',#{dangerType},'%') </if>
+			and t.enabled = '1'
+		</where>
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.KnowledgeInfoDO">
+		select 
+			<include refid="knowledgeInfoColumns"/>
+		from safeguard_knowledge_info t
+		<include refid="knowledgeInfoJoins"/>
+        <where>  
+		  		  <if test="id != null and id != ''"> and t.id = #{id} </if>
+		  		  <if test="level != null and level != ''"> and t.level like concat('%',#{level},'%')</if>
+		  		  <if test="storagelocation != null and storagelocation != ''"> and storageLocation like concat('%',#{storageLocation},'%') </if>
+		  		  <if test="dept != null and dept != ''"> and t.dept like concat('%',#{dept},'%') </if>
+		  		  <if test="px != null and px != ''"> and t.px = #{px} </if>
+		  		  <if test="enabled != null and enabled != ''"> and t.enabled = #{enabled} </if>
+		  		  <if test="remarks != null and remarks != ''"> and t.remarks like concat('%',#{remarks},'%') </if>
+		  		  <if test="effectiveDate != null and effectiveDate != ''"> and t.effective_date = #{effectiveDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and t.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and t.create_date = #{createDate} </if>
+		  		  <if test="detailCode != null and detailCode != ''"> and detail.code like concat('%',#{detailCode},'%') </if>
+		  		  <if test="detailName != null and detailName != ''"> and detail.name like concat('%',#{detailName},'%') </if>
+		  		  <if test="detailMolecularFormula != null and detailMolecularFormula != ''"> and detail.molecular_formula like concat('%',#{detailMolecularFormula},'%') </if>
+		  		  <if test="dangerType != null and dangerType != ''"> and danger.danger_type like concat('%',#{dangerType},'%') </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by t.px asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) 
+		from safeguard_knowledge_info t
+		<include refid="knowledgeInfoJoins"/>
+		 <where>  
+		 		  <if test="id != null and id != ''"> and t.id = #{id} </if>
+		  		  <if test="level != null and level != ''"> and t.level like concat('%',#{level},'%')</if>
+		  		  <if test="storagelocation != null and storagelocation != ''"> and storageLocation like concat('%',#{storageLocation},'%') </if>
+		  		  <if test="dept != null and dept != ''"> and t.dept like concat('%',#{dept},'%') </if>
+		  		  <if test="px != null and px != ''"> and t.px = #{px} </if>
+		  		  <if test="enabled != null and enabled != ''"> and t.enabled = #{enabled} </if>
+		  		  <if test="remarks != null and remarks != ''"> and t.remarks like concat('%',#{remarks},'%') </if>
+		  		  <if test="effectiveDate != null and effectiveDate != ''"> and t.effective_date = #{effectiveDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and t.create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and t.create_date = #{createDate} </if>
+		  		  <if test="detailCode != null and detailCode != ''"> and detail.code like concat('%',#{detailCode},'%') </if>
+		  		  <if test="detailName != null and detailName != ''"> and detail.name like concat('%',#{detailName},'%') </if>
+		  		  <if test="detailMolecularFormula != null and detailMolecularFormula != ''"> and detail.molecular_formula like concat('%',#{detailMolecularFormula},'%') </if>
+		  		  <if test="dangerType != null and dangerType != ''"> and danger.danger_type like concat('%',#{dangerType},'%') </if> 		
+		 </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgeInfoDO">
+		insert into safeguard_knowledge_info
+		(
+			`id`, 
+			`level`, 
+			`storageLocation`, 
+			`dept`, 
+			`px`, 
+			`enabled`, 
+			`remarks`, 
+			`effective_date`, 
+			`create_by`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{level}, 
+			#{storagelocation}, 
+			#{dept}, 
+			#{px}, 
+			#{enabled}, 
+			#{remarks}, 
+			#{effectiveDate}, 
+			#{createBy}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgeInfoDO">
+		update safeguard_knowledge_info 
+		<set>
+			<if test="level != null">`level` = #{level}, </if>
+			<if test="storagelocation != null">`storageLocation` = #{storagelocation}, </if>
+			<if test="dept != null">`dept` = #{dept}, </if>
+			<if test="px != null">`px` = #{px}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="effectiveDate != null">`effective_date` = #{effectiveDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update safeguard_knowledge_info set `enabled` = #{enabled}
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge_info where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

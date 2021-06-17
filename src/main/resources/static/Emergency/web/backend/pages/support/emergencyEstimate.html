@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+</head>
+<body>
+div.layui-col-xs2>div.title>div.line>span>i.fa.fa-angle-double-right
+<!--
+                   <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right {{if data.stepFlow==1}}yellow-arrow-line{{/if}}"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg {{if data.stepFlow==1}}yellow-span{{/if}}">灾前</span>
+                                <%&#45;&#45;||1==1 first-pop &#45;&#45;%>
+                            {{if data.stepFlow==1&&data.filedMark==0&&data.relieveMark==0}}
+                            <div class="pop {{if data.judSameDay}}first-pop{{/if}}">
+                                {{if data.judSameDay}}
+                                <button id="publishWarning" class="red-bg mainProcessBtnGroup">发布预警</button>
+                                {{/if}}
+                                <button id="relieveDis" class="red-bg mainProcessBtnGroup">解除灾害</button>
+                                <button id="publishReport" class="red-bg mainProcessBtnGroup">发布报告</button>
+                            </div>
+                            {{else if data.subs[0].length==1&&(data.subs[0][0]).orderNo==1}}
+                            <div class="pop">
+                                <button id="publishReport" class="red-bg mainProcessBtnGroup">发布报告</button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{if data.subs[0].length>0}}
+                    <div class="list clearfix">
+                        <ul>
+                            {{each data.subs[0] item index}}
+                            <li class="clearfix">
+                                <div class="line">
+                                    <button class="info-bg"><i class="fa fa-check"></i></button>
+                                    <s class="line-y"></s></div>
+                                <div data-sub-preTime={{item.subTime}} data-disId={{data.disId}}  class="box clearfix {{if item.subPdfUrl&&item.subPdfUrl.length>0}}pdfBtn{{else if item.subProssName=='灾害风险预估分布图'}}disImgBtn{{/if}}" {{if item.subPdfUrl&&item.subPdfUrl.length>0}}data-url="{{item.subPdfUrl|replacebackSlant}}" {{else if item.imageUrl&&item.imageUrl.length>0}}data-imgUrl="{{item.imageUrl|replacebackSlant}}"{{/if}}>
+                                    <div class="bnp">
+                                        <div>
+                                            <span style="font-size: 16px!important;font-weight:800;">{{item.subProssName}} </span>
+                                            {{if item.subContent}}
+                                            <span>{{item.subContent}}</span>
+                                            {{/if}}
+                                            {{if item.maxLevel&&item.maxLevelStreets}}
+                                            <span class="small-span">
+                                                        {{if data.disTypeId==3}}
+                                                                {{else}}受灾等级:{{item.maxLevel}}级<br>
+                                                        {{/if}}
+                                                            <p style="display: none;"  dataStr="{{item.maxLevelStreets}}">
+                                                                受灾镇街<br>{{item.maxLevelStreets}}
+                                                            </p>
+                                                    </span>
+                                            {{else if item.maxLevel&&item.maxLevelHt}}
+                                            <span class="small-span">
+                                                        {{if data.disTypeId==3}}
+                                                                {{else}}受灾等级:{{item.maxLevel}}级<br>
+                                                        {{/if}}
+                                                            <p style="display: none;">
+                                                                受灾隐患点<br>{{item.maxLevelHt}}
+                                                            </p>
+                                                    </span>
+                                            {{/if}}
+                                            {{if item.orderNo!==1}}
+                                            <span>操作员:{{item.subOperator}}</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                    <div class="btime"><span>{{item.subTime|dateFormat:"MM-dd"}}<br>{{item.subTime|dateFormat:"hh:mm"}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right {{if data.stepFlow==2}}yellow-arrow-line{{/if}}"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg {{if data.stepFlow==2}}yellow-span{{/if}}">灾中</span>
+                                <%&#45;&#45;||1==1&#45;&#45;%>
+                            {{if data.stepFlow==2&&data.filedMark==0}}
+                            <div class="pop">
+                                <button id="inDisasterReportBtn" class="red-bg mainProcessBtnGroup">生产报告</button>
+                                <button id="addRecordBtn" class="red-bg mainProcessBtnGroup">添加纪要</button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{if data.subs[1].length>0}}
+                    <div class="list clearfix">
+                        <ul>
+                            {{each data.subs[1] item index}}
+                            <li class="clearfix">
+                                <div class="line">
+                                    <button class="info-bg"><i class="fa fa-check"></i></button>
+                                    <s class="line-y"></s></div>
+                                <div class="box clearfix">
+                                        <%&#45;&#45;{{if item.imageUrl&&item.imageUrl.length>0}}&#45;&#45;%>
+                                        <%&#45;&#45;<div class="bnp disImgBtn" data-imgUrl="{{item.imageUrl|replacebackSlant}}">&#45;&#45;%>
+                                        <%&#45;&#45;<div>&#45;&#45;%>
+                                        <%&#45;&#45;&lt;%&ndash;废弃&ndash;%&gt;&#45;&#45;%>
+                                        <%&#45;&#45;<span>{{item.subProssName}}</span>&#45;&#45;%>
+                                        <%&#45;&#45;</div>&#45;&#45;%>
+                                        <%&#45;&#45;</div>&#45;&#45;%>
+                                        <%&#45;&#45;{{else if item.subPdfUrl&&item.subPdfUrl.length>0}}&#45;&#45;%>
+                                    {{if item.subPdfUrl&&item.subPdfUrl.length>0}}
+                                    <div class="bnp subProcessBtnGroup" data-disId={{data.disId}} data-subPdfUrl="{{item.subPdfUrl|replacebackSlant}}" >
+                                        <div>
+                                            <span>{{item.subProssName}}</span>
+                                            <span>{{if item.subOperator&&item.subOperator.length>0}}操作员:{{item.subOperator}}{{/if}}</span>
+                                        </div>
+                                    </div>
+                                    {{else if item.subAttachmentType&&item.subAttachmentType.length>0}}
+                                    <div class="bnp subAttachmentBtnGroup" data-disId={{data.disId}} data-subAttachmentUrl="{{item.subAttachmentUrl}}" data-subAttachmentType="{{item.subAttachmentType}}">
+                                        <div>
+                                            <span>{{item.subProssName}}</span>
+                                            <span>{{if item.subOperator&&item.subOperator.length>0}}操作员:{{item.subOperator}}{{/if}}</span>
+                                        </div>
+                                    </div>
+                                    {{else if item.subContent&&item.subContent.length>0}}
+                                    <div class="bnp">
+                                        <div>
+                                            <span>{{item.subProssName}}</span>
+                                            <span> {{item.subContent}}</span>
+                                            <span> {{if item.subOperator&&item.subOperator.length>0}}操作员:{{item.subOperator}}{{/if}}</span>
+                                        </div>
+                                    </div>
+                                    {{else}}
+                                    <div class="bnp disImgBtn" data-disId={{data.disId}} data-subTime="{{item.subTime|dateFormat:'yyyy-MM-dd hh'}}">
+                                        <div>
+                                            <span style="font-size: 16px!important;font-weight:800;">{{item.subProssName}}</span>
+                                            {{if item.maxLevel&&item.maxLevelStreets}}
+                                            <span class="small-span">
+                                                        {{if data.disTypeId==3}}
+                                                                {{else}}受灾等级:{{item.maxLevel}}级<br>
+                                                        {{/if}}
+                                                            <p style="display: none"  dataStr="{{item.maxLevelStreets}}">
+                                                                受灾镇街<br>{{item.maxLevelStreets}}
+                                                            </p>
+                                                    </span>
+                                            {{else if item.maxLevel&&item.maxLevelHt}}
+                                            <span class="small-span">
+                                                            {{if data.disTypeId==3}}
+                                                                    {{else}}受灾等级:{{item.maxLevel}}级<br>
+                                                            {{/if}}
+                                                                <p style="display: none;">
+                                                                    受灾隐患点<br>{{item.maxLevelHt}}
+                                                                </p>
+                                                     </span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                    <div class="btime"><span>{{item.subTime|dateFormat:"MM-dd"}}<br>{{item.subTime|dateFormat:"hh:mm"}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right {{if data.stepFlow==3}}yellow-arrow-line{{/if}}"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg {{if data.stepFlow==3}}yellow-span{{/if}}">灾后</span>
+                            {{if data.stepFlow==3&&data.filedMark==0}}
+                            <div class="pop">
+                                <button id="uploadExcelBtn" class="red-bg mainProcessBtnGroup">灾害上报</button>
+                                <button id="afterReportBtn" class="red-bg mainProcessBtnGroup">生产报告</button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{if data.subs[2].length>0}}
+                    <div class="list clearfix">
+                        <ul>
+                            {{each data.subs[2] item index}}
+                            <li class="clearfix">
+                                <div class="line">
+                                    <button class="info-bg"><i class="fa fa-check"></i></button>
+                                    <s class="line-y"></s></div>
+                                <div class="box clearfix">
+                                    <div class="bnp {{if item.subPdfUrl&&item.subPdfUrl.length>0}}subProcessBtnGroup{{/if}}" data-disId={{data.disId}} {{if item.subPdfUrl&&item.subPdfUrl.length>0}}data-subPdfUrl="{{item.subPdfUrl|replacebackSlant}}"{{/if}}>
+                                        <div>
+                                            <span>{{item.subProssName}} </span>
+                                            <span>{{if item.subOperator&&item.subOperator.length>0}} 操作员:{{item.subOperator}}{{/if}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="btime"><span>{{item.subTime|dateFormat:"MM-dd"}}<br>{{item.subTime|dateFormat:"hh:mm"}}</span></div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="t1">
+                            <span class="info-bg {{if data.stepFlow==4}}yellow-span{{/if}}">归档</span>
+                            {{if data.stepFlow<=4&&data.filedMark==0}}
+                            <div class="pop">
+                                <button id="filedBtn" class="red-bg mainProcessBtnGroup">归档</button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{if data.subs[3].length>0}}
+                    <div class="list clearfix">
+                        <ul>
+                            {{each data.subs[3] item index}}
+                            <li class="clearfix">
+                                <div class="line">
+                                    <button class="info-bg"><i class="fa fa-check"></i></button>
+                                    <s class="line-y"></s></div>
+                                <div class="box clearfix">
+                                    <div class="bnp ">
+                                        <div>
+                                            <span>{{item.subProssName}}</span>
+                                            <span>{{if item.subOperator&&item.subOperator.length>0}}操作员:{{item.subOperator}}{{/if}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="btime"><span>{{item.subTime|dateFormat:"MM-dd"}}<br>{{item.subTime|dateFormat:"hh:mm"}}</span></div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </script>
+    <script id="disProssFlowInfoNullTemplate" type="text/html">
+        <div class="content-p hidden-y">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg">监测</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg">灾前</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg">灾中</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="line"><span><i class="fa fa-angle-double-right"></i></span></div>
+                        <div class="t1">
+                            <span class="info-bg">灾后</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="title">
+                        <div class="t1">
+                            <span class="info-bg">归档</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        layui.use(['layer', 'form', 'laydate','upload'], function () {
+            var layer = layui.layer,
+                laydate = layui.laydate,
+                upload = layui.upload,
+                form = layui.form;
+
+            var tipsTimer = null;
+            var attachmentFileInst = null;
+            var loopul = $("#loopul");
+            var disTypeArray=[];
+            var neilaoRadar;
+
+            var ulwidth = loopul.width();
+
+            //初始化
+            init();
+            function init() {
+                dateInit();//日期初始化
+                getDisTypeList();//灾害列表
+                queryDisProssFlow();//查询流程
+                distypeSelectListner();//灾害选择
+                mainStepBtnsListner();
+                subStepBtnsListner();
+                warnTips();
+                popUpBtnListner();
+                sendSMS();
+
+            }
+
+
+            //#####################################
+            //主流程按钮监听
+            function mainStepBtnsListner() {
+                mainProcessBtnListner();
+                //indisasterBtnListner();
+            }
+
+            //子流程按钮监听
+            function subStepBtnsListner() {
+                disImgBtnListner();
+                monitorUrlGroupListner();
+                subProcessBtnListner();
+                pdfBtnBtnListner();
+                subAttachmentBtnListner();
+            }
+            function sendSMS(){
+                $(document.body).delegate('#sendSMS','click',function(){
+                    var dis=$("#mainArea").val();
+                    if(dis.indexOf("具体雨量分布图如下图1所示") > 0){
+                    	dis = dis.replace("具体雨量分布图如下图1所示。","").replace("，见图２.","。");
+                    }
+                    var defenseText=$("#defenseArea").val();
+                    var streets=localStorage.getItem("streets");
+                    localStorage.removeItem("streets");
+                    layer.close(layer.index);
+                    var iWidth =1200; //弹出窗口的宽度;
+                    var iHeight= 700; //弹出窗口的高度;
+                    var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                    var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+                    var url="http://10.226.137.201:8180/OcpsWuqing/cn.com.oking.good.outduanshi.DuanshiMain.d?type=disasterReport&content="+dis+"&tip="+defenseText+"&streets"+streets
+                    window.open(url,'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                })
+            }
+
+
+            function popUpBtnListner(){
+                $(document.body).delegate('#jumpToDoc','click',function(){
+                    var date=$("#nameIdsList").find("option:selected").text();
+                    var time=date.split("-");
+                    var disTime=time[0]+"年"+time[1]+"月"+time[2]+"日";
+                    var part1=$("#mainArea").val();
+                    var satellite_img=$(".light-zoom0").attr("src");//如果是大风，大风风险分布图
+                    var satellite_img1=$(".light-zoom1").attr("src");//如果是大风，这是级大风分布图
+                    var part2=$("#infoArea").val();
+                    var part3=$("#defenseArea").val();
+                    var mainId = $("#nameIdsList").val();
+                    var jishuip = $("#jishui").val();
+                    console.log("zihhhh{}");
+                    console.log(jishuip);
+                    console.log(JSON.stringify(jishuip));
+                    var disType=$(this).attr('disType');
+                    var dataBtnType=$(this).attr('data-btnType');
+                    layer.close(layer.index);
+                    $("#imgContainer").empty();
+                    $("#imgContainer").hide();
+                    if(disType=="32"){
+                        if(dataBtnType=="preDis"){
+                            var fileVulgoName = "暴雨 "+date+"灾前报告";
+                            var fileName = disTime+"-"+disType+"-1";
+                            var status = "1";
+                            $.ajax({
+                                url:'evaluateReport.do?method=toDisasterWordR',
+                                type:'post',
+                                dataType:'html',
+                                async:false,
+                                data:{
+                                    'time':disTime, 'part1':part1, 'part2':part2,'satellite_img':satellite_img,'part3':part3,'fileName':fileName,'fileVulgoName':fileVulgoName,
+                                    'status':status,"disasterType":'暴雨',"disTime":date,"mainId":mainId
+
+                                },
+                                success:function(data){
+                                    var iWidth =1200; //弹出窗口的宽度;
+                                    var iHeight= 700; //弹出窗口的高度;
+                                    var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                                    var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+
+                                    var obj = window.open("about:blank",'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                                    obj.document.write(data);
+                                }
+                            })
+                        }else{
+                            var fileVulgoName ="暴雨 "+date+"灾中报告";
+                            var fileName = disTime+"-"+disType+"-2";
+                            var status = "2";
+                            $.ajax({
+                                url:'monitorAlarm.do?method=toDisasterWordR',
+                                type:'post',
+                                data:{
+                                    'time':disTime, 'part1':part1, 'satellite_img1':satellite_img1,"satellite_img2":satellite_img,
+                                    'part2':part2,'part3':part3,
+                                    'fileName':fileName,'fileVulgoName':fileVulgoName,
+                                    'status':status,"disasterType":'暴雨',"disTime":date,"mainId":mainId
+                                },
+                                dataType:"html",
+                                success:function (data) {
+                                    var iWidth =1200; //弹出窗口的宽度;
+                                    var iHeight= 700; //弹出窗口的高度;
+                                    var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                                    var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+                                    var obj = window.open("about:blank",'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                                    obj.document.write(data);
+                                }
+                            })
+                        }
+
+                    }else if(disType=="12"){
+                        if(dataBtnType=="preDis"){
+                            var fileVulgoName = "大风 "+date+"灾前报告";
+                            var fileName = disTime+"-"+disType+"-1";
+                            var status = "1";
+                            $.ajax({
+                                url:'evaluateReport.do?method=toDisasterWordW',
+                                type:'post',
+                                data:{
+                                    'time':disTime, 'part1':part1,'part2':part2, 'satellite_img':satellite_img,'part3':part3,'fileName':fileName,'fileVulgoName':fileVulgoName,
+                                    'status':status,"disasterType":'大风',"disTime":date,"mainId":mainId
+                                },
+                                dataType:"html",
+                                success:function (data) {
+                                    var iWidth =1200; //弹出窗口的宽度;
+                                    var iHeight= 700; //弹出窗口的高度;
+                                    var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                                    var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+
+                                    var obj = window.open("about:blank",'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                                    obj.document.write(data);
+                                }
+                            })
+                        }else if(dataBtnType=="inDis"){
+                            var fileVulgoName ="大风 "+date+"灾中报告";
+                            var fileName = disTime+"-"+disType+"-2";
+                            var status = "2";
+                            $.ajax({
+                                url:'monitorAlarm.do?method=toDisasterWordW',
+                                type:'post',
+                                data:{
+                                    'time':disTime, 'part1':part1, 'satellite_img1':satellite_img1,"satellite_img2":satellite_img,
+                                    'part2':part2,'part3':part3,
+                                    'fileName':fileName,'fileVulgoName':fileVulgoName,
+                                    'status':status,"disasterType":'大风',"disTime":date,"mainId":mainId
+                                },
+                                dataType:"html",
+                                success:function (data) {
+                                    var iWidth =1200; //弹出窗口的宽度;
+                                    var iHeight= 700; //弹出窗口的高度;
+                                    var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                                    var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+
+                                    var obj = window.open("about:blank",'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                                    obj.document.write(data);
+                                }
+                            })
+                        }
+                    }else if(disType=="33"){
+                    	var fileVulgoName = "";
+                    	var fileName = "";
+                        var status = "";
+                    	if(dataBtnType=="inDis") {
+                    		fileVulgoName ="内涝"+date+"灾中报告";
+                    		fileName = disTime+"-"+disType+"-2";
+                            status = "2";
+                    	}else{
+                    		console.log("内涝 part2{}"+part2);
+                    		fileVulgoName ="内涝"+date+"灾前报告";
+                    		fileName = disTime+"-"+disType+"-1";
+                            status = "1";
+                    	}
+                        $.ajax({
+                            url:'neilaoReport.do?method=toDisasterWord',
+                            type:'post',
+                            dataType:'html',
+                            async:false,
+                            data:{
+                                time:date,
+                                part1:part1,
+                                part1Pic:neilaoRadar,
+                                part2:part2,
+                                part2Pic:satellite_img,//灾害图
+                                part2Pic2:satellite_img1,//色斑图
+                                part3:part3,
+                                isShort:'1',
+                                fileName:fileName,
+                                fileVulgoName:fileVulgoName,
+                                status:status,
+                                disasterType:'内涝',
+                                disTime:date,
+                                mainId:mainId,
+                                jishuip:jishuip
+                            },
+                            success:function(data){
+                                var iWidth =1200; //弹出窗口的宽度;
+                                var iHeight= 700; //弹出窗口的高度;
+                                var iTop =  (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                                var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+
+                                var obj = window.open("about:blank",'',"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft);
+                                obj.document.write(data);
+                            }
+                        })
+                    }
+                })
+            }
+            function monitorUrlGroupListner() {
+                $(".monitorUrlGroup").on('click', function () {
+                    var url = $(this).data("url");
+                    //这里需要判断是否是当前日期
+                    popUpCten(null, url)
+                })
+            }
+
+            function distypeSelectListner() {
+                form.on('select(distypeSelectFilter)', function (data) {
+                    var disType = data.value;
+                    var date = $("#yearmonth").val();
+                    $("#nameIdsList").empty();
+                    getNameIdsByDisTypeAndYearMonth(disType, date);
+                });
+            }
+
+            function mainProcessBtnListner() {
+                $(".mainProcessBtnGroup").on('click', function () {
+                    var btn = $(this).attr("id");
+                    var disType = $("#distypeSelect").val();
+                    var date = $("#yearmonth").val();
+                    var mainId = $("#nameIdsList").val();
+                    if (btn == "publishWarning") {
+                        var url = '';
+                        if (disType == '33') {//内涝
+                            url = 'basicdis.do?method=Waterpointlogginginit';
+                        } else if (disType == '13' || disType == '14') {//温室,广告牌
+                            url = 'basicdis.do?method=WindWarndInfrastinit';
+                        }else if (disType == '12'||disType == '32' ) {//大风 暴雨
+                            url = 'basicdis.do?method=windOrRainDisInit';
+                        }  else {
+                            url = 'basicdis.do?method=init';
+                        }
+                        sessionStorage.setItem("disaster",disType);
+                        sessionStorage.setItem("publishPre_mainId",mainId);
+                        popUpCten(mainId, url);
+                    } else if (btn == "relieveDis") {
+                        //解除灾害
+                        layer.open({
+                            content: '确认解除预警吗?',
+                            yes: function (index, layero) {
+                                //do something
+                                var option = {
+                                    url: 'disasterProcess.do?method=updateProcess',
+                                    data: {mainId: mainId, statusType: 'relieveDis'}
+                                };
+                                updateMainProssStatus(mainId, option);
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            }
+                        });
+
+                    } else if (btn == "publishReport") {
+                        //发布灾害
+                        if(disType=="32"){
+                            var url = "page/disasterDecision/beforeDisasterRain.jsp";
+                        }else if(disType=="12"){
+                            var url = "page/disasterDecision/beforeDisasterWind.jsp";
+                        }else{
+                            var url = "page/disasterDecision/beforeDisaster.jsp";
+                        }
+                        var disName = $("#distypeSelect").find("option:selected").text();
+                        var disNameDate = $("#nameIdsList").find("option:selected").text();
+                        localStorage.setItem("befDisaster_disType", disType);
+                        localStorage.setItem("befDisaster_date", disNameDate);
+                        localStorage.setItem("befDisaster_disName", disName);
+                        localStorage.setItem("befDisaster_mainId", mainId);
+                        //localStorage.setItem("befDisaster_disNameDate",disNameDate);
+                        popUpCten(mainId, url);
+                    } else if(btn=="addRecordBtn"){
+                        var width = document.body.clientWidth;
+                        var height = document.body.clientHeight;
+                        localStorage.setItem("recordForm_mainId", mainId);
+                        layer.open({
+                            type: 2,
+                            title:'添加纪要',
+                            skin: 'layui-layer-rim', //加上边框
+                            area: [(width*0.6)+'px', (height*0.6)+'px'], //宽高
+                            content: 'disasterProcess.do?method=recordForm',
+                            cancel: function (index, layero) {
+                                //layer.close(index);
+                            }
+                        });
+
+                    }else if (btn == "inDisasterReportBtn") {
+                        //alert("生成灾中报告!")
+                        //点击生成需要更新主流程的灾中状态
+                        if(disType=="32"){
+                            var url = "page/disasterDecision/middleDisasterRain.jsp";
+                        }else if(disType=="12"){
+                            var url = "page/disasterDecision/middleDisasterWind.jsp";
+                        }else{
+                            var url = "page/disasterDecision/middleDisaster.jsp";
+                        }
+                        var disName = $("#distypeSelect").find("option:selected").text();
+                        var disNameDate = $("#nameIdsList").find("option:selected").text();
+                        localStorage.setItem("befDisaster_disType", disType);
+                        localStorage.setItem("befDisaster_date", disNameDate);
+                        localStorage.setItem("befDisaster_disName", disName);
+                        localStorage.setItem("befDisaster_mainId", mainId);
+                        console.log(disType+","+disNameDate+","+disName+","+mainId);
+                        popUpCten(mainId, url);
+                    } else if (btn == "uploadExcelBtn") {
+                        localStorage.setItem("importExlcel_MainId", mainId);
+                        localStorage.setItem("importExlcel_StatusType", "uploadExcel");
+                        var url = "disFileCatalog.do?method=excelRecordImport";
+                        popUpCten(mainId, url);
+                    } else if (btn == "afterReportBtn") {
+                        //alert("生成灾后报告!")
+                        if(disType=="32"){
+                            var url = "page/disasterDecision/afterDisasterRain.jsp";
+                        }else if(disType=="12"){
+                            var url = "page/disasterDecision/afterDisasterWind.jsp";
+                        }else{
+                            var url = "page/disasterDecision/afterDisaster.jsp";
+                        }
+                        var disName = $("#distypeSelect").find("option:selected").text();
+                        var disNameDate = $("#nameIdsList").find("option:selected").text();
+                        localStorage.setItem("befDisaster_disType", disType);
+                        localStorage.setItem("befDisaster_date", disNameDate);
+                        localStorage.setItem("befDisaster_disName", disName);
+                        localStorage.setItem("befDisaster_mainId", mainId);
+                        popUpCten(mainId, url);
+                    } else if (btn == "filedBtn") {
+                        //alert("归档!")
+                        layer.open({
+                            content: '确认归档吗?',
+                            yes: function (index, layero) {
+                                //do something
+                                var option = {
+                                    url: 'disasterProcess.do?method=updateProcess',
+                                    data: {mainId: mainId, statusType: 'filed'}
+                                };
+                                updateMainProssStatus(mainId, option);
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            }
+                        });
+
+                    } else {
+                        console.log("无此按钮");
+                        return;
+                    }
+                });
+            }
+
+            function subProcessBtnListner() {
+                $(".subProcessBtnGroup").on('click', function () {
+                    var btnName = $(this).find("span").eq(0).text();
+                    var disType = $("#distypeSelect").val();
+                    var date = $("#yearmonth").val();
+                    var mainId = $("#nameIdsList").val();
+                    // 灾中评估报告 灾后评估报告
+                    var option = null;
+                    if (btnName.indexOf('灾中评估报告')!=-1) {
+                        //灾中 subPdfUrl
+                        var url = $(this).attr("data-subPdfUrl");
+                        popUpCten(null, url);
+                    } else if (btnName.indexOf('灾后评估报告')!=-1) {
+                        var url = $(this).attr("data-subPdfUrl");
+                        popUpCten(null, url);
+                    } else {
+                        console.log("暂无此按钮!")
+                        return;
+                    }
+                })
+            }
+
+            function subAttachmentBtnListner() {
+                $(".subAttachmentBtnGroup").on("click",function () {
+                    //var btnName = $(this).find("span").eq(0).text();
+                    var subAttachmentUrl = $(this).attr("data-subAttachmentUrl");
+                    var subAttachmentType = $(this).attr("data-subAttachmentType");
+                    if(subAttachmentType==='doc'||subAttachmentType==='docx'){
+                        var url ="disasterProcess.do?method=openWordByUrl"+"&subAttachmentUrl="+subAttachmentUrl;
+                        popUpCten(null,url);
+                    }else if(subAttachmentType==='pdf'){
+                        popUpCten(null, subAttachmentUrl);
+                    }else{
+                        var imgs=[];
+                        imgs.push(subAttachmentUrl);
+                        showImgsFunc(imgs);
+                    }
+                })
+            }
+
+            function pdfBtnBtnListner() {
+                $(".pdfBtn").on('click', function () {
+                    var pdfUrl = $(this).attr("data-url");
+                    var width = document.body.clientWidth;
+                    var height = document.body.clientHeight;
+                    layer.open({
+                        type: 2,
+                        area: [width + 'px', height + 'px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: pdfUrl //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    });
+                })
+            }
+
+            function disImgBtnListner() {
+                $(".disImgBtn").on('click', function () {
+                    var dataSubTime =$(this).attr("data-subTime");
+                    var dataSubPreTime =$(this).attr("data-sub-preTime");
+                    var streets =$(this).attr("dataStr");
+                    localStorage.setItem("streets",streets);
+                    var disId =$(this).attr("data-disId");
+                    if(dataSubTime&&dataSubTime.length>0){
+                        //alert(dataStepFlow);
+                        var disType = $("#distypeSelect").val();
+                        console.log("zaizhong time="+dataSubTime);//2019-08-07 03
+                        dataSubTime = dataSubTime + ":00:00";
+                        console.log("zaizhong time11="+dataSubTime);
+                        //dataSubTime = timestampToTime(parseInt(dataSubTime));
+                        console.log("zaizhong time22="+dataSubTime);
+                       if(disType == "32"){
+                    	   urltype='meteDisasterFore.do?method=getMiddleRainForecastInfo';
+                       }else if(disType == "12"){
+                    	   urltype='meteDisasterFore.do?method=getWindIndisForecastInfo';
+                       }else{
+                    	   urltype='meteDisasterFore.do?method=getMDisasterForecastInfo';
+                       }
+                        var date = $("#yearmonth").val();
+                        var disDate= $("#nameIdsList").find("option:selected").text()
+                        $.when(
+                            $.ajax({
+                                url:urltype,
+                                type:'POST',
+                                data:{disId:disType,disDate:dataSubTime,isShort:'1'}}
+                            )
+                        ).done(function (data2) {
+                            console.log(data2);
+                            if(data2.success&&data2.imgUrlList.length>0){
+                                var imgUrl = data2.imgUrlList[0]||'';
+                                var spotPic=data2.spotMapUrl[0] == undefined ? '' : data2.spotMapUrl[0].imageUrl;
+                                var imgUrls=[imgUrl,spotPic];
+                                showImgsFunc(imgUrls,"inDis",disType);//传入disType，如果是内涝，不显示应对措施内容，大风和暴雨要显示
+                                //插入内容
+                                var result2 = data2||{};
+                                var liveSummaryContent = result2.liveSummaryContent||'';
+                                var liveSummaryForEffect = result2.liveSummaryForEffect||'';
+                                var jishuiList = result2.jishuipoint||{};
+                                var defense =result2.defense;
+                                //var earlyWarningSignals = result2.earlyWarningSignals[0]||{};
+                                var defenseHead = result2.defenseHead?result2.defenseHead+"\n":"";
+                                var defenceContent ='';
+                                for (var d in defense){
+                                    defenceContent+= defense[d].INDUSTRY+' : '+defense[d].DEFENSECONTENT+'\n';
+                                }
+                                //var infoContent =earlyWarningSignals.infoContent?earlyWarningSignals.infoContent:'';
+                                $(".main").append("<textarea id='mainArea' style='width:100%;height:280px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                $(".main>textarea").val(liveSummaryContent);
+                                if(disType != "33"){
+                                	console.log("大风的defense{}");
+                                	console.log(defenseHead+ ",,"+defenceContent);
+                                	$(".defense").append("<textarea id='defenseArea' style='width:100%;height:180px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                    $(".defense>textarea").val(defenseHead+defenceContent);
+                                }else{
+                                	$(".defense").append("<textarea id='defenseArea' style='width:100%;height:180px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                    $(".defense>textarea").val("");
+                                }
+                                $(".area").append("<textarea id='infoArea' style='width:100%;height:280px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                $(".area>textarea").val(liveSummaryForEffect.replace("null",result2.streets));
+                                $("#jishui").val(JSON.stringify(jishuiList));
+                                console.log(jishuiList);
+                                console.log($("#jishui").val());
+                                $("#jumpToDoc").attr("data-btnType","inDis");
+                                $("#jumpToDoc").attr("disType",disTypeArray[0]);
+                            }
+                        })
+                    }else if(dataSubPreTime&&dataSubPreTime.length>0){
+                        var imgUrl = $(this).attr("data-imgUrl");
+                        if (!imgUrl) return;
+                        var imgUrls = imgUrl.split(",");
+                        var disType = $("#distypeSelect").val();
+                        var streets =$(this).attr("dataStr");
+                        localStorage.setItem("streets",streets);
+                        console.log("dataSubPreTime="+dataSubPreTime);
+                        dataSubPreTime = timestampToTime(parseInt(dataSubPreTime));
+                        //dataSubPreTime =$("#nameIdsList").find("option:selected").text();
+                        if(disType == "33"){//城市内涝
+                        	urltype2='meteDisasterFore.do?method=getWaterloggingForecastContent';
+                        }else if(disType == "12"){
+                        	urltype2='meteDisasterFore.do?method=getBDisasterForecastInfo';
+                        }else{
+                        	urltype2='meteDisasterFore.do?method=getRainForecastInfo';
+                        }
+                        $.ajax({
+                            url:urltype2,
+                            type:'POST',
+                            data:{disId:disType,disDate:dataSubPreTime},
+                            success:function (data) {
+                                console.log(data.liveSummaryForEffect);
+                                neilaoRadar=data.radarPic;
+                                showImgsFunc(imgUrls,"preDis",null)
+
+                                var liveSummaryContent = data.liveSummaryContent||'';
+                                var liveSummaryForEffect = data.liveSummaryForEffect||'';
+
+                                var defense =data.defense;
+                                var defenceContent ='';
+                                for (var d in defense){
+                                	if(disType == "33"){
+                                		defenceContent+= defense[d].DEFENSECONTENT+'\n';
+                                	}else{
+                                		defenceContent+= defense[d].INDUSTRY+' : '+defense[d].DEFENSECONTENT+'\n';
+                                	}
+
+                                }
+                                //var earlyWarningSignals = data.earlyWarningSignals[0]||{};
+                                // var infoContent =earlyWarningSignals.infoContent?earlyWarningSignals.infoContent:''
+								$(".main").append("<textarea id='mainArea' style='width:100%;height:230px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                //16号没数据，先写死
+								if(!liveSummaryContent&&dataSubPreTime=='2019-4-16'){
+									$(".main>textarea").val("预计2019年4月16日夜间，我区将有西南风4-5级，阵风6级，影响区域为武清全区，大风气象灾害影响等级为Ⅱ级以上，影响较重的区域为河西务、下伍旗、大良等北部镇，影响等级为III级。");
+								}else{
+									$(".main>textarea").val(liveSummaryContent);
+								}
+
+								$(".area").append("<textarea id='infoArea' style='width:100%;height:180px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                $(".area>textarea").val(data.meteDisasterWarn);
+                                //$(".main").hide();
+                                $(".defense").append("<textarea id='defenseArea' style='width:100%;height:180px;resize: none;border: 0;text-indent:2rem;line-height: 1.5rem;'></textarea>");
+                                $(".defense>textarea").val(defenceContent);
+                                //$(".area").hide();
+                                $("#jumpToDoc").attr("data-btnType","preDis");
+                                $("#jumpToDoc").attr("disType",disTypeArray[0]);
+                            }
+                        })
+                    }else{
+                        var disType = $("#distypeSelect").val();
+                        var date = $("#yearmonth").val();
+                        var mainId = $("#nameIdsList").val();
+                        $.ajax({
+                            url:'meteDisasterFore.do?method=getADisasterForecastInfo',//反查图片
+                            type:'POST',
+                            data:{disId:disType,disDate:dataSubTime}}
+                        )
+                    }
+                })
+            }
+
+            function showImgsFunc(imgs,type,typeId) {
+                $("#imgContainer").empty();
+                var disType = $("#distypeSelect").val();
+                console.log(disType);
+                if (imgs.length > 0) {
+                    var outContainer = document.createElement('div');
+                    $(outContainer).addClass("col-md-6");
+                    for (var i = 0; i < imgs.length; i++) {
+                    	if(imgs[i]!=null&&imgs[i]!=''){
+                    		 var img = document.createElement('img');
+                             $(img).addClass("light-zoom"+i)
+                             img.src = imgs[i];
+                             var div = document.createElement('div');
+                             $(div).css({
+//                                 width: "1200px",
+//                                 height: "800px",
+                                 width:"100%",
+                                 margin: "0 auto"
+                             });
+                             $(img).css({
+                                 width:"100%",
+                                 height:"800px",
+                             })
+                             $(div).append(img);
+                             $(outContainer).append(div);
+                             if(disType=="33"){
+                                 var cover=document.createElement('div');
+                                 $(cover).css({
+                                     width:"100%",
+                                     height:"40px",
+                                     top:'0',
+                                     left:'0',
+                                     'background-color':'white',
+                                     position:'absolute'
+                                 })
+                                 $(outContainer).append(cover);
+                             }
+                    	}
+                    }
+                    $("#imgContainer").append(outContainer);
+                    var textContentForDis =createDisDescContainer(type,typeId);
+                    $("#imgContainer").append(textContentForDis);
+                }
+
+                var width = document.body.clientWidth;
+                var height = document.body.clientHeight;
+                layer.open({
+                    type: 1,
+                    area: [width + 'px', height + 'px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: $("#imgContainer"), //这里content是一个普通的String
+                    cancel: function (index, layero) {
+                        $("#imgContainer").empty();
+                        $("#imgContainer").hide();
+                        layer.close(index);
+                        return false;
+                    }
+                });
+            }
+
+            function createDisDescContainer(type,typeId) {
+                var disDesContainer = $("<div id='textContentForDis'>");
+                disDesContainer.css({
+                    border:'solid 1px #ffffff'
+                })
+                disDesContainer.addClass("offset-md&#45;&#45;1 col-md-5")
+                //分成4部分
+//                var $explain = $("<div class='explain'>").css({height: '200px',paddingLeft:'10px'})
+//                $explain.append("<p>天气实况</p>")
+                if(type=="inDis"){
+                    var $main = $("<div class='main'>").css({height: '250px',paddingLeft:'10px'})
+                    $main.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>灾害性天气过程实况</p>")
+
+                    var $area = $("<div class='area'>").css({height: '300px',paddingLeft:'10px'})
+                    $area.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>未来天气预报与气象灾害风险预报</p>")
+					var $jishui =  $("<div class='jishui'>")
+                    $jishui.append("<input type='hidden' id='jishui'/>");
+                    if(typeId != "33"){
+                    	 var $defense = $("<div class='defense'>").css({height: '200px',paddingLeft:'10px'})
+                         $defense.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>应对措施建议</p>")
+                    }
+                    //disDesContainer.append($explain).append($main).append($area).append($defense);
+                    disDesContainer.append($main,$area,$defense,$jishui);
+                }else if(type=="preDis"){
+                    var $main = $("<div class='main'>").css({height: '250px',paddingLeft:'10px'})
+                    $main.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>灾害性天气预报</p>")
+
+					var $area = $("<div class='area'>").css({height: '250px',paddingLeft:'10px'})
+                    $area.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>气象灾害风险预警</p>")
+
+                    var $defense = $("<div class='defense'>").css({height: '200px',paddingLeft:'10px'})
+                    $defense.append("<p style='font-weight: bold;color:#dd2222;font-size: 1.25rem;'>应对措施建议</p>")
+                    //disDesContainer.append($explain).append($main).append($area).append($defense);
+                    disDesContainer.append($main,$area,$defense);
+                }
+
+                //var save=document.createElement("<div id='jumpToDoc'>");
+                var $save = $("<div id='jumpToDoc' data-btnType=''>");
+                var $sms = $("<div id='sendSMS' data-btnType=''>");
+                disDesContainer.append($save);
+                disDesContainer.append($sms);
+                $save.addClass("btn");
+                $save.addClass("btn-info");
+                $save.text("生成报告");
+                $save.css({
+                    float:'right'
+                })
+                $sms.addClass("btn");
+                $sms.addClass("btn-info");
+                $sms.text("发送短信");
+                $sms.css({
+                    float:'right',
+                    'margin-right':'10px'
+                })
+                return disDesContainer;
+            }
+
+
+
+
+            function popUpCten(mainId, contentUrl) {
+                var width = document.body.clientWidth;
+                var height = document.body.clientHeight;
+                layer.open({
+                    type: 2,
+                    area: [width + 'px', height + 'px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: contentUrl,
+                    cancel: function (index, layero) {
+                        var outIndex = index;
+//                        layer.confirm('确定要关闭么?', function(index){
+//                            layer.close(index)
+//                        });
+                        if (mainId) {
+                            getDisProssFlowByMainId(mainId);
+                        }
+                        layer.close(outIndex);
+                        return false;
+                    }
+                });
+            }
+
+
+            function updateMainProssStatus(mainId, option) {
+                $.ajax({
+                    url: option.url,
+                    type: 'post',
+                    data: option.data
+                }).done(function (data) {
+                    if (data.success) {
+                        if (mainId) {
+                            getDisProssFlowByMainId(mainId);
+                        }
+                    } else {
+                        swal("提醒", data.msg || "", 'error');
+                    }
+                })
+
+            }
+
+            //##################################
+
+            //查询按钮
+            function queryDisProssFlow() {
+                $("#queryBtn").on("click", function () {
+                    var id = $("#nameIdsList").val();
+                    if (!id) {
+                        swal("提示", "请选择指定记录", "error");
+                        return;
+                    }
+                    getDisProssFlowByMainId(id);
+
+                })
+            }
+
+
+            function eventListners() {
+                mainStepBtnsListner();
+                subStepBtnsListner();
+            }
+
+            function dateInit() {
+                laydate.render({
+                    elem: '#yearmonth', //指定元素
+                    type: 'month',
+                    format: 'yyyy-M',
+                    value: new Date(),
+                    done: function (value, date, endDate) {
+                        var disType = $("#distypeSelect").val();
+                        var date = value;
+                        getNameIdsByDisTypeAndYearMonth(disType, date);
+                    }
+                });
+            }
+
+            function linkFromdifPage() {
+                var page = localStorage.getItem("page");
+                localStorage.setItem("page", null);
+                if (page == "init") {//从首页过来
+                    var disTypeId = localStorage.getItem("disTypeId");
+                    var disDate = localStorage.getItem("disDate");
+                    $("#distypeSelect").val(disTypeId);
+                    getNameIdsByDisTypeAndYearMonth(disTypeId, disDate);
+                } else {
+                    nullTemplateInit();//自身页面
+                }
+            }
+
+            //空参数页面
+            function nullTemplateInit() {
+                var html = template("disProssFlowInfoNullTemplate", {data: null});
+                $("#disProssFlowInfo").empty().html(html);
+            }
+
+
+            //获取灾害类型
+            function getDisTypeList() {
+                $.ajax({
+                    url: 'disasterProcess.do?method=getDisTypeList',
+                    type: 'get'
+                }).done(function (data) {
+                    //使用模板
+                    if (data.success) {
+                        //使用 data.dpmList
+                        var arr = data.list;
+                        arr.reverse();
+//                        var temp = arr[2];
+//                        arr[2]=arr[5];
+//                        arr[5]=temp;
+                        var html = template("distypeSelectTemplate", {list: arr});
+                        $("#distypeSelect").html(html);
+                        form.render();
+                        linkFromdifPage();
+                    }
+                })
+            }
+
+            //获取温馨提示
+            function warnTips() {
+//                $(".content-f .text-info").hide();
+                $.ajax({
+                    url: 'disasterProcess.do?method=getWarnTips',
+                    type: 'get'
+                }).done(function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var li = document.createElement("li");
+                            li.innerHTML = data[i].CONTENT;
+                            loopul.append(li);
+                        }
+                        positionli();
+                        loopAction();
+                    }
+                })
+            }
+
+            //给li定位 起始位置
+            function positionli() {
+                loopul.find("li").each(function () {
+                    var index = $(this).index();
+                    var left = index * ulwidth + ulwidth;
+                    $(this).css({left: left});
+                });
+            }
+            //轮播
+            function loopAction() {
+                loopul.find("li").each(function () {
+                    var liindex = $(this).index();
+                    var lastleft = -(loopul.find("li").length - liindex) * ulwidth
+                    $(this).animate({left: lastleft}, 20000, 'linear', function () {
+                        positionli();
+                        loopAction();
+                    });
+
+                });
+            }
+
+            function getNameIdsByDisTypeAndYearMonth(disType, date) {
+                //alert(disType+"-"+date);
+                //$("#nameIdsList").empty();
+                // form.render('select','nameIdsListFilter');
+                form.render();
+                $.ajax({
+                    url: 'disasterProcess.do?method=getNameIdsByDisTypeAndYearMonth',
+                    type: 'post',
+                    data: {disTypeId: disType, disTime: date},
+                }).done(function (data) {
+                    if (data.success) {
+                        //console.log(data.dpmList);
+                        var html = template("nameIdsListTemplate", {list: data.dpmList});
+                        $("#nameIdsList").html(html);
+                        form.render();
+                        localStorage.setItem("disTypeId", null);
+                        localStorage.setItem("disDate", null);
+                    } else {
+                        console.log(data.msg);
+                    }
+                }).done(function (data) {
+                    var mainProssId = localStorage.getItem("mainProssId");
+                    if (mainProssId != null && mainProssId != 'null') {
+                        //从其他页面跳转过来
+                        //alert(mainProssId);
+                        localStorage.setItem("mainProssId", null);
+                        $("#nameIdsList").val(mainProssId);
+                        form.render();
+                        $("#queryBtn").trigger('click');
+                    }
+
+                })
+            }
+
+            function selectDisType() {
+                var disType = $("#distypeSelect").val();
+                var date = $("#yearmonth").val();
+                getNameIdsByDisTypeAndYearMonth(disType, date);
+            }
+
+            function getDisProssFlowByMainId(id) {
+                $.ajax({
+                    url: 'disasterProcess.do?method=getDisProssFlowByMainId',
+                    type: 'post',
+                    data: {id: id},
+                }).done(function (data) {
+                    if (data.success) {
+
+                        console.log(data.disProssFlow);
+                        var html = template("disProssFlowInfoTemplate", {data: data.disProssFlow});
+                        var disTypeId = data.disProssFlow.disTypeId;
+                        disTypeArray[0]=disTypeId;
+                        var disTime = data.disProssFlow.disTime ? new Date(data.disProssFlow.disTime).pattern("yyyy-MM-dd") : null;
+                        //console.log(html);
+                        $("#disProssFlowInfo").empty().html(html);
+                        $("#queryDataInfos").attr("data-disTypeId", disTypeId).attr("data-disTime", disTime);
+                        eventListners();
+                    } else {
+                        console.log(data.msg);
+                    }
+
+                }).done(function (data) {
+                    //console.log(data);
+                    var disTime = data.disProssFlow.disTime ? new Date(data.disProssFlow.disTime).pattern("yyyy-MM-dd") : null;
+                    getHistoryDateFunc(disTime);
+                })
+            }
+            function getHistoryDateFunc(disTime) {
+                var start=disTime+" 00:00:00";
+                var end=disTime+" 23:59:59";
+                var maxrA=new Array();
+                var maxtA=new Array();
+                var maxwA=new Array();
+                $.ajax({
+                    type:'post',
+                    url:'meteorological.do?method=getHistoryDate',
+                    data:{'start':start,'end':end},
+                    dataType:'json',
+                    async:false,
+                    success:function(data){
+                        //console.log(data);
+                        $.each(data,function(index,value){
+                            if(index==0){
+                                maxrA[0]=value['STATION_NAME'];
+                                maxrA[1]=parseFloat(value['maxr']);
+                                maxwA[0]=value['STATION_NAME'];
+                                maxwA[1]=parseFloat(value['maxw']);
+                                maxtA[0]=value['STATION_NAME'];
+                                maxtA[1]=parseFloat(value['maxt']);
+                            }else{
+                                if(parseFloat(value['maxr'])>maxrA[1]){
+                                    maxrA[0]=value['STATION_NAME'];
+                                    maxrA[1]=parseFloat(value['maxr']);
+                                }
+                                if(parseFloat(value['maxw'])>maxwA[1]){
+                                    maxwA[0]=value['STATION_NAME'];
+                                    maxwA[1]=parseFloat(value['maxw']);
+                                }
+                                if(parseFloat(value['maxt'])>maxtA[1]){
+                                    maxtA[0]=value['STATION_NAME'];
+                                    maxtA[1]=parseFloat(value['maxt']);
+                                }
+                            }
+                        })
+                        $(".monitorUrlGroup").eq(0).append("<div style='display: inline-block;font-size: 10px; margin:5px 0 0 1px;'>max："+(maxtA[0]?maxtA[0]:"&#45;&#45;")+":"+(maxtA[1]?maxtA[1]:"&#45;&#45;")+"℃</div>");
+                        $(".monitorUrlGroup").eq(1).append("<div style='display: inline-block;font-size: 10px;margin:5px 0 0 1px;'>max："+(maxwA[0]?maxwA[0]:"&#45;&#45;")+":"+(maxwA[1]?maxwA[1]:"&#45;&#45;")+"m/s</div>");
+                        $(".monitorUrlGroup").eq(2).append("<div style='display: inline-block;font-size: 10px;margin:5px 0 0 1px;'>max："+(maxrA[0]?maxrA[0]:"&#45;&#45;")+":"+(maxrA[1]?maxrA[1]:"&#45;&#45;")+"mm</div>");
+                    },
+                    error:function(){
+                    }
+                })
+            }
+            window.getDisProssFlowByMainId=getDisProssFlowByMainId;
+        });
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+            var h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+            var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+            var s = date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds();
+            return Y+M+D+h+m+s;
+        }
+    </script>
+
+    </body>
+    <div id="imgContainer" style="display: none"></div>
+    <script>
+        function zoom(){
+            for(var i=0;i<$("img").length;i++){
+                $('img.light-zoom'+i).lightzoom({
+                    zoomPower   : 3,    //Default
+                    glassSize   : 180,  //Default
+                });
+            }
+
+        }
+    </script>-->
+</html>

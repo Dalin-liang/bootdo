@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+			<form class="layui-form" lay-filter="goodsInfoForm" action="">
+				<input type="hidden" name="id" id="id">
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">物资名称：</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="goodsname" id="goodsname" lay-verify="required" lay-reqtext="物资名称是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">单位：</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="unit" id="unit" lay-verify="required" lay-reqtext="单位是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">一级分类：</label>
+				    <div class="layui-input-block">
+						<select name="oneleveltype_id" id="oneleveltype_id" lay-filter="oneleveltype_id" lay-verify="required" lay-reqtext="一级分类是必填项，岂能为空？">
+						</select>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">二级分类：</label>
+				    <div class="layui-input-block">
+						<select name="twoleveltype_id" id="twoleveltype_id" lay-filter="twoleveltype_id" lay-verify="required" lay-reqtext="二级分类是必填项，岂能为空？">
+						</select>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">规格：</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="specifications" id="specifications"  lay-verify="required" lay-reqtext="规格是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" id="remarks"  class="layui-textarea"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">是否启用：</label>
+					<div class="layui-input-block">
+						<input type="checkbox" id="enabled"  name="enabled" checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+					</div>
+				</div>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<!--<button type="button" class="layui-btn layui-btn-radius">暂 存</button>-->
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<!--<button type="button" class="layui-btn layui-btn-primary layui-btn-radius">关 闭</button>-->
+			 	</div>
+			</form>
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				var oneleveltypeList;
+				var twoleveltypeList;
+				var form;
+			  layui.use(['form', 'layer','element'], function(){
+				  form = layui.form;
+				  var layer = layui.layer
+					  ,element=layui.element
+				  
+				  
+				  $.ajax({
+	                    url:'/goodsInfo/getSelectData',
+	                    type:'post',
+	                    dataType:'json',
+	                    async: false,   
+	                    data:{},
+	                    success:function(data){
+	                        if(data.msg=="true"){
+								if(data.oneleveltypeList !=null && data.oneleveltypeList !=""){
+									oneleveltypeList = data.oneleveltypeList;
+				  					var html = '<option value=""></option>';
+				  					for(var i=0;i<oneleveltypeList.length;i++){
+				  						html += '<option value="'+oneleveltypeList[i].id+'">'+oneleveltypeList[i].name+'</option>';
+				  					}
+			  						$("#oneleveltype_id").html(html);
+			  					}
+								if(data.twoleveltypeList !=null && data.twoleveltypeList !=""){
+									twoleveltypeList = data.twoleveltypeList;
+				  					var html = '<option value=""></option>';
+				  					for(var i=0;i<twoleveltypeList.length;i++){
+				  						html += '<option value="'+twoleveltypeList[i].id+'">'+twoleveltypeList[i].name+'</option>';
+				  					}
+			  						$("#twoleveltype_id").html(html);
+			  					}
+								$("#twoleveltype_id").attr('disabled', 'disabled');
+								form.render('select', 'goodsInfoForm');
+	                        }
+	                    }
+	                })
+					if(sessionStorage.getItem("edit")=="true"){
+					    var temp=sessionStorage.getItem("row");
+					    var edit=sessionStorage.getItem("edit");
+					    sessionStorage.removeItem("edit");
+					    sessionStorage.removeItem("row");
+					    rowData=$.parseJSON(temp);
+					    oneleveltypeChange(rowData.oneleveltype_id);
+					    /* for(var key in rowData){
+						    $("*[name="+key+"]").val(rowData[key]);
+						}  */
+					    form.val('goodsInfoForm', {
+		            	    "id": rowData.id 
+		            	    ,"goodsname": rowData.goodsname
+		            	    ,"unit": rowData.unit
+		            	    ,"oneleveltype_id": rowData.oneleveltype_id 
+		            	    ,"twoleveltype_id": rowData.twoleveltype_id
+		            	    ,"specifications": rowData.specifications
+		            	    ,"remarks": rowData.remarks
+		            	    ,"enabled": rowData.enabled
+		                });
+					}
+				  
+				  form.on('select(oneleveltype_id)', function(data){   
+					  oneleveltypeChange(data.value);	
+					  
+				  });  
+				  
+				  form.on('submit(submit)',function(data){
+				      if(edit=="true"){
+                          console.log(111);
+						  var o = $(".layui-form-switch");
+						  if (o.find("em").text() == "OFF") {
+							  data.field.enabled = "0";
+						  } else {
+							  data.field.enabled = "1";
+						  }
+                          $.ajax({
+                              url:'/goodsInfo/update',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame()
+                    				parent.t.Init("/goodsInfo/query");
+								 }
+                              }
+                          })
+					  }else{
+						  if (data.field.enabled == "on") {
+							  data.field.enabled = "1";
+						  } else {
+							  data.field.enabled = "0";
+						  }
+                          $.ajax({
+                              url:'/goodsInfo/insert',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/goodsInfo/query");
+								 }
+                              }
+                          })
+					  }
+				  })
+			  })
+			  
+			  function oneleveltypeChange(id){
+				  $("#twoleveltype_id").empty();
+				  	$("#twoleveltype_id").attr('disabled','disabled');	
+				  	var html = '<option value=""></option>';	
+				  	var change = false;	
+				  	for(var i=0;i<twoleveltypeList.length;i++){
+						if(id == twoleveltypeList[i].oneleveltypeId){
+							html += '<option value="'+twoleveltypeList[i].id+'">'+twoleveltypeList[i].name+'</option>';
+							change = true;	
+						}
+	 				}
+				 	if(change){
+					  $("#twoleveltype_id").removeAttr('disabled');
+					  $("#twoleveltype_id").html(html); 
+				 	}else if(id !=null && id !=""){
+				 		layer.alert("该一级物资下，还没有配置二级物资");
+				 	}
+				 	form.render('select', 'goodsInfoForm');
+			  }
+		</script>
+	</body>
+</html>

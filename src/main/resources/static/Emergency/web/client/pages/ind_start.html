@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="../../backend/js/common.js"></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<br /><br />
+				<div class="pad10 ind_cont clearfix srcollcom" style="height: 510px;">
+					<div class="col-xs-12">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								方案 :
+							</div>
+							<div class="col-xs-10 pad0">								
+								<p class="form-control" id="plan_name"></p>
+							</div>
+						</div>						
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								响应部门 :
+							</div>
+							<div class="col-xs-10 pad0">
+								<div class="form-control" style="height: auto;">
+									<table class="table table-auto table-bordered text-center" style="margin-bottom: 0;">
+										<thead>
+											<tr>
+												<td style="width: 50px;">序号</td>
+												<td>部门名称</td>
+												<td>响应工作内容</td>
+												<td>负责人</td>
+											</tr>
+										</thead>
+										<tbody id="part_cont">
+											<tr><td colspan="4">暂无</td></tr>
+										</tbody>				    		
+							    	</table>
+								</div>
+								
+							</div>
+						</div>						
+					</div>
+					<div class="col-xs-12 mt10">
+						<div class="clearfix">
+							<div class="col-xs-2 pad5 text-right">
+								响应任务 :
+							</div>
+							<div class="col-xs-10 pad0">	
+								<div class="form-control" style="height: auto;">
+									<table class="table table-auto table-bordered text-center" style="margin-bottom: 0;">
+										<thead>
+											<tr>
+												<td style="width: 50px;">序号</td>
+												<td>任务内容</td>
+												<td>任务内容</td>
+												<td>负责对象</td>
+											</tr>
+										</thead>
+										<tbody id="task_cont">
+											<tr><td colspan="4">暂无</td></tr>
+										</tbody>				    		
+							    	</table>
+								</div>
+							</div>
+						</div>						
+					</div>
+					<div class="clearfix"></div>
+					
+				</div>
+				<div class="text-center pad20 clearfix">
+					<button class="btn btn-info" id="submit">启动</button>
+				</div>
+				<div style="width: 100%;height: 100%;position: absolute;top:0;left: 0;background-color: rgb(13,71,127);display: none;" id="loading">
+					<i class="fa fa-spin fa-spinner fa-5x" style="left:calc(50% - 35px);top:calc(50% - 35px);position: relative;"></i>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/layer_v3.1.1/layer.js" ></script>
+		<script>
+			var planId=parent.planId;
+			function gettask(){
+				$.ajax({
+					url:'/planManage/planMain/getPlanDetails',
+					dataType:'json',
+					type:'post',
+					data:{
+						"id":planId
+					},
+					success:function(result){
+						console.log(result)
+						$("#part_cont").empty()
+						$("#task_cont").empty()
+						$("#plan_name").text(result.planMain.name==null?"":result.planMain.name)
+//						
+						if(result.respDept.length>0){
+							$.each(result.respDept,function(index,val){
+								$("#part_cont").append("<tr><td>"+(index+1)+"</td><td>"+val.deptName+"</td><td>"+val.content+"</td><td>"+val.liabilityMan+"</td></tr>")							
+							})
+						}else{
+							$("#part_cont").append("<tr><td colspan='4'>暂无</td></tr>")
+						}
+						if(result.task.length>0){
+							$.each(result.task,function(index,val){
+								$("#task_cont").append("<tr><td>"+(index+1)+"</td><td>"+val.name+"</td><td>"+val.content+"</td><td>"+val.liabilityMan+"</td></tr>")
+							})
+						}else{							
+							$("#task_cont").append("<tr><td colspan='4'>暂无</td></tr>")
+						}
+					}
+				})
+			}
+			gettask();
+
+			$("#submit").on("click",function(){
+			    $("#submit").attr("disabled","disabled");
+			    $("#loading").show();
+				$.ajax({
+					url:'/dispatch/center/startAction',
+					dataType:'json',
+					type:'post',
+					data:{
+						"eventId":parent.eventId,
+						"planId":planId
+					},
+					success:function(result){
+						if(result.msg!="操作成功"){
+							parent.layer.msg('操作失败！');
+							parent.layer.close(parent.layerstart);
+							return
+						}else{
+							parent.$("#start_btn").html('<button class="btn btn-info sclose">结案</button>');
+							parent.layer.msg('预案已启动！');
+							parent.layer.close(parent.layerstart);
+						}
+					},
+					complete:function(){
+					    $("#loading").hide();
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

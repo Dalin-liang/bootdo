@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="../../css/bootstrap.css" />
+    <link rel="stylesheet" href="../../bootstrap-table/bootstrap-table.css" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="../../js/popper.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    <div class="layui-pad10">
+        <div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+            <form class="layui-form"  lay-filter="searchForm" action="">
+				<div class="layui-form-item">
+					<div class="layui-inline" style="margin-right: 0px;">
+					  <label class="layui-form-label" >接报途径：</label>
+					  <div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="source_type"  name="source_type">
+							</select>
+					  </div>					
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+					  	<label class="layui-form-label">上报人：</label>
+					  	<div class="layui-input-inline" style="margin-right: 0px;">
+							<input type="text" id="repname" name="repname" autocomplete="off" placeholder="请输入上报人" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+					  <label class="layui-form-label">事件地址：</label>
+					  <div class="layui-input-inline" style="margin-right: 0px;">
+						<input type="text" id="eventaddr" name="eventaddr" autocomplete="off" placeholder="请输入事件地址" class="layui-input">
+					  </div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+					  <label class="layui-form-label">上报审批状态：</label>
+					  <div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="examine_type"  name="examine_type">
+								<option value=""></option>
+								<option value="1">上报审批中</option>
+								<option value="5">推送</option>
+								<option value="10">终结</option>
+							</select>
+					  </div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+					  <label class="layui-form-label">事件类别：</label>
+					  <div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="accident_type_id"  name="accident_type_id">
+							</select>
+					  </div>
+					</div>
+					<div class="layui-inline" style="margin-right: 0px;">
+					  <label class="layui-form-label">预警类型：</label>
+					  <div class="layui-input-inline" style="margin-right: 0px;">
+							<select id="earlywarn_id"  name="earlywarn_id">
+							</select>
+					  </div>
+					</div>
+					<button type="button" class="layui-btn" style="margin-left: 20px;" id="search">查 询</button>
+				</div>
+				</form>
+		</div>
+        <div class="layui-mt10">
+            <table id="ArbetTable"></table>
+        </div>
+
+
+    </div>
+
+</body>
+<script>
+    var Table=function(){
+        var oTable=new Object();
+        oTable.Init=function(url){
+            $("#ArbetTable").bootstrapTable("destroy");
+            $("#ArbetTable").bootstrapTable({
+                url:url,
+                method:'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc",
+                queryParams:oTable.queryParams,
+                sidePagination: "server",
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 25, 50, 100],
+                smartDisplay: false,
+                clickToSelect: true,
+                uniqueId: "id",
+                columns:[
+                	{
+                        field:'id',
+                        title:'编号',
+                        align:'center'
+                    },{
+                        field:'source_name',
+                        title:'接报途径',
+                        align:'center'
+                    },{
+                        field:'repname',
+                        title:'上报人',
+                        align:'center'
+                    },{
+                        field:'repphone',
+                        title:'联系电话',
+                        align:'center'
+                    },{
+                        field:'eventdesc',
+                        title:'事件描述',
+                        align:'center'
+                    },{
+                        field:'eventaddr',
+                        title:'事件地址',
+                        align:'center'
+                    },{
+                        field:'accident_name',
+                        title:'事件类别',
+                        align:'center'
+                    },
+                    {
+                        field:'warntype',
+                        title:'预警类型',
+                        align:'center'
+                    },
+                    {
+                        field:'warnlevel',
+                        title:'预警级别',
+                        align:'center'
+                    },{
+                        field:'examine_type',
+                        title:'上报审批状态',
+                        align:'center',
+                        formatter:function(value){
+                            switch(parseInt(value)){//上报审批状态：上报审批中1、推送(同意)5、终结(不同意)10
+                                case 1:
+                                    return "上报审批中";
+                                    break;
+                                case 5:
+                                    return "推送";
+                                    break;
+                                case 10:
+                                    return "终结";
+                                    break;
+                            }
+                        }
+                    }
+                ],
+                rowStyle:function(row,index){
+                    var classesArr = ['success', 'info'];
+                    var strclass = "";
+                    if (index % 2 === 0) {//偶数行
+                        strclass = classesArr[0];
+                    } else {//奇数行
+                        strclass = classesArr[1];
+                    }
+                    return { classes: strclass };
+                }
+            })
+        }
+
+        oTable.queryParams=function(params){
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: this.pageSize,   //页面大小
+                pageNumber:this.pageNumber, //页码
+                source_type: $("#source_type").val(),
+                repname: $("#repname").val(),
+                eventaddr: $("#eventaddr").val(),
+                examine_type: $("#examine_type").val(),
+                accident_type_id: $("#accident_type_id").val(),
+                earlywarn_id: $("#earlywarn_id").val(),
+                eventlevel: $("#eventlevel").val()
+            };
+            return temp;
+        };
+
+        return oTable;
+    };
+
+
+    var t=new Table();
+    t.Init("/receiveInfo/query");
+    layui.use(['layer', 'form'], function(){
+	   	var layer = layui.layer
+	   	,form = layui.form;
+	   	
+	   	$.ajax({
+            url:'/receiveInfo/getSource',
+            type:'post',
+            dataType:'json',
+            async:true,
+            success:function (rs) {
+                $("#source_type").empty();
+                if(rs.length>0){
+                	$("#source_type").append('<option value=""></option>');
+                    for(var i in rs){
+                        $("#source_type").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                    }
+                }
+                form.render('select', 'searchForm');
+            }
+        })
+        $.ajax({
+            url:'/planManage/planMain/getSelectData',
+            type:'post',
+            dataType:'json',
+            async:true,
+            success:function (data) {
+            	if(data.msg =='true'){       
+	  				if(data.accidentTypeList !=null && data.accidentTypeList !=""){
+	  					accidentType = data.accidentTypeList;
+	  					var html = '<option value=""></option>';
+	  					for(var i=0;i<accidentType.length;i++){
+	  						html += '<option value="'+accidentType[i].id+'">'+accidentType[i].name+'</option>';
+	  					}
+  						$("#accident_type_id").html(html);
+  					}
+	  				if(data.earlywarnTypeList !=null && data.earlywarnTypeList !=""){
+	  					earlywarnType = data.earlywarnTypeList;
+	  					var html = '<option value=""></option>';
+	  					for(var i=0;i<earlywarnType.length;i++){
+	  						html += '<option value="'+earlywarnType[i].id+'">'+earlywarnType[i].name+'</option>';
+	  					}
+	  					$("#earlywarn_id").html(html);
+  					}
+	  				form.render('select', 'searchForm');
+  				}
+            }
+        })
+        
+        
+   	});
+    $("#search").on("click",function(){
+        $("#ArbetTable").bootstrapTable("destroy");
+        t.Init("/receiveInfo/query")
+    })
+
+</script>
+</html>

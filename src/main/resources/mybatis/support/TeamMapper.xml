@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.TeamMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportTeam">
+        insert into safeguard_team(
+            id,
+            name,
+            teamtype_id,
+            dept_id,
+            numofteam,
+            remarks,
+            create_by,
+            create_date,
+            address,
+            lat,
+            lon
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{teamtype_id,jdbcType=VARCHAR},
+            #{dept_id,jdbcType=VARCHAR},
+            #{numofteam,jdbcType=INTEGER},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=DATE},
+            #{address,jdbcType=VARCHAR},
+            #{lat,jdbcType=VARCHAR},
+            #{lon,jdbcType=VARCHAR}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportTeamDTO">
+          select hc.*,(@rowNum:=@rowNum+1) RN from safeguard_team hc,(select (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="name != null  and name != '' ">
+	            AND HC.name like concat('%',#{name},'%')
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="teamtype_id != null and teamtype_id != '' ">
+	            AND  HC.teamtype_id = #{teamtype_id}
+	        </if>
+			<if test="dept_id != null and dept_id != '' ">
+	            AND  HC.dept_id = #{dept_id}
+	        </if>
+            <if test="numofteam != null and numofteam != '' ">
+	            AND  HC.numofteam = #{numofteam}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+
+    <select id="getByName" resultType="com.bootdo.support.dto.SupportTeamDTO" parameterType="String">
+        select *
+        from safeguard_team
+        where name = #{name}
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportTeam">
+        update safeguard_team set
+            name=#{name,jdbcType=VARCHAR},
+            teamtype_id=#{teamtype_id,jdbcType=VARCHAR},
+            dept_id=#{dept_id,jdbcType=VARCHAR},
+            numofteam=#{numofteam,jdbcType=INTEGER},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=DATE},
+            address=#{address,jdbcType=VARCHAR},
+            lon=#{lon,jdbcType=VARCHAR},
+            lat=#{lat,jdbcType=VARCHAR}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_team where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_team set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_team where id=#{id}
+    </select>
+
+    <select id="getDept" resultType="java.util.Map">
+        select rs.id,rs.name from safeguard_dept rs  WHERE rs.enabled !=1 order by rs.name not like '%村%' ,rs.name desc
+    </select>
+
+    <select id="getTeamMate" resultType="java.util.Map">
+        SELECT
+            rs.id,
+            rs.NAME,
+            rs.mobile,
+            rs.remarks,
+
+            ( SELECT d.NAME FROM safeguard_dept d WHERE rs.dept_id = d.id ) dept
+        FROM
+            safeguard_deptperson rs,
+            safeguard_team t,
+            safeguard_teamperson tp
+        WHERE
+            t.id = tp.team_id
+            AND tp.deptperson_id = rs.id
+            AND t.id = #{id}
+    </select>
+
+    <insert id="insertTeam">
+        insert into safeguard_teamperson(team_id,deptperson_id) values(#{team_id},#{deptperson_id})
+    </insert>
+
+    <delete id="deleteTeam">
+        delete from safeguard_teamperson where team_id=#{team_id}
+    </delete>
+
+    <select id="getAllTeam" resultType="com.bootdo.dispatch.center.res.EmergencyTeamRes">
+        select
+        t.id as 'res_id',
+        t.name as 'team_name',
+        t.teamtype_id as 'team_type_id',
+        tt.name as 'team_type_name',
+        t.numofteam as 'num_of_team',
+        t.address,
+        t.dept_id as 'main_dept_id',
+        dept.name as 'main_dept_name',
+        t.lat,
+        t.lon,
+        dept.contact,
+        dept.mobile
+        from safeguard_team t
+        left join safeguard_teamtype tt on t.teamtype_id = tt.id
+        left join safeguard_dept dept on t.dept_id = dept.id
+        order by t.create_date,t.id
+    </select>
+
+    <resultMap id="teamPersonTree" type="com.bootdo.support.entity.SupportTeam">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <collection property="deptperson" ofType="com.bootdo.support.entity.SupportDeptPerson">
+            <id column="personid" property="id"/>
+            <result column="personname" property="name"/>
+            <result column="personmobile" property="mobile"/>
+            <result column="personposition" property="position"/>
+        </collection>
+    </resultMap>
+    <!-- 查询队伍和对应的队伍人员 -->
+    <select id="getTeamAndPerson" resultMap="teamPersonTree">
+		SELECT t.id,t.name ,p.id AS personid,p.name AS personname,p.mobile AS personmobile,
+		(CASE WHEN p.position IS NULL THEN '职员' WHEN p.position ='' THEN '职员' ELSE p.position END) AS personposition
+		FROM safeguard_team t
+		INNER JOIN safeguard_teamperson tp ON t.id = tp.team_id
+		INNER JOIN safeguard_deptperson p ON tp.deptperson_id = p.id
+	</select>
+
+</mapper>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>接报途径</title>
+	<link rel="stylesheet" href="../../../css/bootstrap.css" />
+	<link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.css" />
+	<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+
+	<link rel="stylesheet" href="../../../css/main.css" />
+	<link rel="stylesheet" href="../../../css/style.css" />
+
+	<script type="text/javascript" src="../../../js/jquery-3.4.1.js" ></script>
+	<script type="text/javascript" src="../../../layui/layui.all.js" ></script>
+	<script type="text/javascript" src="../../../js/popper.js"></script>
+	<script type="text/javascript" src="../../../js/bootstrap.js"></script>
+	<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.js" ></script>
+	<script type="text/javascript" src="../../../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../endWarn/js/warnTable.js?v=1.1"></script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="layui-pad10">
+			<div class="layui-pad10 layui-wbg layui-clear layui-col-space28">
+				<div class="layui-form-item layui-col-xs8 layui-mb0">
+
+			</div>
+				<button type="button" class="layui-btn"  onclick="endWarn()">终结</button>
+			<table id="exampleTable" data-mobile-responsive="true">
+			</table>
+		</div>
+	</div>
+	<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+		<div>
+			<script type="text/javascript">
+				var s_edit_h = 'hidden';
+				var s_remove_h = 'hidden';
+				var s_resetPwd_h = 'hidden';
+			</script>
+		</div>
+		<div >
+			<script type="text/javascript">
+				s_edit_h = '';
+			</script>
+		</div>
+		<div >
+			<script type="text/javascript">
+				var s_remove_h = '';
+			</script>
+		</div>
+		<div >
+			<script type="text/javascript">
+				var s_resetPwd_h = '';
+			</script>
+		</div>
+	</div>
+</body>
+</html>

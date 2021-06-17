@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+			.tlist{
+				max-height: 270px;
+				overflow-y: auto;
+			}
+			table{
+				max-width: 99%!important;
+			}
+			table tr{
+				height: 32px;
+				line-height: 32px;
+			}
+			table td{
+				text-align: center;
+				color:white;
+
+			}
+			table td{
+				border:1px solid #9dd3ff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="tl comtl">
+					综合查询
+				</div>
+				<div class="pad10 ind_cont clearfix font12 droptype">					
+					<div class="col-xs-5">
+						<div class="clearfix">
+							<div class="col-xs-3 pad5 text-right">
+								事件类型 :
+							</div>
+							<div class="col-xs-9 pad0">
+								<!--<input class="form-control" id="com_type" />-->
+								<div class="dropdown com_dropdown casetype" id="com_type">
+								    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+								    	<span class="txt">请选择事故类型</span>
+								        <span class="caret"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu"  style="max-height: 220px;">
+								       
+								    </ul>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix" style="margin-top: 10px;margin-bottom: 10px;">
+							<div class="col-xs-3 pad5 text-right">
+								预警级别 :
+							</div>
+							<div class="col-xs-9 pad0">
+								<!--<input class="form-control" id="com_wernlevel" />-->
+								<div class="dropdown com_dropdown caselevel" id="com_wernlevel">
+								    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+								    	<span class="txt">请选择预警级别</span>
+								        <span class="caret"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu"  style="max-height: 220px;">
+								       
+								    </ul>
+								</div>
+							</div>	
+						</div>
+						<div class="clearfix">
+							<div class="col-xs-3 pad5 text-right">
+								预警时间起
+							</div>
+							<div class="col-xs-9 pad0">
+								<input class="form-control" id="warntimebegin" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div class="clearfix">
+							<div class="col-xs-4 pad5 text-right">
+								预警类别 :
+							</div>
+							<div class="col-xs-8 pad0">
+								<!--<input class="form-control" id="com_werntype" />-->
+								<div class="dropdown com_dropdown casewarn" id="com_werntype">
+								    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+								    	<span class="txt">请选择预警类别</span>
+								        <span class="caret"></span>
+								    </button>
+								    <ul class="srcollcom dropdown-menu btn-block" role="menu"  style="max-height: 220px;">
+								       
+								    </ul>
+								</div>
+							</div>							
+						</div>	
+						<div class="clearfix" style="margin-top: 10px;margin-bottom: 10px;">
+							<div class="col-xs-4 pad5 text-right">
+								预案名称 :
+							</div>
+							<div class="col-xs-8 pad0">
+								<input class="form-control" id="com_name" />
+							</div>								
+						</div>
+						<div class="clearfix">
+							<div class="col-xs-4 pad5 text-right">
+								预案时间止
+							</div>
+							<div class="col-xs-8 pad0">
+								<input class="form-control" id="warntimeend" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-1">
+						<button class="btn btn-info " onclick="querycom()">查 询</button>
+						<button class="btn btn-default mt10" onclick="queryclear()">清 除</button>
+					</div>
+				</div>
+				<div class="pad10 ind_cont clearfix font12" id="com_info">
+					<!--<div class="col-xs-6 font14">
+						<div class="case_control pad10 srcollcom" style="height: 300px;" id="com_list">
+							<p>暂无相关数据...</p>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="col-xs-3 pad5 text-right">
+							事件类型 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comtype"></p>
+						</div>
+					</div>								
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							预警类别 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comwerntype"></p>
+						</div>
+					</div>
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							预警级别 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comwernlevel"></p>
+						</div>
+					</div>
+					&lt;!&ndash;<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							事件ID :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comeventid"></p>
+						</div>
+					</div>&ndash;&gt;
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							事件摘要 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comeventname"></p>
+						</div>
+					</div>
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							物资名称 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comgoodsname"></p>
+						</div>
+					</div>
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							开始时间 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comstarttime"></p>
+						</div>
+					</div>
+					<div class="col-xs-6 mt10">
+						<div class="col-xs-3 pad5 text-right">
+							结束时间 :
+						</div>
+						<div class="col-xs-9 pad0">
+							<p class="form-control" id="comendtime"></p>
+						</div>
+					</div>-->
+					<table style="width: calc(100% - 8px)">
+						<thead><tr><td width="35%">预案名称</td><td width="18%">预警时间</td><td width="18%">处理时间</td><td width="18%">结束时间</td><td width="10%">负责人</td></tr></thead>
+					</table>
+					<div class="tlist">
+						<table width="100%;">
+							<tbody id="com_list">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../layui/layui.js" ></script>
+		
+		<script type="text/javascript" src="../js/layer_v3.1.1/layer.js" ></script>
+	
+		<script>
+			var comdata=[];
+			var warnmenudata=[],levelmenudata=[];
+			layui.use(['element','laydate'], function() {
+				var  element = layui.element
+						, laydate = layui.laydate;
+				laydate.render({
+					type: 'datetime',
+					elem: '#warntimebegin',
+					trigger: 'click'
+				})
+				laydate.render({
+					type: 'datetime',
+					elem: '#warntimeend',
+					trigger: 'click'
+				})
+			});
+			function downoption(){
+				var eventmenu=$(".casetype").find(".dropdown-menu");
+				eventmenu.empty()
+				
+				eventmenu.append("<li><a onclick='casetype(this)'>请选择事故类型</a></li>");
+				$.ajax({
+					url:'/planManage/planMain/getSelectData',
+					dataType:'json',
+					type:'post',
+					success:function(result){
+//						console.log(result)
+						$.each(result.accidentTypeList,function(idx,item){
+							eventmenu.append("<li><a onclick='casetype(this)'>"+item.name+"</a></li>");
+						})
+						warnmenudata=result.earlywarnTypeList;
+						levelmenudata=result.earlywarnLevelList;
+						
+					}
+				})
+			}
+			
+			function casetype(opt){
+				var eventtypetxt=$(opt).parents(".dropdown").find(".txt");
+				eventtypetxt.text($(opt).text());
+				var warnmenu=$(opt).parents(".droptype").find(".casewarn");
+				var levelmenu=$(opt).parents(".droptype").find(".caselevel");
+				warnmenu.find(".txt").text("请选择预警类别");
+				levelmenu.find(".txt").text("请选择预警级别");
+				warnmenu.find(".dropdown-menu").empty();
+				levelmenu.find(".dropdown-menu").empty();
+				
+				warnmenu.find(".dropdown-menu").append("<li><a onclick='casewarn(this)'>请选择预警类别</a></li>");				
+				$.each(warnmenudata,function(idx,item){
+					if(item.accidentTypeName==eventtypetxt.text()){
+						warnmenu.find(".dropdown-menu").append("<li><a onclick='casewarn(this)'>"+item.name+"</a></li>");						
+					}
+				})
+			}
+			function casewarn(opt){
+				var warntypetxt=$(opt).parents(".dropdown").find(".txt");
+				warntypetxt.text($(opt).text());
+				var levelmenu=$(opt).parents(".droptype").find(".caselevel");
+				levelmenu.find(".txt").text("请选择预警级别");				
+				levelmenu.find(".dropdown-menu").empty();
+				
+				levelmenu.find(".dropdown-menu").append("<li><a onclick='caselevel(this)'>请选择预警级别</a></li>");
+				$.each(levelmenudata,function(idx,item){
+					if(item.earlywarnTypeName==warntypetxt.text()){
+						levelmenu.find(".dropdown-menu").append("<li><a onclick='caselevel(this)'>"+item.name+"</a></li>");						
+					}
+				})
+			}
+			function caselevel(opt){
+				var warnleveltxt=$(opt).parents(".dropdown").find(".txt");
+				warnleveltxt.text($(opt).text());				
+			}
+			
+			downoption()
+			function getcomList(){
+				var levelId=parent.levelId;
+				$("#com_info .form-control").empty();
+	            $.ajax({
+					url:'/dispatch/center/getCaseByLost',
+					dataType:'json',
+					type:'get',
+					success:function(result){
+						console.log(result)
+						comdata=result.data;
+						$("#com_list").empty()
+						if(result.data.length<1){
+							$("#com_list").html("<tr><td colspan='5'>暂无相关数据...</td></tr>");
+							return false;
+						}
+						$.each(result.data,function(idx,item){
+							$("#com_list").append("<tr dataId='"+item.id+"'><td width='35%'>"+item.planName+"</td><td width='18%'>"+item.WarningTime+"</td><td width='18%'>"+item.actionDate+"</td><td width='18%'>"+item.closecaseDate+"</td><td width='10%'>"+item.actionBy+"</td></tr>");
+						});
+					}
+				})
+			}
+			getcomList();
+			function querycom(){
+//				var com_type=$("#com_type").val().trim();
+//				var com_werntype=$("#com_werntype").val().trim();
+//				var com_wernlevel=$("#com_wernlevel").val().trim();
+				
+				var com_type=$("#com_type").find(".txt").text()=="请选择事故类型"?"":$("#com_type").find(".txt").text();
+				var com_werntype=$("#com_werntype").find(".txt").text()=="请选择预警类别"?"":$("#com_werntype").find(".txt").text();
+				var com_wernlevel=$("#com_wernlevel").find(".txt").text()=="请选择预警级别"?"":$("#com_wernlevel").find(".txt").text();
+				var com_name=$("#com_name").val().trim();
+
+				var com_warntimeb = $("#warntimebegin").val().trim();
+				var com_warntimee = $("#warntimeend").val().trim();
+				console.log("预警时间:", com_warntimeb+com_warntimee);
+				$("#com_info .form-control").empty();
+				$("#com_list").empty()
+				
+	            $.ajax({
+					url:'/dispatch/center/getCaseByLost',
+					dataType:'json',
+					type:'post',
+					data:{
+						"accidentName":com_type,
+						"warnTypeName":com_werntype,
+						"warnLevelName":com_wernlevel,
+						"planName":com_name,
+						"receiveBtime":com_warntimeb,
+						"receiveEtime":com_warntimee
+					},
+					success:function(result){
+						console.log(result)
+						comdata=result.data;
+						if(result.data.length<1){
+							$("#com_list").html("<tr><td colspan='5'>暂无相关数据...</td></tr>");
+							return false;
+						}
+						$.each(result.data,function(idx,item){
+							$("#com_list").append("<tr dataId='"+item.id+"'><td width='35%'>"+item.planName+"</td><td width='18%'>"+item.WarningTime+"</td><td width='18%'>"+item.actionDate+"</td><td width='18%'>"+item.closecaseDate+"</td><td width='10%'>"+item.actionBy+"</td></tr>");
+						});
+					}
+				})
+			}
+			function getcomInfo(key,ele){
+				$("#com_list p").removeClass("colorblue");
+				$(ele).addClass("colorblue");
+				$("#com_info .form-control").empty();
+				$.each(comdata,function(idx,value) {
+					if(value.id==key){
+						$("#comtype").text(value.accidentName);
+						$("#comwerntype").text(value.warnTypeName);
+						$("#comwernlevel").text(value.warnLevelName);
+						$("#comeventid").text(value.id);
+						$("#comeventname").text(value.warnDesc);
+						$("#comeventname").attr("title",value.warnDesc);
+						
+//						$("#comgoodsname").text(value.remark);
+						$("#comstarttime").text(value.actionDate);
+						$("#comendtime").text(value.closecaseDate);
+						
+						return false;
+					}
+			    });
+			}
+			function queryclear(){
+//				$("#com_type").val("");
+//				$("#com_werntype").val("");
+//				$("#com_wernlevel").val("");
+				$("#com_type").find(".txt").text("请选择事故类型");
+				$("#com_werntype").find(".txt").text("请选择预警类别");
+				$("#com_wernlevel").find(".txt").text("请选择预警级别");
+				
+				$("#com_name").val("");
+				$("#com_info .form-control").empty();				
+			}
+			$("tbody").on('click','td',function(e){
+			    e.stopPropagation();
+			    var id=$(this).parent("tr").attr("dataId");
+			    sessionStorage.setItem("HId",id);
+			    parent.layer.open({
+					type:2,
+					closeBtn:2,
+					offset:'auto',
+					title:false,
+					id:'timeline',
+					area:['1000px','600px'],
+					content:'ind_timeline.html',
+					end:function(){
+					    sessionStorage.removeItem("HId");
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

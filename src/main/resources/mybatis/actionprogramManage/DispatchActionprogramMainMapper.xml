@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.bootdo.actionprogramManage.dao.DispatchActionprogramMainDao">
+
+	<select id="get"
+		resultType="com.bootdo.actionprogramManage.domain.DispatchActionprogramMainDO">
+		select
+		`id`,`code`,`status`,`action_date`,`closecase_date`,`archive_date`,`is_archive`,`create_by`,`create_date`,`update_by`,`update_date`
+		from dispatch_actionprogram_main where id = #{value}
+	</select>
+
+	<select id="list"
+		resultType="com.bootdo.actionprogramManage.domain.DispatchActionprogramMainDO">
+		select
+		t.`id`,t.`code`,t.`status`,t.`action_date`,t.`closecase_date`,t.`archive_date`,t.`is_archive`,t.`create_by`,t.`create_date`,t.`update_by`,t.`update_date`,e.id
+		AS eventCode,e.eventdesc as eventdesc,p.name as planmainName
+		from
+		dispatch_actionprogram_main t
+		LEFT JOIN dispatch_earlywarn e ON
+		e.`actionprogram_id` = t.`id`
+		LEFT JOIN dispatch_plan_main p ON
+		p.`actionprogram_id` = t.`id`
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id} </if>
+			<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+			<if test="status != null and status != ''"> and t.status = #{status} </if>
+			<if test="actionDate != null and actionDate != ''"> and t.action_date = #{actionDate} </if>
+			<if test="closecaseDate != null and closecaseDate != ''"> and t.closecase_date = #{closecaseDate} </if>
+			<if test="archiveDate != null and archiveDate != ''"> and t.archive_date = #{archiveDate} </if>
+			<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+			<if test="createBy != null and createBy != ''"> and t.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and t.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and t.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and t.update_date = #{updateDate} </if>
+			<if test="eventCode != null and eventCode != ''"> and e.id like concat('%',#{eventCode},'%') </if>
+			<if test="planmainName != null and planmainName != ''"> and p.name like concat('%',#{planmainName},'%')</if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by t.create_date desc ,t.update_date desc, ${sort} ${order}
+			</when>
+			<otherwise>
+				order by t.create_date desc ,t.update_date desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from dispatch_actionprogram_main t
+		LEFT JOIN
+		dispatch_earlywarn e ON e.`actionprogram_id` = t.`id`
+		LEFT JOIN
+		dispatch_plan_main p ON p.`actionprogram_id` = t.`id`
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id} </if>
+			<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+			<if test="status != null and status != ''"> and t.status = #{status} </if>
+			<if test="actionDate != null and actionDate != ''"> and t.action_date = #{actionDate} </if>
+			<if test="closecaseDate != null and closecaseDate != ''"> and t.closecase_date = #{closecaseDate} </if>
+			<if test="archiveDate != null and archiveDate != ''"> and t.archive_date = #{archiveDate} </if>
+			<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+			<if test="createBy != null and createBy != ''"> and t.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and t.create_date = #{createDate} </if>
+			<if test="updateBy != null and updateBy != ''"> and t.update_by = #{updateBy} </if>
+			<if test="updateDate != null and updateDate != ''"> and t.update_date = #{updateDate} </if>
+			<if test="eventCode != null and eventCode != ''"> and e.id like concat('%',#{eventCode},'%') </if>
+			<if test="planmainName != null and planmainName != ''"> and p.name like concat('%',#{planmainName},'%')</if>
+		</where>
+	</select>
+
+	<select id="getAllName" resultType="java.util.Map">
+		SELECT t.id,a.name,t.`code`
+		FROM dispatch_actionprogram_main t
+		INNER JOIN dispatch_plan_main a ON
+		t.id = a.`actionprogram_id`
+	</select>
+
+	<select id="getLastNameForSms" resultType="java.util.Map">
+		SELECT
+		t.id,a.name,t.code
+		FROM dispatch_actionprogram_main t
+		INNER JOIN
+		dispatch_plan_main a ON t.id = a.`actionprogram_id`
+		WHERE t.id NOT IN (
+		SELECT t.id
+		FROM dispatch_actionprogram_main t
+		INNER JOIN sms_send_config c ON c.`type`= '2' AND t.`id` = c.`targetId`
+		)
+	</select>
+
+	<select id="getEarlywarnInfo" resultType="java.util.HashMap">
+		SELECT
+		IFNULL(w.actionprogram_id, '') AS actionprogramId,
+		IFNULL(w.eventdesc, '') AS eventdesc,
+		IFNULL(w.accident_type_name, '') AS accidentTypeName,
+		IFNULL(w.earlywarn_type_name, '') AS earlywarnTypeName,
+		IFNULL(w.eventlevel_name, '') AS eventlevelName,
+		IFNULL(w.eventaddr, '') AS eventaddr,
+		IFNULL(w.lat_lon, '') AS lat_lon,
+		IFNULL(w.repname, '') AS repname,
+		IFNULL(w.repdate, '') AS repdate,
+		IFNULL(w.repphone, '') AS repphone,
+		IFNULL(w.dept_name, '') AS deptName
+		FROM dispatch_actionprogram_main m
+		INNER JOIN
+		dispatch_earlywarn w ON m.id = w.actionprogram_id
+		WHERE m.status = '1'
+	</select>
+
+	<insert id="save"
+		parameterType="com.bootdo.actionprogramManage.domain.DispatchActionprogramMainDO">
+		insert into dispatch_actionprogram_main
+		(
+		`id`,
+		`code`,
+		`status`,
+		`action_date`,
+		`closecase_date`,
+		`archive_date`,
+		`is_archive`,
+		`create_by`,
+		`create_date`,
+		`update_by`,
+		`update_date`
+		)
+		values
+		(
+		#{id},
+		#{code},
+		#{status},
+		#{actionDate},
+		#{closecaseDate},
+		#{archiveDate},
+		#{isArchive},
+		#{createBy},
+		#{createDate},
+		#{updateBy},
+		#{updateDate}
+		)
+	</insert>
+
+	<update id="update"
+		parameterType="com.bootdo.actionprogramManage.domain.DispatchActionprogramMainDO">
+		update dispatch_actionprogram_main
+		<set>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="actionDate != null">`action_date` = #{actionDate}, </if>
+			<if test="closecaseDate != null">`closecase_date` = #{closecaseDate}, </if>
+			<if test="archiveDate != null">`archive_date` = #{archiveDate}, </if>
+			<if test="isArchive != null">`is_archive` = #{isArchive}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateStatusByActionprogramId">
+		update
+		dispatch_actionprogram_main set status='2',is_archive='1',
+		closecase_date=now() where id=#{value}
+	</update>
+	<delete id="remove">
+		delete from dispatch_actionprogram_main where id =
+		#{value}
+	</delete>
+
+	<delete id="removeByActionprogramId">
+		DELETE FROM
+		dispatch_actionprogram_main WHERE id=#{actionprogramId}
+	</delete>
+	<delete id="batchRemove">
+		delete from dispatch_actionprogram_main where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 获取事件时间轴数据 -->
+	<select id="getTimeAxisData" resultType="Map">
+		SELECT
+		UNIX_TIMESTAMP( create_date ) * 1000 date,
+		concat_ws( '', create_date, '事件告警' ) evendesc ,
+		(select emergency from plan_appraise_manage t WHERE planid = #{actionprogramId})emergency ,
+		(select timely from plan_appraise_manage t WHERE planid =#{actionprogramId}) etimely ,
+		(select effective from plan_appraise_manage t WHERE planid =#{actionprogramId}) effective
+		FROM
+		watch_receiveinfo
+		WHERE
+		id = (
+		SELECT
+		id
+		FROM
+		archive_earlywarn ae
+		WHERE
+		ae.actionprogram_id = #{actionprogramId}
+		)
+		UNION
+
+		SELECT
+		UNIX_TIMESTAMP( ispush_time ) * 1000 date,
+		concat_ws( '', create_date, IFNULL( ( SELECT NAME FROM sys_user u WHERE user_id
+		= update_by ), t.update_by ), '进行事件推送' ) evendesc ,
+		(select emergency from plan_appraise_manage t WHERE planid = #{actionprogramId})emergency ,
+		(select timely from plan_appraise_manage t WHERE planid =#{actionprogramId}) etimely ,
+		(select effective from plan_appraise_manage t WHERE planid =#{actionprogramId}) effective
+		FROM
+		watch_receiveinfo t
+		WHERE
+		id = (
+		SELECT
+		id
+		FROM
+		archive_earlywarn ae
+		WHERE
+		ae.actionprogram_id = #{actionprogramId}
+		)
+		UNION
+		SELECT
+		UNIX_TIMESTAMP( action_date ) * 1000 date,
+		concat_ws( '', action_date, IFNULL( ( SELECT NAME FROM sys_user u WHERE user_id
+		= create_by ), t.create_by ), '生成预案' ) evendesc ,
+		(select emergency from plan_appraise_manage t WHERE planid = #{actionprogramId})emergency ,
+		(select timely from plan_appraise_manage t WHERE planid =#{actionprogramId}) etimely ,
+		(select effective from plan_appraise_manage t WHERE planid =#{actionprogramId}) effective
+		FROM
+		archive_actionprogram_main t
+		WHERE
+		id = #{actionprogramId}
+		UNION
+
+		SELECT
+		UNIX_TIMESTAMP( closecase_date ) * 1000 date,
+		concat_ws( '', closecase_date, '结束事件' ) evendesc ,
+		(select emergency from plan_appraise_manage t WHERE planid = #{actionprogramId})emergency ,
+		(select timely from plan_appraise_manage t WHERE planid =#{actionprogramId}) etimely ,
+		(select effective from plan_appraise_manage t WHERE planid =#{actionprogramId}) effective
+		FROM
+		archive_actionprogram_main
+		WHERE
+		id = #{actionprogramId}
+
+
+	</select>
+
+	<!-- 获取事件时间轴数据 -->
+	<select id="getArchivelog" resultType="Map">
+		select
+		UNIX_TIMESTAMP(create_date)*1000 date,content from archive_log where
+		actionprogram_id=#{actionprogramId} order by create_date asc
+	</select>
+
+	<select id="getEarlywarnById"
+		resultType="com.bootdo.actionprogramManage.domain.DispatchEarlywarnDO">
+		SELECT *
+		FROM dispatch_earlywarn
+		where
+		actionprogram_id=#{actionprogramId}
+		LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.TeamTypeMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportTeamType">
+        insert into safeguard_teamtype(
+            id,
+            name,
+            code,
+            enabled,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{code,jdbcType=VARCHAR},
+            #{enabled,jdbcType=INTEGER},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=DATE}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportTeamTypeDTO">
+          select hc.*,(@rowNum:=@rowNum+1) RN from safeguard_teamtype hc,(select (@rowNum:=0)) b
+          <where>
+			1=1
+			<if test="id != null ">
+	            AND  HC.id = #{id}
+	        </if>
+			<if test="name != null  and name != '' ">
+	            AND HC.name like concat('%',#{name},'%')
+	        </if>
+			<if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+	        </if>
+			<if test="code != null and code != '' ">
+	            AND  HC.code = #{code}
+	        </if>
+			<if test="enabled != null and enabled != '' ">
+	            AND  HC.enabled = #{enabled}
+	        </if>
+			<if test="remarks != null and remarks != '' ">
+	            AND  HC.remarks = #{remarks}
+	        </if>
+			<if test="create_date != null and create_date != '' ">
+	            AND  HC.create_date = #{create_date}
+	        </if>
+        </where>
+        order by HC.create_date desc
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportTeamType">
+        update safeguard_teamtype set
+            name=#{name,jdbcType=VARCHAR},
+            code=#{code,jdbcType=VARCHAR},
+            enabled=#{enabled,jdbcType=INTEGER},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=DATE}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_teamtype where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_teamtype set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_teamtype where id=#{id}
+    </select>
+
+</mapper>

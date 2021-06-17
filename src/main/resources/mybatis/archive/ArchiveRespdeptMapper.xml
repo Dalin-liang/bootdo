@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.archive.dao.ArchiveRespdeptDao">
+
+	<select id="get" resultType="com.bootdo.archive.domain.ArchiveRespdeptDO">
+		select `id`,`actionprogram_id`,`dispatch_planmain_id`,`dept_name`,`content`,`liability_man`,`mobile`,`create_by`,`create_date`,`update_by`,`update_date`,`isArrange`,`action_status`,`is_del`,`sort_no` from archive_respdept where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.archive.domain.ArchiveRespdeptDO">
+		select `id`,`actionprogram_id`,`dispatch_planmain_id`,`dept_name`,`content`,`liability_man`,`mobile`,`create_by`,`create_date`,`update_by`,`update_date`,`isArrange`,`action_status`,`is_del`,`sort_no` from archive_respdept
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="dispatchPlanmainId != null and dispatchPlanmainId != ''"> and dispatch_planmain_id = #{dispatchPlanmainId} </if>
+		  		  <if test="deptName != null and deptName != ''"> and dept_name = #{deptName} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="liabilityMan != null and liabilityMan != ''"> and liability_man = #{liabilityMan} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="isarrange != null and isarrange != ''"> and isArrange = #{isarrange} </if>
+		  		  <if test="actionStatus != null and actionStatus != ''"> and action_status = #{actionStatus} </if>
+		  		  <if test="isDel != null and isDel != ''"> and is_del = #{isDel} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from archive_respdept
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		   <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="dispatchPlanmainId != null and dispatchPlanmainId != ''"> and dispatch_planmain_id = #{dispatchPlanmainId} </if>
+		  		  <if test="deptName != null and deptName != ''"> and dept_name = #{deptName} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="liabilityMan != null and liabilityMan != ''"> and liability_man = #{liabilityMan} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="isarrange != null and isarrange != ''"> and isArrange = #{isarrange} </if>
+		  		  <if test="actionStatus != null and actionStatus != ''"> and action_status = #{actionStatus} </if>
+		  		  <if test="isDel != null and isDel != ''"> and is_del = #{isDel} </if>
+		  		</where>
+	</select>
+
+	<select id="getByPlanMainId" resultType="com.bootdo.archive.domain.ArchiveRespdeptDO">
+		select  `id`,`actionprogram_id`,`dispatch_planmain_id`,`dept_name`,`content`,`liability_man`,`mobile`,`create_by`,`create_date`,`update_by`,`update_date`,`isArrange`,`action_status`,`is_del`,IFNULL(`sort_no`, '') AS sortNo
+		from archive_respdept
+		where dispatch_planmain_id = #{value} AND IFNULL(is_del,0) !=1
+		order by sort_no asc
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.archive.domain.ArchiveRespdeptDO">
+		insert into archive_respdept
+		(
+			`id`, 
+			`sort_no`,
+			`actionprogram_id`, 
+			`dispatch_planmain_id`, 
+			`dept_name`, 
+			`content`, 
+			`liability_man`, 
+			`mobile`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`, 
+			`isArrange`, 
+			`action_status`, 
+			`is_del`
+		)
+		values
+		(
+			#{id}, 
+			#{sortNo}, 
+			#{actionprogramId}, 
+			#{dispatchPlanmainId}, 
+			#{deptName}, 
+			#{content}, 
+			#{liabilityMan}, 
+			#{mobile}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{isarrange}, 
+			#{actionStatus}, 
+			#{isDel}
+		)
+	</insert>
+	 <insert id="saveFromDispatch" >
+		INSERT INTO archive_respdept (SELECT *  from dispatch_respdept  WHERE actionprogram_id=#{value} )
+	 </insert>
+	<update id="update" parameterType="com.bootdo.archive.domain.ArchiveRespdeptDO">
+		update archive_respdept 
+		<set>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}, </if>
+			<if test="dispatchPlanmainId != null">`dispatch_planmain_id` = #{dispatchPlanmainId}, </if>
+			<if test="deptName != null">`dept_name` = #{deptName}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="liabilityMan != null">`liability_man` = #{liabilityMan}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="isarrange != null">`isArrange` = #{isarrange}, </if>
+			<if test="actionStatus != null">`action_status` = #{actionStatus}, </if>
+			<if test="isDel != null">`is_del` = #{isDel}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from archive_respdept where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from archive_respdept where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

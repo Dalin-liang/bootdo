@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+	<body>
+		<div class=" layui-pad10">
+			<form class="layui-form" lay-filter="taskForm"  action="">
+				<input type="text" id="earlyWarnLevelId" name="id"  class="layui-input" style="display:none;">
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <input type="text" id="returnEarlyWarnTypeId" class="layui-input" style="display:none;">
+				    <label class="layui-form-label">序号：</label>
+				    <div class="layui-input-block">
+				        <input type="text" id="sortNo" name="sortNo" placeholder="请输入" autocomplete="off" class="layui-input" lay-verify="required|number" lay-reqtext="序号是必填项，岂能为空？">
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <input type="text" id="returnEarlyWarnTypeId" class="layui-input" style="display:none;">
+				    <label class="layui-form-label">任务名称：</label>
+				    <div class="layui-input-block">
+				        <input type="text" id="name" name="name" placeholder="请输入" autocomplete="off" class="layui-input" lay-verify="required|nameLong" lay-reqtext="任务名称是必填项，岂能为空？">
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">任务内容：</label>
+				    <div class="layui-input-block">
+				      <textarea id="content" name="content" placeholder="请输入内容" class="layui-textarea" lay-verify="required|contentLong" lay-reqtext="任务内容是必填项，岂能为空？"></textarea>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">接收对象类型：</label>
+				    <div class="layui-input-block">
+				      	<select id="type"  name="type" lay-verify="required" lay-reqtext="接收对象类型是必填项，岂能为空？" lay-filter="typeChange">
+							<option value=""></option>
+							<option value="1">个人</option>
+							<option value="2">应急队伍</option>
+							<option value="3">部门</option>
+							<option value="4">专家</option>
+						</select>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">负责对象：</label>
+				    <div class="layui-input-block">
+				    	<select id="liabilityId"  name="liabilityId" lay-verify="required" lay-reqtext="负责对象是必填项，岂能为空？" lay-filter="liabilityChange">
+						</select>
+				    </div>
+				  </div>					
+				</div>
+				<div class="layui-col-xs6">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">联系电话：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="mobile" name="mobile" lay-verify="required|mobile" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>					
+				</div>
+				 <div class="layui-form-item layui-mt10 layui-text-center">
+			 		<button type="button" class="layui-btn layui-btn-radius" lay-submit lay-filter="formSubmit">保 存</button>
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+				 </div>
+			 </form>
+		</div>
+		
+		
+		
+		
+		<script type="text/javascript" src="../../layui/layui.js" ></script>
+		<script>
+		var parentData;
+		var dpetList ;
+		var personList ;
+		var expertList ;
+		var teamList ;
+		var form;
+		var $;
+		layui.use(['form', 'layedit'], function(){
+			  form = layui.form;
+			  layer = layui.layer;
+			  $ = layui.$;
+		  
+			  $.ajax({
+					url : '/actionprogramManage/dispatchTask/getSelectData',
+					method : 'post',
+					data : {
+					},
+					async : false,
+					success : function(data) {
+						if (data.msg == 'true') {
+							if(data.dpetList !=null && data.dpetList !=""){
+								dpetList = data.dpetList;
+							}
+							if(data.personList !=null && data.personList !=""){
+								personList = data.personList;
+							}
+							if(data.expertList !=null && data.expertList !=""){
+								expertList = data.expertList;
+							}
+							if(data.teamList !=null && data.teamList !=""){
+								teamList = data.teamList;
+							}
+							$("#liabilityId").attr('disabled', 'disabled');
+							form.render('select', 'taskForm');
+						} else {
+							layer.msg("获取责任对象下拉失败");
+						}
+					},
+					error : function(data) {
+						layer.msg("获取责任对象下拉失败");
+					}
+			  });         
+			  //回显
+			  if(parent.editTaskData !=null && parent.editTaskData !=""){
+				  parentData = parent.editTaskData;
+				  parent.editTaskData = null;
+				  typeChange(parentData.type);
+				  form.val('taskForm', {
+	            	    "sortNo": parentData.sortNo 
+	            	    ,"name": parentData.name
+	            	    ,"content": parentData.content
+	            	    ,"type": parentData.type
+	            	    ,"liabilityId": parentData.liabilityId
+	            	    ,"mobile": parentData.mobile
+	              });
+			  }
+			  
+			  form.on('select(typeChange)', function(data){   
+				  typeChange(data.value);
+			  });
+			  
+			  form.on('select(liabilityChange)', function(data){   
+				  liabilityChange(data.value);
+			  });
+			  
+				//表单校验
+				form.verify({
+					nameLong: function(value){ 
+						if(value.length > 120){
+			                 return '名称长度大于120！请重新输入';
+			             }
+					},
+					contentLong: function(value){ 
+						if(value.length > 1000){
+			                 return '内容长度大于1000！请重新输入';
+			             }
+					},
+					mobile: function(value){
+						var mobile = /^1[3|4|5|7|8]\d{9}((,1[3|4|5|7|8]\d{9})*)((，1[3|4|5|7|8]\d{9})*)$/;
+						var flag = mobile.test(value);
+		                if(!flag){
+		                	return '请输入正确手机号码';
+		                }
+					}
+				});
+		  
+			  
+			  form.on('submit(formSubmit)', function(data){ 
+				  var $parentTable = parent.$('#taskTable');
+				  if(parentData !=null && parentData !=""){
+		 			  var editData = $parentTable.bootstrapTable('getRowByUniqueId',parentData.id);
+					  if(editData!=null){
+						  editData.sortNo = $("#sortNo").val();
+						  editData.name = $("#name").val();
+						  editData.content = $("#content").val();
+						  editData.type = $("#type").val();
+						  editData.liabilityId = $("#liabilityId").val();
+						  editData.mobile = $("#mobile").val();  
+						  editData.liabilityMan = $("#liabilityId").find("option:selected").text();
+						  $parentTable.bootstrapTable('updateByUniqueId', {
+					            id: editData.id,
+					            row: editData
+					      }); 
+					  }
+				  }else{
+					  var len = $parentTable.bootstrapTable('getData').length;
+					  data.field.id = new Date().getTime() + Math.floor(Math.random()*10);
+					  data.field.liabilityMan = $("#liabilityId").find("option:selected").text();
+					  $parentTable.bootstrapTable('insertRow', { 
+						  index: len,
+						  row: data.field
+				      });
+				  }
+			      var index = parent.layer.getFrameIndex(window.name);
+				  parent.layer.close(index);
+	          });   
+			  
+			  $("#closeForm").click(function() {
+				  var index = parent.layer.getFrameIndex(window.name);
+				  parent.layer.close(index);
+			  });
+			        
+		  });
+		  
+		  function typeChange(type){
+			type +=""; 
+			$("#liabilityId").html("");
+			$("#liabilityId").attr('disabled', 'disabled');
+			var html = '<option value=""></option>';
+			var change = false;
+			switch (type) {
+				case "1"://个人
+					if (personList != null && personList != "") {
+						for (var i = 0; i < personList.length; i++) {
+							change = true;
+							html += '<option value="'+personList[i].id+'">' + personList[i].name + '</option>';
+						}
+					}
+					break;
+				case "2"://队伍
+					if (teamList != null && teamList != "") {
+						for (var i = 0; i < teamList.length; i++) {
+							change = true;
+							html += '<option value="'+teamList[i].id+'">' + teamList[i].name + '</option>';
+						}
+					}
+					break;
+				case "3"://部门
+					if (dpetList != null && dpetList != "") {
+						for (var i = 0; i < dpetList.length; i++) {
+							change = true;
+							html += '<option value="'+dpetList[i].id+'">' + dpetList[i].name + '</option>';
+						}
+					}
+					break;
+				case "4"://专家
+					if (expertList != null && expertList != "") {
+						for (var i = 0; i < expertList.length; i++) {
+							change = true;
+							html += '<option value="'+expertList[i].id+'">' + expertList[i].name + '</option>';
+						}
+					}
+					break;
+
+			}
+			if (change) {
+				$("#liabilityId").removeAttr('disabled');
+				$("#liabilityId").html(html);
+			}
+			form.render('select', 'taskForm');
+		}
+		
+		function liabilityChange(id){
+			$("#mobile").val("");
+			var type = $("#type").val();
+			switch (type) {
+				case "1"://个人
+					if (personList != null && personList != "") {
+						for (var i = 0; i < personList.length; i++) {
+							if(personList[i].id == id){
+								$("#mobile").val(personList[i].mobile);
+								break;
+							}
+						}
+					}
+					break;
+				case "2"://队伍
+					if (teamList != null && teamList != "") {
+						for (var i = 0; i < teamList.length; i++) {
+							if(teamList[i].id == id){
+								$("#mobile").val(teamList[i].mobile);
+								break;
+							}
+						}
+					}
+					break;
+				case "3"://部门
+					if (dpetList != null && dpetList != "") {
+						for (var i = 0; i < dpetList.length; i++) {
+							if(dpetList[i].id == id){
+								$("#mobile").val(dpetList[i].mobile);
+								break;
+							}
+						}
+					}
+					break;
+				case "4"://专家
+					if (expertList != null && expertList != "") {
+						for (var i = 0; i < expertList.length; i++) {
+							if(expertList[i].id == id){
+								$("#mobile").val(expertList[i].mobile);
+								break;
+							}
+						}
+					}
+					break;
+			}
+		}
+		</script>
+	</body>
+</html>

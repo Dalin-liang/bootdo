@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>接报信息表单</title>
+		<link rel="stylesheet" href="../../sweetalert/sweetalert.css" />
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../css/main.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+        <link rel="stylesheet" href="../../css/select2.css"/>
+        <script src="../../js/jquery-3.4.1.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../sweetalert/sweetalert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+        <script type="text/javascript" src="../../layui/layui.js" ></script>
+        <script type="text/javascript" src="../../js/select2.js"></script>
+
+        <style>
+
+            /*解决layui 和select2的样式冲突*/
+            /*去掉layui unselect*/
+            #deptSelectDiv .layui-unselect {
+                display : none !important;
+            }
+
+            #deptSelectDiv .select2 {
+                width: 100% !important;
+                height: 38px;
+            }
+            #deptSelectDiv .select2-selection{
+                height: 38px;
+                line-height: 1.3;
+                border-width: 1px;
+                border-style: solid;
+                border-color: #e6e6e6;
+            }
+            #deptSelectDiv .select2-selection__rendered{
+                line-height: 2.5 !important;
+            }
+            #deptSelectDiv .select2-selection__arrow{
+                height: 38px;
+            }
+            .select .layui-unselect {
+                display : none !important;
+            }
+            .select .select2 {
+                width: 100% !important;
+                height: 38px;
+            }
+            .select .select2-selection{
+                height: 38px;
+                line-height: 1.3;
+                border-width: 1px;
+                border-style: solid;
+                border-color: #e6e6e6;
+            }
+            .select .select2-selection__rendered{
+                line-height: 2.5 !important;
+            }
+            .select .select2-selection__arrow{
+                height: 38px;
+            }
+
+            #zhiNdeptDiv .layui-unselect {
+                display : none !important;
+            }
+
+            #zhiNdeptDiv .select2 {
+                width: 100% !important;
+                height: 38px;
+            }
+            #zhiNdeptDiv .select2-selection{
+                height: 38px;
+                line-height: 1.3;
+                border-width: 1px;
+                border-style: solid;
+                border-color: #e6e6e6;
+            }
+            #zhiNdeptDiv .select2-selection__rendered{
+                line-height: 2.5 !important;
+            }
+            #zhiNdeptDiv .select2-selection__arrow{
+                height: 38px;
+            }
+        </style>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+            <form class="layui-form" lay-filter="component-form-group">
+                <input type="hidden" name="id">
+                <input type="hidden" id="lat_lon" name="lat_lon">
+                <input type="hidden" id="acceptance_type" name="acceptance_type" value="">
+                <input type="hidden" id="examine_type" name="examine_type">
+                <input type="hidden" id="examiner_type" name="examiner_type" value="">
+                <div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">上报人：</label>
+				    <div class="layui-input-block select">
+                        <select name="repname" id="repname" style="display: none;" class="populate" tabindex="-1">
+                        </select>
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs4">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">联系电话：</label>
+				    <div class="layui-input-block">
+                        <input type="text" name="repphone" id="repphone" lay-verify="required" lay-reqtext="联系电话是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别：</label>
+                        <div class="layui-input-block">
+                            <select name="sex" id="sex" lay-filter="sex" lay-verify="required" lay-reqtext="性别是必填项，岂能为空？">
+                                <option value="0">男</option>
+                                <option value="1">女</option>
+                                <option value="2">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs10">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">事件地址：</label>
+				    <div class="layui-input-block">
+                        <input type="text" id="eventaddr" name="eventaddr" lay-verify="required" lay-reqtext="事件地址是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true">
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs2">
+                    <button id="selectPos" type="button" class="layui-btn layui-btn-normal">选择地址</button>
+                </div>
+				<div class="layui-col-xs8">
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">事件描述：</label>
+				    <div class="layui-input-block">
+                        <!--<textarea placeholder="请输入内容" name="eventdesc" class="layui-textarea"></textarea>-->
+                       <input type="text" name="eventdesc" lay-verify="required|eventdescLong" lay-reqtext="事件描述是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-col-xs4">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">上报时间：</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="repdate" id="repdate" lay-verify="required" lay-reqtext="上报时间是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+				    </div>
+				  </div>
+				</div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">接报途径：</label>
+                        <div class="layui-input-block">
+                            <select name="source_type" id="source_type" lay-filter="source_type" lay-verify="required" lay-reqtext="接报途径是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主管单位：</label>
+                        <div id="deptSelectDiv" class="layui-input-block">
+                            <!--<select name="dept_id" id="dept_id" lay-filter="dept_id" lay-verify="required" lay-reqtext="主管单位是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>-->
+                            <select name="dept_id" id="dept_id" style="display: none;" class="populate" tabindex="-1">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">事故类型：</label>
+                        <div class="layui-input-block">
+                            <select name="accident_type_id" id="accident_type_id" lay-filter="accident_type_id" lay-verify="required" lay-reqtext="事故类别是必填项，岂能为空？">
+                                <option value="">暂无数据</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">预警类型：</label>
+                        <div class="layui-input-block">
+                            <select name="earlywarn_id" id="earlywarn_id" lay-filter="earlywarn_id" lay-verify="required" lay-reqtext="预警类型是必填项，岂能为空？">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">预警级别：</label>
+                        <div class="layui-input-block">
+                            <select name="eventlevel" id="eventlevel" lay-filter="eventlevel" lay-verify="required" lay-reqtext="预警级别是必填项，岂能为空？">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否受理：</label>
+                        <div class="layui-input-block">
+                            <select name="is_acceptance" id="is_acceptance"  lay-verify="required" lay-reqtext="处理方式是必填项，岂能为空？">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">受理时间：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="acceptance_time" id="acceptance_time"  placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">处理方式：</label>
+                        <div class="layui-input-block">
+                            <select  id="process_type" name="process_type" lay-filter="process_type" lay-verify="required" lay-reqtext="处理方式是必填项，岂能为空？">
+                                <option value=""></option>
+                                <option value="1">上报职能部门</option>
+                                <option value="2">上报值班负责人</option>
+                                <option value="5">推送</option>
+                                <option value="10">终结</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="showDept" class="layui-col-xs4" style="display: none;">
+                    <div class="layui-form-item" >
+                       <label class="layui-form-label">职能部门：</label>
+                        <div id="zhiNdeptDiv" class="layui-input-block">
+                            <!--<select name="deptBySelect" id="deptBySelect" lay-filter="deptBySelect">
+
+                            </select>-->
+                            <select name="deptBySelect" id="deptBySelect" style="display: none;" class="populate" tabindex="-1">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="showPerson" class="layui-col-xs4" style="display: none;">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">接收人：</label>
+                         <div class="layui-input-block">
+                             <select name="deptperson_id" id="deptpersonByDept" lay-filter="deptpersonByDept">
+                                 <option value="">暂无数据</option>
+                             </select>
+                         </div>
+                    </div>
+                </div>
+				<div class="layui-col-xs12">
+				  <div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">备注：</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入内容" name="remarks" class="layui-textarea" lay-verify="remarksLong"></textarea>
+				    </div>
+				  </div>
+				</div>
+				<div class="layui-mt10 layui-text-center layui-col-xs12">
+		 			<button type="button" class="layui-btn layui-btn-radius" id="tempSave">暂 存</button>
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit">提 交</button>
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" onclick="closeFrame()">关 闭</button>
+			 	</div>
+			</form>
+		</div>
+		<script>
+				var rowData;
+				var edit;
+				var deptArr;//职能部门信息集合
+                var personArr;//应急人员信息集合
+                var select2DeptArr;
+                var select2PersonArr;
+                var initJson='{"special":{"dept":"fb99d18a206c4be7a4d7e8b410655b52","accident":"4f7166afa66c477ea77cb5642123f5ec","earlywarn":"3dfb6660ba664aa7b4eaf5241f5d2ac1","earlyleve":"c26b9c1df860414a9a62936a9a1d922f"},"smoke":{"dept":"284c6993e4ed4c3692d83058c3809e5b","accident":"6ca7eb18ff2d4141a59f1090448cf66c","earlywarn":"fcdb4f543d6a485a96f25a30cf6ee6f6","earlylevel":"60c8220bbc484a8487f1396dcfd5415d"},"outdoor":{"dept":"284c6993e4ed4c3692d83058c3809e5b","accident":"6ca7eb18ff2d4141a59f1090448cf66c","earlywarn":"43ee0dbff5664e8fbe0664c2cf3d06d6","earlylevel":"0aed3e90c7d441efa1092b00ac6b0c01"},"indoor":{"dept":"284c6993e4ed4c3692d83058c3809e5b","accident":"6ca7eb18ff2d4141a59f1090448cf66c","earlywarn":"46fd2af0ef23414db23dbafbd77a43f0","earlylevel":"e09b8cf746b64860ac0400468e96dd07"},"rain":{"dept":"4048932fda8c40ebbb2cd9954df6ae48","accident":"4432e338b2d04a86a41efb856385da7a","earlywarn":"4f51de19a4ba4cedafb130a4b8f99221","earlylevel":"2c1552db71834234b9a785d93bd116ba"},"aqi":{"dept":"052aa94a5b7548379be87b9ca7f04027","accident":"cfc83bf63de44633bb4cb59cb0a0561d","earlywarn":"67caaf5540854da8baba6579caf77387","earlylevel":"159dbf16121f40828595500bd9329fc4"},"water":{"dept":"052aa94a5b7548379be87b9ca7f04027","accident":"cfc83bf63de44633bb4cb59cb0a0561d","earlywarn":"dba5be1ee1e345869bd2114bafc90b3f","earlylevel":"cc481842d2d248dda03e366ac40660bb"},"lamp":{"dept":"fdebca551e51476e9c2536bcaababfd5","accident":"5eb736a3df014c748a2773ea5f1885a7","earlywarn":"320db896b7154a73aa6a02441ea2115e","earlylevel":"cbec2b99826840b081bff079ee3fd1a5"},"fire":{"dept":"284c6993e4ed4c3692d83058c3809e5b","accident":"6ca7eb18ff2d4141a59f1090448cf66c","earlywarn":"e1d8c1e5dcdc4c6eaca9e01500472d02","earlylevel":"73af9ca1293144cf9dd113d8c9bc5434"}}';
+
+                var jsonObject = JSON.parse(initJson, null);
+
+                //var currentDutyPersonArray;//值班负责人信息集合
+
+                $(function(){
+                    initChargeDept();//主管部门
+                    initSourceSelect();//接报途径
+                    initRePerson();//接报人
+                    initModifyPop();
+
+                });
+
+                //初始化主管单位select
+                function initChargeDept(){
+
+                    $.ajax({
+                        url:'/team/getDept',
+                        type:'post',
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            deptArr = rs;
+                            //改用select2加载
+                            var deptArray = new Array();
+                            deptArray.push({id:"",text:""});
+                            if(rs.length>0){
+                                for (var i in rs){
+                                    var obj = new Object();
+                                    obj.id = rs[i]["id"];
+                                    obj.text = rs[i]["name"];
+                                    deptArray.push(obj);
+                                }
+                            }
+                            select2DeptArr = deptArray;
+                            $("#dept_id").select2({
+                                data:deptArray
+                            });
+                            var deptId='007f1cf99fac4e3883dc36fc502d8fec';
+                            $("#dept_id").val(deptId).select2();//默认镇三防
+                            var accId=initAccidentSelect(deptId);
+                            var warnId=  ininEarlyWarningType(accId);//初始化预警类型
+                            initEarlyWarningLevel(warnId);//初始化已经级别
+                            $("#dept_id").on("select2:open", function() {
+                                $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Search...");
+                            });
+                            $("#dept_id").on("select2:close", function() {
+                                $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+                            });
+;                           /*$("#dept_id").empty();
+                            $("#dept_id").append("<option value=''></option>");
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#dept_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>");
+                                }
+                            }*/
+                        }
+                    })
+                }
+                //初始化上报人
+                function initRePerson(){
+                    $.ajax({
+                        url:'/deptPerson/getAll2',
+                        type:'post',
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            console.log(rs)
+                            personArr = rs.data;
+                            //改用select2加载
+                            var deptArray = new Array();
+                            deptArray.push({id:"",text:""});
+                            if(rs.data.length>0){
+                                for (var i in rs.data){
+                                    var obj = new Object();
+                                    obj.id = rs.data[i]["name"];
+                                    obj.text = rs.data[i]["name"];
+                                    obj.mobile = rs.data[i]["mobile"];
+                                    obj.sex = rs.data[i]["sex"];
+                                    deptArray.push(obj);
+                                }
+                            }
+                            select2PersonArr = deptArray;
+                            $("#repname").select2({
+                                data:deptArray,
+                                tags: true
+                            });
+                            //初始化上报人为当前登陆人
+                            var option = new Option(rs.user.name, rs.user.name, true, true);
+                            $('#repname').append(option);
+                            $('#repname').trigger("change");
+                            $("#repphone").val(rs.user.mobile);
+                            $("#sex").val(rs.user.sex);
+
+                            $("#repname").on("select2:open", function() {
+                                $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Search...");
+                            });
+                            $("#repname").on("select2:close", function() {
+                                $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+                            });
+                            ;                           /*$("#dept_id").empty();
+                            $("#dept_id").append("<option value=''></option>");
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#dept_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>");
+                                }
+                            }*/
+                        }
+                    })
+                }
+                //初始化职能部门select
+                function initDept() {
+                    /*$("#deptBySelect").empty();
+                    $("#deptBySelect").append('<option value="">请选择部门</option>');
+                    console.log(deptArr);
+                    if(deptArr.length > 0){
+                        for(var i in deptArr){
+                            $("#deptBySelect").append('<option value="'+deptArr[i].id+'">'+deptArr[i].name+'</option>');
+                        }
+                    }*/
+                    //改用select2加载
+                    $("#deptBySelect").select2({
+                        data:select2DeptArr
+                    });
+                    $("#deptBySelect").on("select2:open", function() {
+                        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Search...");
+                    });
+                    $("#deptBySelect").on("select2:close", function() {
+                        $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+                    });
+
+                }
+                //初始化部门人员select（接收人）根据部门id初始化
+                function initDeptPerson(id) {
+                    $.ajax({
+                        url:'/deptPerson/getDeptpersonByDeptId',
+                        type:'post',
+                        data:{"id":id},
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            $("#deptpersonByDept").empty();
+                            if(rs.length>0){
+                                console.log(rs);
+                                //判断personid是否为空
+                                if(rs[0].personid==""||rs[0].personid==undefined||rs[0].personid==null){
+                                    //设置部门负责人
+                                    for(var i in rs){
+                                        $("#deptpersonByDept").append("<option value='"+rs[i].id+"'>"+rs[i].contact+"</option>");
+                                    }
+                                }else{
+                                    for(var i in rs){
+                                        $("#deptpersonByDept").append("<option value='"+rs[i].personid+"'>"+rs[i].personname+"</option>");
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                //根据接收人id获取对应部门
+                function getDeptByPersonId(id) {
+                    var res;
+                    $.ajax({
+                        url:'/deptPerson/getDeptByDeptPersonId',
+                        type:'post',
+                        data:{"id":id},
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            if(rs){
+                                res = rs.dept;
+                            }
+                        }
+                    });
+                    return res;
+                }
+                //初始化当前值班人select
+                function initCurrentDutyPerson(personId){
+                    $.ajax({
+                        url:'/receiveInfo/getCurrentDutyPerson',
+                        type:'post',
+                        dataType:'json',
+                        data: {'personId' : personId},
+                        async:false,
+                        success:function (rs) {
+                            $("#deptpersonByDept").empty();
+                            if(rs.length>0){
+                                for (var i in rs) {
+                                    $("#deptpersonByDept").append("<option value='" + rs[i].deptperson_id + "'>" + rs[i].name + "</option>");
+                                }
+                            }
+                        }
+                    });
+                }
+                //初始化接报信息途径
+                function initSourceSelect(){
+                    $.ajax({
+                        url:'/receiveInfo/getSource',
+                        type:'post',
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            $("#source_type").empty();
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#source_type").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>")
+                                }
+                                $("#source_type").val(3)
+
+                            }
+                        }
+                    })
+                }
+                //初始化事故类别select（根据部门id）
+                function initAccidentSelect(id){
+                    var id;
+                    $.ajax({
+                        url:'/receiveInfo/getAccidentType',
+                        type:'post',
+                        data:{"id": id},
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            $("#accident_type_id").empty();
+                            $("#accident_type_id").append("<option value=''></option>");
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#accident_type_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>");
+                                }
+                                id=rs[0].id;
+                                $("#accident_type_id").val(rs[0].id);
+                            }
+
+                        }
+                    })
+                    return id;
+                }
+
+                //初始化预警类型select（根据事故类型）
+                function ininEarlyWarningType(id) {
+                    var id;
+                    $.ajax({
+                        url:'/receiveInfo/getEarlyWarnTypeByAccidentId',
+                        type:'post',
+                        data:{"id": id},
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            $("#earlywarn_id").empty();
+                            $("#earlywarn_id").append("<option value=''></option>");
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#earlywarn_id").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>");
+                                }
+                                id=rs[0].id
+                                $("#earlywarn_id").val(rs[0].id)
+                            }
+                        }
+                    });
+                    return id;
+                }
+                //初始化预警级别select（根据预警类型）
+                function initEarlyWarningLevel(id) {
+                    $.ajax({
+                        url:'/receiveInfo/getEarlyWarnLevelByTypeId',
+                        type:'post',
+                        data:{"id": id},
+                        dataType:'json',
+                        async:false,
+                        success:function (rs) {
+                            $("#eventlevel").empty();
+                            $("#eventlevel").append("<option value=''></option>");
+                            if(rs.length>0){
+                                for(var i in rs){
+                                    $("#eventlevel").append("<option value='"+rs[i].id+"'>"+rs[i].name+"</option>");
+                                }
+                                $("#eventlevel").val(rs[0].id)
+                            }
+                        }
+                    });
+                }
+                //初始化弹出的修改编辑框
+                function initModifyPop() {
+                    if (sessionStorage.getItem("edit") == "true") {//表示弹出修改编辑框
+                        var temp = sessionStorage.getItem("row");
+                        edit = sessionStorage.getItem("edit");
+                        sessionStorage.removeItem("edit");
+                        sessionStorage.removeItem("row");
+                        rowData = $.parseJSON(temp);
+                        for (var key in rowData) {//循环对表单赋值
+
+                            if(key == "dept_id"){
+                                $("#dept_id").val(rowData[key]).select2();//设置主管部门select2选中
+                            }else if(key == "repname") {
+                                $("#repname").val(rowData[key]).select2(   { data:select2PersonArr});//设置上报人select2选中
+                                $("#repname").val(rowData[key])
+                                var repname = $("#repname").find("option:selected").val();
+                                if(!repname){
+                                    var option = new Option(rowData[key], rowData[key], true, true);
+                                    $('#repname').append(option);
+                                    $('#repname').trigger("change");
+                                }
+                            }else{
+                                $("*[name=" + key + "]").val(rowData[key]);
+                            }
+
+                        }
+                        var deptId = rowData["dept_id"]//部门选中id
+                        initAccidentSelect(deptId);//初始化事故类型
+                        var accidentId = rowData["accident_type_id"];
+                        if(accidentId != "" && accidentId != null){$("#accident_type_id").val(accidentId)}
+                        ininEarlyWarningType(accidentId);//初始化预警类型
+                        var earlywarnType = rowData["earlywarn_id"];
+                        if(earlywarnType != "" && earlywarnType != null){$("#earlywarn_id").val(earlywarnType)}
+                        initEarlyWarningLevel(earlywarnType);//初始化已经级别
+                        var earlywarnLevel = rowData["eventlevel"];
+                        if(earlywarnLevel != "" && earlywarnLevel != null){$("#eventlevel").val(earlywarnLevel)}
+                        var acceptanceType = $("#acceptance_type").val();//值守人员的受理方式：上报1、推送5、终结10
+                        var examinerType = $("#examiner_type").val();//接收人来源类型1部门2值班
+                        initAllSelect(rowData["source_type"])
+                        //判断是否显示部门人员或值班人员下拉框
+                        if (acceptanceType == "1") {
+                            if (examinerType == "1") {//来源部门
+                                $("#process_type").val("1");
+                                $("#showDept").css({"display": "block"});
+                                $("#showPerson").css({"display": "block"});
+                                initDept();//初始化部门选择框
+                                var personId = rowData['deptperson_id'];//获取接收人id
+                                var dept = getDeptByPersonId(personId);//获取对应部门
+                                console.log("test dept{}");
+                                console.log(dept);
+                               // $("#deptBySelect").val(dept.id);//设置部门选中
+                                $("#deptBySelect").val(dept.id).select2();//设置职能部门select2选中
+                                initDeptPerson(dept.id);//初始化部门人员选项框
+                                $("#deptpersonByDept").val(personId);//设置人员选中
+
+                            }
+                            if (examinerType == "2") {//来源值班
+                                $("#process_type").val("2");
+                                $("#showDept").css({"display": "none"});
+                                $("#showPerson").css({"display": "block"});
+                                var personId = rowData['deptperson_id'];
+                                initCurrentDutyPerson(personId);//初始化值班人员选项框
+                                $("#deptpersonByDept").val(personId);//设置人员选中
+
+                            }
+                        } else if (acceptanceType == "5") {
+                            $("#process_type").val("5");
+                        } else if (acceptanceType == "10") {
+                            $("#process_type").val("10");
+                        }
+
+                    }
+                }
+
+                function initAllSelect(sourceType) {
+                    var json;
+                    switch (sourceType) {
+                        case "8":
+                            json = jsonObject.rain;
+                            break;
+                        case "9":
+                            json = jsonObject.special;
+                            break;
+                        case "11":
+                            json = jsonObject.lamp;
+                            break;
+                        case "12":
+                            json = jsonObject.water;
+                            break;
+                        case "15":
+                            json = jsonObject.aqi;
+                            break;
+                        case "18":
+                            json = jsonObject.smoke;
+                            break;
+                        case "19":
+                            json = jsonObject.outdorr;
+                            break;
+                        case "20":
+                            json = jsonObject.indoor;
+                            break;
+                        case "21":
+                            json = jsonObject.fire;
+                            break;
+                    }
+                    if (json) {
+                        $("#dept_id").val(json.dept).select2();//
+                        initAccidentSelect(json.dept);//初始化事故类型
+                        $("#accident_type_id").val(json.accident);//accident_type_id
+                        ininEarlyWarningType(json.accident);//初始化预警类型
+                        $("#earlywarn_id").val(json.earlywarn);//
+                        initEarlyWarningLevel(json.earlywarn);//初始化已经级别
+                        $("#earlylevel").val(json.earlylevel);
+                    }
+                }
+
+			  layui.use(['form', 'layer','element','laydate'], function(){
+				  var form = layui.form
+					  ,layer = layui.layer
+					  ,element=layui.element
+                      ,laydate=layui.laydate;
+                  laydate.render({
+                      elem:'#repdate',
+                      type:'datetime',
+                      trigger: 'click',
+                      value: new Date()
+                  });
+                  laydate.render({
+                      elem:'#acceptance_time',
+                      type:'datetime',
+                      trigger:'click',
+                      value: new Date()
+                  });
+                  
+                  if (!!rowData) {
+                	  $("#repdate").val(rowData.repdate);
+                	  $("#acceptance_time").val(rowData.acceptance_time);
+
+                  }else{
+                      $("#is_acceptance").val("1");//初始化是否受理
+                      $("#process_type").val("5");
+                      $("#acceptance_type").val(5);
+                      $("#examine_type").val(5);//上报审批状态
+                  }
+				  form.render();
+                  //地理位置选择
+                  $("#selectPos").on('click', function () {
+                      var lat_lon = $("#lat_lon").val();
+                      layer.open({
+                          title: "定位",
+                          type: 2,
+                          content: '../expertpairing/emergencyGeoPosition.html?lat_lon=' + lat_lon,
+                          area: ['700px', '400px'],
+                          btn: ['确定', '取消'],
+                          yes: function (index, layero) {
+                              var res = window["layui-layer-iframe" + index].callbackdata();
+                              $("#lat_lon").val(res.latitude_longitude);
+                              $("#eventaddr").val(res.address);
+                              layer.closeAll();
+                          },
+                          btn2: function () {
+                              layer.closeAll();
+                          },
+                          cancel: function (index, layero) {
+                              layer.close(index);
+                          }
+                      });
+                  });
+                  //监听主管部门select,根据选择部门初始化事故类型select
+                  /*form.on('select(dept_id)', function (data) {
+                      initAccidentSelect(data.value);
+                      $("#earlywarn_id").empty();
+                      $("#eventlevel").empty();
+                      form.render();
+                  });*/
+                  //select2监听主管部门,根据选择部门初始化事故类型select
+                  $("#dept_id").on("select2:select",function(e){
+                      var deptId= $("#dept_id").val();
+                      var accid= initAccidentSelect(deptId);
+                      var warnid=ininEarlyWarningType(accid);
+                      initEarlyWarningLevel(warnid);
+
+                      //$("#eventlevel").empty();
+                      form.render();
+                  });
+                  //监听事故类型select,根据事故类型id初始化预警类型
+                 form.on('select(accident_type_id)', function (data) {
+                     ininEarlyWarningType(data.value);
+                     $("#eventlevel").empty();
+                     form.render();
+                  });
+
+                 //监听预警类型select,根据预警类型id初始化预警级别
+                  form.on('select(earlywarn_id)', function (data) {
+                      initEarlyWarningLevel(data.value);
+                      form.render();
+                  });
+
+                  //监听接报途径select,
+                  form.on('select(source_type)', function (data) {
+                      initAllSelect(data.value);
+                      form.render();
+                  });
+
+				  //监听处理方式选项框
+                  form.on('select(process_type)', function(data){
+                      if(data.value == "1"){//上报职能部门
+                          var acceptanceType = $("#acceptance_type").val();
+                          var examinerType = $("#examiner_type").val();
+                          console.log("sss{}");
+                          console.log(acceptanceType);
+                          console.log(examinerType);
+                          $("#showDept").css({"display" : "block"});
+                          $("#showPerson").css({"display" : "block"});
+                          $("#deptpersonByDept").empty();
+                          initDept();
+                          form.render();
+                          $("#acceptance_type").val("1");//受理方式（1上报）
+                          $("#examiner_type").val("1");//接收人来源（1部门）
+                          $("#examine_type").val("1");//上报审批状态
+                      }else if(data.value == "2") {//上报值班负责人
+
+                          $("#showDept").css({"display" : "none"});
+                          $("#showPerson").css({"display": "block"});
+                          //判断是修改时的监听还是新增时的监听
+                          if(sessionStorage.getItem("edit") == "true"){
+                              console.log("xx personid");
+                              console.log(rowData['deptperson_id']);
+                              initCurrentDutyPerson(rowData['deptperson_id']);//初始化值班人员选项框
+                          }else{
+                              console.log("xxdd personid");
+                              initCurrentDutyPerson();//初始化值班人员选项框
+                          }
+                          //$("#deptpersonByDept").val(rowData['deptperson_id']);//设置人员选中
+                          form.render();
+
+                          $("#acceptance_type").val("1");//受理方式（1上报）
+                          $("#examiner_type").val("2");//接受人来源（2值班）
+                          $("#examine_type").val("1");//上报审批状态
+                      }else{//推送或终结，没有负责人
+                          $("#showDept").css({"display" : "none"});
+                          $("#showPerson").css({"display" : "none"});
+                          $("#acceptance_type").val(data.value);//受理方式（5推送或10终结）
+                          $("#examiner_type").val("");//接受人来源（2值班）
+                          $("#examine_type").val(data.value);//上报审批状态
+                      }
+
+                  });
+                  //监听职能部门
+                  /*form.on('select(deptBySelect)', function(data){
+                      initDeptPerson(data.value);
+                      form.render();
+                  });*/
+                  //select2监听职能部门
+                  $("#deptBySelect").on("select2:select",function(e){
+                      var zhiNId= $("#deptBySelect").val();
+                      initDeptPerson(zhiNId);
+                      form.render();
+                  });
+                  //监听上报人
+                  $("#repname").on("select2:select",function(e){
+                        $("#repphone").val(e.params.data.mobile);
+                        $("#sex").val(e.params.data.sex);
+
+                        form.render();
+                  });
+
+                //表单校验
+      			form.verify({
+      				repname: function(value){ 
+      					if(value.length > 60){
+      		                 return '上报人长度大于60！请重新输入';
+      		             }
+      				},
+      				eventdescLong:function(value){ 
+      					if(value.length > 500){
+      		                 return '事件描述长度大于500！请重新输入';
+      		             }
+      				},
+      				remarksLong:function(value){ 
+      					if(value.length > 500){
+      		                 return '备注长度大于500！请重新输入';
+      		             }
+      				}
+      			});
+                  
+				  form.on('submit(submit)',function(data){
+				      var field=data.field;
+                      if($("#process_type").val() == "1"){
+                         // if($("#deptBySelect").val() == "" || $("#deptpersonByDept").val()== ""){
+                          if(data.field.deptBySelect == ""){
+                              swal("警告","请选择部门和人员","warning");
+                              return;
+                          }
+                      }
+                      if(data.field.dept_id == ""){
+                          swal("警告", "请选择主管部门", "warning");
+                          return;
+                      }
+                      if($("#process_type").val() == "2"){
+                          if($("#deptpersonByDept").val()== ""){
+                              swal("警告","请选择值班人员","warning");
+                              return;
+                          }
+                      }
+                      field.tempsaveFlag=0;//不暂存
+                      if(field.examiner_type == ""){//接收人来源类型如果空字符，就删除field中的该对象（数据库插入int类型不能是空字符）
+                          delete field.examiner_type;
+                      }
+                      if(field.is_acceptance == "0"){//不受理弹出警告
+                          swal("警告","请确认是否受理选项","warning");
+                          return;
+                      }
+                      if(field.is_acceptance == "1" && field.process_type == "5"){
+                          field.ispush = 5;
+                      }else{
+                          field.ispush = 0;
+                      }
+				      if(edit=="true"){
+                          $.ajax({
+                              url:'/receiveInfo/update',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/receiveInfo/query");
+								 }
+                              }
+                          })
+					  }else{
+
+                          $.ajax({
+                              url:'/receiveInfo/insert',
+                              type:'post',
+                              dataType:'json',
+                              data:data.field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/receiveInfo/query");
+								 }
+                              }
+                          })
+					  }
+				  });
+				  //临时保存
+				  $("#tempSave").click(function(){
+				      var arrays = $("form").serializeArray();
+				      var field = {};
+				      $.each(arrays, function () {
+                          field[this.name] = this.value;
+                      });
+                      if($("#process_type").val() == "1"){
+                          if($("#deptBySelect").val() == "" || $("#deptpersonByDept").val()== ""){
+                          //if(data.field.deptBySelect == ""){
+                              swal("警告","请选择部门和人员","warning");
+                              return;
+                          }
+                      }
+                      if($("#dept_id").val() == ""){
+                          swal("警告", "请选择主管部门", "warning");
+                          return;
+                      }
+                      if($("#process_type").val() == "2"){
+                          if($("#deptpersonByDept").val()== ""){
+                              swal("警告","请选择值班人员","warning");
+                              return;
+                          }
+                      }
+                      field.tempsaveFlag=1;
+                      field.is_acceptance = 0;
+                      if(field.examiner_type == ""){
+                          delete field.examiner_type;
+                      }
+
+                      if(edit=="true"){
+                          $.ajax({
+                              url:'/receiveInfo/update',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                  if(rs==1){
+                                      swal("编辑成功","编辑成功","success");
+                                      closeFrame();
+                                      parent.t.Init("/receiveInfo/query");
+                                  }
+                              }
+                          })
+                      }else{
+                          $.ajax({
+                              url:'/receiveInfo/insert',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                  if(rs==1){
+                                      swal("新增成功","新增成功","success");
+                                      closeFrame();
+                                      parent.t.Init("/receiveInfo/query");
+                                  }
+                              }
+                          })
+                      }
+
+
+                  })
+                  /*form.on('submit(tempSave)',function(data){
+                      var field=data.field;
+
+                      console.log("暂时保存");
+                      if($("#process_type").val() == "1"){
+                          if($("#deptBySelect").val() == "" || $("#deptpersonByDept").val()== ""){
+                              swal("警告","请选择部门和人员","warning");
+                              return;
+                          }
+                      }
+                      if($("#process_type").val() == "2"){
+                          if($("#deptpersonByDept").val()== ""){
+                              swal("警告","请选择值班人员","warning");
+                              return;
+                          }
+                      }
+                      field.tempsaveFlag=1;
+                      field.is_acceptance = 0;
+                      if(field.examiner_type == ""){
+                          delete field.examiner_type;
+                      }
+                      if(edit=="true"){
+                          $.ajax({
+                              url:'/receiveInfo/update',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("编辑成功","编辑成功","success");
+                    				closeFrame()
+                    				parent.t.Init("/receiveInfo/query");
+								 }
+                              }
+                          })
+					  }else{
+                          $.ajax({
+                              url:'/receiveInfo/insert',
+                              type:'post',
+                              dataType:'json',
+                              data:field,
+                              success:function(rs){
+                                 if(rs==1){
+                    				swal("新增成功","新增成功","success");
+                    				closeFrame();
+                    				parent.t.Init("/receiveInfo/query");
+								 }
+                              }
+                          })
+					  }
+                  })*/
+			  })
+		</script>
+	</body>
+</html>

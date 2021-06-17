@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.archive.dao.ArchiveTaskDao">
+
+	<select id="get" resultType="com.bootdo.archive.domain.ArchiveTaskDO">
+		select `id`,`actionprogram_id`,`dispatch_planmain_id`,`name`,`content`,`type`,`liability_id`,`isArrange`,`action_status`,`create_by`,`create_date`,`update_by`,`update_date`,`mobile`,`is_del`,`sort_no` from archive_task where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.archive.domain.ArchiveTaskDO">
+		select `id`,`actionprogram_id`,`dispatch_planmain_id`,`name`,`content`,`type`,`liability_id`,`isArrange`,`action_status`,`create_by`,`create_date`,`update_by`,`update_date`,`mobile`,`is_del`,`sort_no` from archive_task
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="dispatchPlanmainId != null and dispatchPlanmainId != ''"> and dispatch_planmain_id = #{dispatchPlanmainId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="liabilityId != null and liabilityId != ''"> and liability_id = #{liabilityId} </if>
+		  		  <if test="isarrange != null and isarrange != ''"> and isArrange = #{isarrange} </if>
+		  		  <if test="actionStatus != null and actionStatus != ''"> and action_status = #{actionStatus} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="isDel != null and isDel != ''"> and is_del = #{isDel} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from archive_task
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="actionprogramId != null and actionprogramId != ''"> and actionprogram_id = #{actionprogramId} </if>
+		  		  <if test="dispatchPlanmainId != null and dispatchPlanmainId != ''"> and dispatch_planmain_id = #{dispatchPlanmainId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="liabilityId != null and liabilityId != ''"> and liability_id = #{liabilityId} </if>
+		  		  <if test="isarrange != null and isarrange != ''"> and isArrange = #{isarrange} </if>
+		  		  <if test="actionStatus != null and actionStatus != ''"> and action_status = #{actionStatus} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="isDel != null and isDel != ''"> and is_del = #{isDel} </if>
+		  		</where>
+	</select>
+
+	<select id="getByActionprogramIdAndPlanMainId" resultType="java.util.HashMap">
+		select  `id`,`actionprogram_id`,`dispatch_planmain_id`,`name`,`content`,`type`,`liability_id`,`isArrange`,`action_status`,`create_by`,`create_date`,`update_by`,`update_date`,`mobile`,`is_del`,'task' flag,IFNULL(`sort_no`, '') AS sortNo
+		from archive_task
+		where actionprogram_id = #{actionprogramId}  AND  dispatch_planmain_id = #{planMainId} AND IFNULL(is_del,0) !=1
+		ORDER BY sort_no asc,update_date ASC,create_date ASC
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.archive.domain.ArchiveTaskDO">
+		insert into archive_task
+		(
+			`id`, 
+			`sort_no`,
+			`actionprogram_id`, 
+			`dispatch_planmain_id`, 
+			`name`, 
+			`content`, 
+			`type`, 
+			`liability_id`, 
+			`isArrange`, 
+			`action_status`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`update_date`, 
+			`mobile`, 
+			`is_del`
+		)
+		values
+		(
+			#{id}, 
+			#{sortNo}, 
+			#{actionprogramId}, 
+			#{dispatchPlanmainId}, 
+			#{name}, 
+			#{content}, 
+			#{type}, 
+			#{liabilityId}, 
+			#{isarrange}, 
+			#{actionStatus}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{updateDate}, 
+			#{mobile}, 
+			#{isDel}
+		)
+	</insert>
+	 <insert id="saveFromDispatch" >
+		INSERT INTO archive_task (SELECT *  from dispatch_task  WHERE actionprogram_id=#{value} )
+	 </insert>
+	<update id="update" parameterType="com.bootdo.archive.domain.ArchiveTaskDO">
+		update archive_task 
+		<set>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="actionprogramId != null">`actionprogram_id` = #{actionprogramId}, </if>
+			<if test="dispatchPlanmainId != null">`dispatch_planmain_id` = #{dispatchPlanmainId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="liabilityId != null">`liability_id` = #{liabilityId}, </if>
+			<if test="isarrange != null">`isArrange` = #{isarrange}, </if>
+			<if test="actionStatus != null">`action_status` = #{actionStatus}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="isDel != null">`is_del` = #{isDel}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from archive_task where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from archive_task where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.DailyFileDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.DailyFileDO">
+		select `id`,`daily_id`,`type`,`url`,`create_date`,`physical_address`,`sort`,`del_flag` from safeguard_daily_file where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.DailyFileDO">
+		select `id`,`daily_id`,`type`,`url`,`create_date`,`physical_address`,`sort`,`del_flag` from safeguard_daily_file
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dailyId != null and dailyId != ''"> and daily_id = #{dailyId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="url != null and url != ''"> and url = #{url} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="physicalAddress != null and physicalAddress != ''"> and physical_address = #{physicalAddress} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_daily_file
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dailyId != null and dailyId != ''"> and daily_id = #{dailyId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="url != null and url != ''"> and url = #{url} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="physicalAddress != null and physicalAddress != ''"> and physical_address = #{physicalAddress} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.DailyFileDO">
+		insert into safeguard_daily_file
+		(
+			`id`, 
+			`daily_id`, 
+			`type`, 
+			`url`, 
+			`create_date`, 
+			`physical_address`, 
+			`sort`, 
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{dailyId}, 
+			#{type}, 
+			#{url}, 
+			#{createDate}, 
+			#{physicalAddress}, 
+			#{sort}, 
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.DailyFileDO">
+		update safeguard_daily_file 
+		<set>
+			<if test="dailyId != null">`daily_id` = #{dailyId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="physicalAddress != null">`physical_address` = #{physicalAddress}, </if>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_daily_file where id = #{value}
+	</delete>
+
+	<delete id="removeByDailyId">
+		delete from safeguard_daily_file where daily_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_daily_file where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getByDailyId" resultType="com.bootdo.support.dto.DailyFileDO">
+		select `id`,`daily_id`,`type`,`url`,`create_date`,`physical_address`,`sort`,`del_flag`
+		from safeguard_daily_file
+		where daily_id = #{dailyId}
+		order by sort asc,create_date asc
+	</select>
+
+</mapper>

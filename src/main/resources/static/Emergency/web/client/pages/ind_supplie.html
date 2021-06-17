@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../sweetalert/sweetalert.css">
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<script type="text/javascript" src="../sweetalert/sweetalert.min.js"></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+			.suppliecont{
+				background: #093661;
+				border: none;
+				color: #fff;
+			}
+			.searchgroup .form-control{
+				background-color: #92bae0;				
+    			border: 1px solid #80a8fd;
+    			color: #fff;
+			}
+			.searchgroup .input-group-addon{			
+    			border: 1px solid #80a8fd;
+    			background-color: #093661;
+				color: #fff;
+			}
+			#searchval::-webkit-input-placeholder{
+				color: #dfefff;
+			}
+			#searchval::-ms-input-placeholder{
+				color: #dfefff;
+			}
+			#searchval::-moz-placeholder{
+				color: #dfefff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="title">
+					选择物资类型
+				</div>
+				<div class="srcollcom" style="height: 360px;">
+					<div class="col-xs-12 ">
+						<div class="input-group pad10 searchgroup">
+							<input class="form-control" id="searchval" autocomplete="off" placeholder="请输入物资名称进行搜索..." />
+							<a class="input-group-addon" id="searchbtn">
+								<i class="fa fa-search"></i>
+							</a>
+						</div>
+					</div>
+					<div class="pad10 clearfix" id="supplie_optoin">
+						<div id="levelone" class="col-xs-4">
+							<div class="dropdown com_dropdown">
+							    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+							    	<span class="txt">选择一级物资</span>
+							        <span class="caret"></span>
+							    </button>
+							    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="oneoption" style="max-height: 220px;">
+							        <li>
+							            <a href="#">选择一级物资</a>
+							        </li>
+							    </ul>
+							</div>							
+						</div>
+						<div id="leveltwo" class="col-xs-4">
+							<div class="dropdown com_dropdown">
+							    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+							    	<span class="txt">选择二级分类</span>
+							        <span class="caret"></span>
+							    </button>
+							    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="twooption" style="max-height: 220px;">
+							    	<li>
+							            <a href="#">选择二级分类</a>
+							       </li>
+							    </ul>
+							</div>							
+						</div>
+						<div id="levelthree" class="col-xs-4">
+							<div class="dropdown com_dropdown">
+							    <button type="button" class="btn btn-block line-clamp"  data-toggle="dropdown">
+							    	<span class="txt">选择物资名称</span>
+							        <span class="caret"></span>
+							    </button>
+							    <ul class="srcollcom dropdown-menu btn-block" role="menu" id="threeoption" style="max-height: 220px;">
+							        <li>
+							            <a href="#">选择物资名称</a>
+							        </li>							       
+							    </ul>
+							</div>							
+						</div>
+						<div class="col-xs-12 mt20 clearfix">
+							<div class="form-control srcollcom suppliecont pad10" style="height: 200px;">
+								<table class="table table-bordered text-center">
+									<thead>
+										<tr class="colorblue">
+							    			<td>
+							    				物资名称
+							    			</td>
+							    			<td>
+							    				所属一级类别
+							    			</td>
+							    			<td>
+							    				所属二级类别
+							    			</td>
+							    			<td>
+							    				所属仓库
+							    			</td>
+							    			<td>
+							    				数量
+							    			</td>
+							    		</tr>
+									</thead>
+									<tbody id="sup_table">
+										<!--<tr class="nodata"><td colspan="5">请选择物资</td>-->
+									</tbody>
+						    	</table>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="clearfix mt10">
+							<div class="col-xs-4 col-xs-offset-4">
+								<button class="btn btn-block btn-success" onclick="getSuppliesMap()">确定</button>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/layer_v3.1.1/layer.js" ></script>
+		
+		<script>
+				var twodata=[],threedata=[],fourdata=[];
+				
+              	var supdataname=[],supdatares=[];
+              	
+				var supinfo=[];//物资信息
+				function getSupplielev() {
+					$.ajax({
+						url:'/dispatch/res/goods',
+						/*url:'/api/nt/preventMaterial/getPreventMaterialList',*/
+						dataType:'json',
+						type:'get',
+						success:function(result){
+							console.log(result);							
+							$("#oneoption").empty()
+							$.each(result.data, function(index,value){
+								$("#oneoption").append('<li levelone="'+index+'"><a href="#">'+value.levelName+'</a></li>')
+								twodata.push(value.level2);
+								$.each(value.level2, function(idx,val){
+									$.each(val.googs, function(i,v){								
+										supdataname.push(v.goodName)
+										supdatares.push(v.res)
+										$.each(v.res, function(resi,resv){
+											$("#sup_table").append('<tr><td>'+resv.goodInfo.goodName+'</td><td>'+resv.goodInfo.level1Name+'</td>'+
+								'<td>'+resv.goodInfo.level2Name+'</td><td>'+resv.houseName+'</td><td>'+resv.goodNum+'</td></tr>')
+											
+											supinfo.push(resv)
+										})
+						
+				                  	});
+			                  	});
+		                  	});
+						}
+					})
+//					$("#oneoption").empty()
+//					$.each(datatest, function(index,value){
+//						$("#oneoption").append('<li levelone="'+index+'"><a href="#">'+value.levelName+'</a></li>')
+//						twodata.push(value.children);
+//                	});
+//                	console.log(datatest)
+//                	console.log(datatest);
+//					$.each(datatest, function(index,value){
+//						$.each(value.children, function(idx,val){
+//							$.each(val.googs, function(i,v){								
+//								supdataname.push(v.goodName)
+//								supdatares.push(v.res)
+//		                  	});
+//	                  	});
+//                	});
+				}
+				$("#oneoption").on("click",'li',function(){
+					threedata=[];
+					$("#levelone .txt").text($(this).text())
+					$("#leveltwo .txt").text("选择二级分类")
+					$("#levelthree .txt").text("选择物资名称")
+					$("#twooption").empty()
+					$("#threeoption").html('<li><a href="#">选择物资名称</a></li>')
+					$("#sup_table").html('<tr class="nodata"><td colspan="5">请选择物资</td></tr>')
+						
+					var index=$(this).attr("levelone")
+					$.each(twodata[index], function(index,value){
+						$("#twooption").append('<li leveltwo="'+index+'"><a href="#">'+value.levelName+'</a></li>')						
+						threedata.push(value.googs);
+                  	});
+				})
+				$("#twooption").on("click",'li',function(){
+					fourdata=[];
+					if(!$(this).attr("leveltwo")){
+						swal("请选择一级分类","","warning");
+						$("#sup_table").html('<tr class="nodata"><td colspan="5">请选择物资</td></tr>')
+						return;
+					};
+					$("#leveltwo .txt").text($(this).text())
+					$("#threeoption").empty()
+					var index=$(this).attr("leveltwo")
+					$.each(threedata[index], function(index,value){
+						$("#threeoption").append('<li levelthree="'+index+'"><a href="#">'+value.goodName+'</a></li>')
+						fourdata.push(value.res)
+                  	});
+				})
+				
+				
+				$("#threeoption").on("click",'li',function(){
+					if(!$(this).attr("levelthree")){
+						swal("请选择一二级别分类","","warning");
+						$("#sup_table").html('<tr class="nodata"><td colspan="5">请选择物资</td></tr>')
+						return;
+					};
+					$("#levelthree .txt").text($(this).text())
+					$("#sup_table").empty()
+					supinfo=[];
+					var index=$(this).attr("levelthree")
+					if(fourdata[index].length<1){
+						$("#sup_table").html('<tr class="nodata"><td colspan="5">暂无相关数据</td></tr>')
+						
+						return;
+					}
+					$.each(fourdata[index], function(index,value){
+						$("#sup_table").append('<tr><td>'+value.goodInfo.goodName+'</td><td>'+value.goodInfo.level1Name+'</td>'+
+							'<td>'+value.goodInfo.level2Name+'</td><td>'+value.houseName+'</td><td>'+value.goodNum+'</td></tr>')
+						
+						supinfo.push(value);
+                  	});
+				})
+				
+				getSupplielev()
+				
+				
+				function getSuppliesMap(){
+					var index = parent.layer.getFrameIndex(window.name);
+					
+					if($("#sup_table tr:first-child").hasClass("nodata")){
+						swal("地图上无相关数据","","warning");
+						return;
+					}
+					window.parent.getSupplies(supinfo);
+					parent.layer.close(index);
+				}
+				
+				
+				
+				$("#searchbtn").on("click",function(){
+					var val=$("#searchval").val().trim()
+					if(val==""){
+						swal("请输入物资名称","","warning");
+						return;
+					}
+					$("#levelone .txt").text("选择一级分类")
+					$("#leveltwo .txt").text("选择二级分类")
+					$("#levelthree .txt").text("选择物资名称")
+					$("#twooption").html('<li><a href="#">选择物资名称</a></li>')
+					$("#threeoption").html('<li><a href="#">选择物资名称</a></li>')
+					$("#sup_table").empty()
+					
+					var arr = [];
+					var len=supdataname.length-1;
+//					console.log(supdatares)
+					$.each(supdataname, function(index,value){
+						supinfo=[];
+						if(value.indexOf(val) >= 0){
+							arr.push(index);
+						}
+						if(index==len){
+							if(arr.length<1){
+								$("#sup_table").html('<tr class="nodata"><td colspan="5">暂无相关数据</td></tr>')
+								return;
+							}
+							$.each(arr, function(index,value){
+								$.each(supdatares[value], function(i,v){
+									$("#sup_table").append('<tr><td>'+v.goodInfo.goodName+'</td><td>'+v.goodInfo.level1Name+'</td>'+
+									'<td>'+v.goodInfo.level2Name+'</td><td>'+v.houseName+'</td><td>'+v.goodNum+'</td></tr>')
+									supinfo.push(v);
+			                  	});
+//			                  	supinfo.push(supdatares[value]);
+		                  	});
+							
+						}
+					});
+					
+				})
+		</script>
+	</body>
+</html>

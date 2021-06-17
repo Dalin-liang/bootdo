@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+		<meta name="renderer" content="webkit">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>正果应急指挥调度平台</title>
+		
+		<link rel="stylesheet" href="../js/layer_v3.1.1/mobile/need/layer.css" media="all">
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bace.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/fonts/font-awesome.min.css"/>
+		
+		<script type="text/javascript" src="../js/jquery-1.11.3/jquery.min.js" ></script>
+		<script type="text/javascript" src="../js/page/common.js"></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js" ></script>
+		
+		<style>
+			body{
+				width: auto;
+				background: rgba(13, 71, 127);
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="comborder5 layoption">
+			<div class="border chart_warn">
+				<div class="srcollcom" style="height: 418px;">
+					<div class="pad10" id="list">
+						<!--<div class="dialog1 active" id="tasktest">
+							<div class="warn_li_tl clearfix">
+								<p> <span class="badge plansign">01</span> 镇委书记</p>
+							</div>
+							<div class="pad5 line-clamp">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="pad5 line-clamp colornum">
+								反馈:aaaa
+							</div>
+						</div>
+						<div class="dialog1 mt10">
+							<div class="warn_li_tl clearfix">
+								<p> <span class="badge plansign">01</span> 镇委书记</p>
+							</div>
+							<div class="pad5 line-clamp">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="pad5 line-clamp colornum">
+								反馈:aaaa
+							</div>
+						</div>
+						<div class="dialog1 mt10">
+							<div class="warn_li_tl clearfix">
+								<p> <span class="badge plansign">01</span> 镇委书记</p>
+							</div>
+							<div class="pad5 line-clamp">
+								市气象台发布台风红色预警信号，水文预报风暴潮将对我区造成特大影响。市气象台发布台风红色预警信号
+							</div>
+							<div class="pad5 line-clamp colornum">
+								反馈:aaaa
+							</div>
+						</div>
+					</div>-->
+				</div>
+			</div>
+				<div class="warn_b unevent_b">
+					<div class="clearfix"></div>
+					<button class="btn btn-primary btn-xs" id="addtask" >添加</button>
+					<button class="btn btn-success btn-xs" id="edittask">修改</button>
+					<button class="btn btn-default btn-xs" id="deletetask">删除</button>
+					<button class="btn btn-warning btn-xs pull-right" id="feedback">反馈</button>
+				</div>
+			</div>
+		
+		
+		<script type="text/javascript" src="../js/layer_v3.1.1/layer.js" ></script>
+		<script type="text/javascript">
+			var eId=sessionStorage.getItem("eventId");
+			var aId=sessionStorage.getItem("actionId");
+			var editData=[];
+			var contactLayer;
+			var lastId='';
+			if(!sessionStorage.getItem("lastId")){
+				sessionStorage.setItem("lastId",sessionStorage.getItem("nowId"));
+			}else{
+				lastId=sessionStorage.getItem("lastId");
+				sessionStorage.setItem("lastId",sessionStorage.getItem("nowId"));
+			}
+			if(lastId!=''||lastId!=sessionStorage.getItem("nowId")){
+				parent.layer.close(sessionStorage.getItem("lastIndex"));
+			}
+			$(".title .colornum").text(eId);
+
+
+			taskStep(aId);
+
+			function taskStep(aid){
+				$.ajax({
+					url:'/dispatch/center/getTaskStep/'+aid,
+					type:'post',
+					dataType:'json',
+					success:function(data){
+						console.log('反馈内容加载成功{}');
+						console.log(data);
+						editData = [];
+						$("#list").empty();
+						for(var i in data.data){
+							editData.push(data.data[i]);
+						}
+						editData.sort((a, b) => parseInt(a.sortNo) - parseInt(b.sortNo));
+						for(var i in editData){
+							if(i==0){
+								$("#list").append("<div class='dialog1 active' dataId='"+data.data[i].id+"'><div class='warn_li_tl clearfix'>"+
+										"<p><span class='badge plansign'>"+prefixInteger((parseInt(i)+1),2)+"</span>"+(data.data[i].name?data.data[i].name:'')+"</p></div>"+
+										"<div class='pad5 line-clamp'>"+(data.data[i].content?data.data[i].content:'')+"</div>"+
+										"<div class='pad5 line-clamp colornum'>反馈:"+(data.data[i].feedbackContent?data.data[i].feedbackContent:'')+"</div></div></div>")
+							}else{
+								$("#list").append("<div class='dialog1 mt10' dataId='"+data.data[i].id+"'><div class='warn_li_tl clearfix'>"+
+										"<p><span class='badge plansign'>"+prefixInteger((parseInt(i)+1),2)+"</span>"+(data.data[i].name?data.data[i].name:'')+"</p></div>"+
+										"<div class='pad5 line-clamp'>"+(data.data[i].content?data.data[i].content:'')+"</div>"+
+										"<div class='pad5 line-clamp colornum'>反馈:"+(data.data[i].feedbackContent?data.data[i].feedbackContent:'')+"</div></div></div>")
+							}
+						}
+
+					}
+				})
+			}
+
+
+//				部门联系方式弹出窗
+				$("#list").on("click",".dialog1",function() {
+				    var index=$(this).index();
+				    sessionStorage.setItem("contactData",JSON.stringify(editData[index]));
+				    if(!!contactLayer){
+				        layerReload(contactLayer,true)
+					}else{
+                        contactLayer=parent.layer.open({
+                            type: 2,
+                            id:"contactlist",
+                            offset: ['100px', '700px'],
+                            shade: false,
+                            closeBtn: 2,
+                            fixed:false,
+                            title:false,
+                            area: ['340px', '500px'],
+                            skin: '',
+                            content: 'ind_contactlist.html',
+							end:function () {
+								contactLayer=null;
+                            }
+                        })
+						sessionStorage.setItem("lastIndex",contactLayer);
+					}
+				})
+//				添加修改任务
+				$("#addtask").on("click", function() {
+				    sessionStorage.setItem("actionId",aId);
+					var layerIndex=parent.layer.open({
+				    	type: 2,
+				    	id:"taskedit",
+						shade: 0.3,
+						closeBtn: 2,
+						fixed:false,
+						title:false,
+						area: ['680px', '426px'],
+						content: 'ind_taskedit.html'
+					})
+				})
+				$("#edittask").on("click", function() {
+					sessionStorage.setItem("edit","true");
+					var index=$(".srcollcom .active").index();
+					sessionStorage.setItem("editData",JSON.stringify(editData[index]));
+					var layerIndex=parent.layer.open({
+				    	type: 2,
+				    	id:"taskedit",
+						shade: 0.3,
+						closeBtn: 2,
+						fixed:false,
+						title:false,
+						area: ['680px', '426px'],
+						content: 'ind_taskedit.html'
+					})
+				})
+			$("#deletetask").on("click",function(){
+			    var index=$(".srcollcom .active").index();
+			    $.ajax({
+					url:'/dispatch/center/taskStep/delete',
+					type:'post',
+					dataType:'json',
+					data:{
+						taskId:editData[index].id,
+						flag:JSON.parse(sessionStorage.getItem("contactData")).flag
+					},
+					success:function(data){
+						self.frames.location.reload();
+					}
+				})
+			})
+			$(".srcollcom").on("click",'.dialog1',function(){
+			    $(".srcollcom .dialog1").removeClass("active");
+			    $(this).addClass("active");
+			})
+			$("#feedback").on("click",function(){
+			    var feedbackTask=sessionStorage.setItem("taskId",$('#list .active').attr('dataId'));
+			    feedBack=parent.layer.open({
+					type: 2,
+					id:"ind_taskquery",
+					shade: 0.3,
+					closeBtn: 2,
+					fixed:false,
+					title:false,
+					area: ['600px', '460px'],
+					content: 'ind_taskquery.html',
+					end:function(){
+					    sessionStorage.removeItem("taskId");
+					    self.frames.location.reload();
+					}
+				})
+			});
+		</script>
+	</body>
+</html>

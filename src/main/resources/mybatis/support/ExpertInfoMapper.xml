@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.support.dao.ExpertInfoMapper">
+
+    <!--插入-->
+    <insert id="insert" parameterType="com.bootdo.support.entity.SupportExpertInfo">
+        insert into safeguard_expert_info(
+            id,
+            name,
+            sex,
+            age,
+            mobile,
+            position,
+            goodat,
+            typeof,
+            ethnic,
+            organization,
+            title,
+            descrip,
+            addr,
+            sn,
+            remarks,
+            create_by,
+            create_date
+        ) values (
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{sex,jdbcType=INTEGER},
+            #{age,jdbcType=INTEGER},
+            #{mobile,jdbcType=VARCHAR},
+            #{position,jdbcType=VARCHAR},
+            #{goodat,jdbcType=VARCHAR},
+            #{typeof,jdbcType=VARCHAR},
+            #{ethnic,jdbcType=VARCHAR},
+            #{organization,jdbcType=VARCHAR},
+            #{title,jdbcType=VARCHAR},
+            #{descrip,jdbcType=VARCHAR},
+            #{addr,jdbcType=VARCHAR},
+            #{sn,jdbcType=VARCHAR},
+            #{remarks,jdbcType=VARCHAR},
+            #{create_by,jdbcType=VARCHAR},
+            #{create_date,jdbcType=DATE}
+        )
+    </insert>
+    <!--查询-->
+    <select id="get" resultType="java.util.Map" parameterType="com.bootdo.support.dto.SupportExpertInfoDTO">
+        select hc.*,group_concat(pet.name) as earlywarnName,group_concat(pet.id) as earlywarn_type_id,(@rowNum:=@rowNum+1) RN from safeguard_expert_info hc left join safeguard_expert_plantype sep on hc.id=sep.expert_info_id
+        left join plan_earlywarn_type pet on sep.earlywarn_type_id=pet.id ,(select (@rowNum:=0)) b
+        <where>
+            1=1
+            <if test="id != null ">
+                AND HC.id = #{id}
+            </if>
+            <if test="name != null  and name != '' ">
+                AND HC.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != '' ">
+                AND HC.sex = #{sex}
+            </if>
+            <if test="age != null and age != '' ">
+                AND HC.age = #{age}
+            </if>
+            <if test="mobile != null and mobile != '' ">
+                AND HC.mobile = #{mobile}
+            </if>
+            <if test="position != null and position != '' ">
+                AND HC.position = #{position}
+            </if>
+            <if test="goodat != null and goodat != '' ">
+                AND HC.goodat = #{goodat}
+            </if>
+            <if test="typeof !=null and typeof != ''">
+                AND HC.typeof = #{typeof}
+            </if>
+            <if test="ethnic !=null and ethnic != ''">
+                AND HC.ethnic = #{ethnic}
+            </if>
+            <if test="organization !=null and organization != ''">
+                AND HC.organization = #{organization}
+            </if>
+            <if test="title !=null and title != ''">
+                AND HC.title = #{title}
+            </if>
+            <if test="descrip !=null and descrip != ''">
+                AND HC.descrip = #{descrip}
+            </if>
+            <if test="addr !=null and addr != ''">
+                AND HC.addr = #{addr}
+            </if>
+            <if test="sn !=null and sn != ''">
+                AND HC.sn = #{sn}
+            </if>
+            <if test="remarks != null and remarks != '' ">
+                AND HC.remarks = #{remarks}
+            </if>
+            <if test="create_by != null and create_by != '' ">
+                AND HC.create_by like concat('%',#{create_by},'%')
+            </if>
+            <if test="create_date != null and create_date != '' ">
+                AND HC.create_date = #{create_date}
+            </if>
+            <if test="update_by != null and update_by != '' ">
+                AND HC.update_by like concat('%',#{update_by},'%')
+            </if>
+            <if test="update_date != null and update_date != '' ">
+                AND HC.update_date = #{update_date}
+            </if>
+        </where>
+        group by HC.id order by HC.create_date desc
+    </select>
+    
+      <!--查询-->
+    <select id="getExpertInfoByParams" resultType="java.util.Map" parameterType="java.util.Map">
+        select hc.*,group_concat(pet.name) as earlywarnName,group_concat(pet.id) as earlywarn_type_id,(@rowNum:=@rowNum+1) RN from safeguard_expert_info hc left join safeguard_expert_plantype sep on hc.id=sep.expert_info_id
+        left join plan_earlywarn_type pet on sep.earlywarn_type_id=pet.id ,(select (@rowNum:=0)) b
+        <where>
+            1=1
+    
+            <if test="name != null  and name != '' ">
+                AND HC.name like concat('%',#{name},'%')
+            </if>
+            
+            <if test="typeof !=null and typeof != ''">
+                AND HC.typeof like concat('%',#{typeof},'%')
+            </if>    
+             <if test="warn_id !=null and warn_id != ''">
+                AND  pet.id = #{warn_id}
+            </if>
+              <if test="warn_name !=null and warn_name != ''">
+                AND  pet.name = #{warn_name}
+            </if>
+
+        </where>
+        group by HC.id order by HC.create_date desc
+    </select>
+    
+
+    <!--更新-->
+    <update id="update" parameterType="com.bootdo.support.entity.SupportExpertInfo">
+        update safeguard_expert_info set
+            name=#{name,jdbcType=VARCHAR},
+            sex=#{sex,jdbcType=INTEGER},
+            age=#{age,jdbcType=INTEGER},
+            mobile=#{mobile,jdbcType=VARCHAR},
+            position=#{position,jdbcType=VARCHAR},
+            goodat=#{goodat,jdbcType=VARCHAR},
+            typeof = #{typeof,jdbcType=VARCHAR},
+            ethnic = #{ethnic,jdbcType=VARCHAR},
+            organization = #{organization,jdbcType=VARCHAR},
+            title = #{title,jdbcType=VARCHAR},
+            descrip = #{descrip,jdbcType=VARCHAR},
+            addr = #{addr,jdbcType=VARCHAR},
+            sn = #{sn,jdbcType=VARCHAR},
+            remarks=#{remarks,jdbcType=VARCHAR},
+            update_by=#{update_by,jdbcType=VARCHAR},
+            update_date=#{update_date,jdbcType=DATE}
+            where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--物理删除-->
+    <delete id="delete">
+        delete from safeguard_expert_info where id=#{id}
+    </delete>
+
+    <update id="logicalDelete">
+        update safeguard_expert_info set enabled='0' where id=#{id}
+    </update>
+
+    <select id="getUniqueById" resultType="java.util.Map">
+        select * from safeguard_expert_info where id=#{id}
+    </select>
+
+    <select id="getAllEarlyWarningType" resultType="com.bootdo.planManage.domain.PlanEarlywarnTypeDO">
+        select t.id,t.name from plan_earlywarn_type t where t.name is not null
+    </select>
+
+    <delete id="deleteExpertPlantype">
+       delete from safeguard_expert_plantype where expert_info_id=#{id}
+    </delete>
+
+    <insert id="insertExpertPlantype">
+
+        insert into safeguard_expert_plantype(
+        id,
+        expert_info_id,
+        earlywarn_type_id
+        )
+        values(
+        #{id},
+        #{expertInfoId},
+        #{earlwarnTypeId}
+        )
+    </insert>
+    <select id="getAllExpertByWarnTypeId" resultType="com.bootdo.dispatch.center.res.ExpertRes">
+        select
+        sei.id as 'res_id',
+        sei.name,
+        sei.sex,
+        sei.age,
+        sei.mobile,
+        sei.position,
+        sei.goodat,
+        sei.typeof,
+        sei.ethnic,
+        sei.organization,
+        sei.title,
+        sei.descrip,
+        sei.addr,
+        sei.sn,
+        sei.remarks
+        from safeguard_expert_info sei
+           <if test="warnTypeId !=null and warnTypeId !=''">
+            left join safeguard_expert_plantype sep on sei.id=sep.expert_info_id
+            where sep.earlywarn_type_id=#{warnTypeId, jdbcType=VARCHAR}
+           </if>
+        order by sn
+    </select>
+
+    <select id="getAllExpert" resultType="com.bootdo.dispatch.center.res.ExpertRes">
+      select
+        id as 'res_id',
+        name,
+        sex,
+        age,
+        mobile,
+        position,
+        goodat,
+        typeof,
+        ethnic,
+        organization,
+        title,
+        descrip,
+        addr,
+        sn,
+        remarks
+        from safeguard_expert_info
+        order by sn
+    </select>
+    
+    <select id="getByIdAndName" resultType="java.util.Map">
+        SELECT f.* 
+        FROM safeguard_expert_info f 
+        <where>
+			<if test="id != null and id != '' ">
+	            AND  f.id = #{id}
+	        </if>
+            <if test="name != null and name != '' ">
+	            AND f.name like concat('%',#{name},'%')
+	        </if>
+        </where>
+    </select>
+
+</mapper>

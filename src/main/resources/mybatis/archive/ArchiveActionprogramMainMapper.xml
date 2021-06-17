@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.archive.dao.ArchiveActionprogramMainDao">
+
+	<select id="get" resultType="com.bootdo.archive.domain.ArchiveActionprogramMainDO">
+		select `id`,`code`,`status`,`action_date`,`closecase_date`,`archive_date`,`is_archive`,`create_by`,`create_date`,`update_by`,`update_date`,`labelContent` from archive_actionprogram_main where id = #{value}
+	</select>
+
+	<select id="list" resultType="java.util.HashMap">
+		SELECT
+			IFNULL(t.id, '') AS id,
+			IFNULL(t.`code`, '') AS code,
+			IFNULL(t.`status`, '') AS status,
+			IFNULL(t.action_date, '') AS actionDate,
+			IFNULL(t.closecase_date, '') AS closecaseDate,
+			IFNULL(t.archive_date, '') AS archiveDate,
+			IFNULL(t.is_archive, '') AS isArchive,
+			IFNULL(t.labelContent, '') AS labelContent,
+			IFNULL(e.id, '') AS warnId,
+			IFNULL(p.`name`, '') AS planName,
+			IFNULL(u.name, '') AS actionPerson,
+			IFNULL(e.accident_type_name, '') AS accidentName,
+			IFNULL(e.earlywarn_type_name, '') AS warnTypeName,
+			IFNULL(e.eventlevel_name, '') AS warnLevelName,
+			IFNULL(e.eventdesc, '') AS warnDesc,
+			IFNULL(w.create_date, '') AS WarningTime,
+			IFNULL(e.id, '') AS eventCode,
+			(SELECT name from sys_user  where user_id=t.create_by) AS actionBy
+		from archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN watch_receiveinfo w ON e.id = w.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by`
+        <where>
+				<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+				<if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+				<if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+				<if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+				<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+				<if test="labelContent != null and labelContent != ''"> and t.labelContent like concat('%',#{labelContent},'%') </if>
+				<if test="name != null and name != ''"> and p.name like concat('%',#{name},'%') </if>
+				<if test="closecaseDateBegin != null and closecaseDateBegin != ''">
+					<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{closecaseDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+				</if>
+				<if test="closecaseDateEnd != null and closecaseDateEnd != ''">
+					<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{closecaseDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+				</if>
+				AND t.status ='2'
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order},t.create_date DESC ,t.update_date DESC
+            </when>
+			<otherwise>
+                ORDER BY t.create_date DESC ,t.update_date DESC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*)
+		from archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN watch_receiveinfo w ON e.id = w.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by`
+		<where>
+			<if test="isArchive != null and isArchive != ''"> and t.is_archive = #{isArchive} </if>
+			<if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+			<if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+			<if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+			<if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+			<if test="labelContent != null and labelContent != ''"> and t.labelContent like concat('%',#{labelContent},'%') </if>
+			<if test="name != null and name != ''"> and p.name like concat('%',#{name},'%') </if>
+			<if test="closecaseDateBegin != null and closecaseDateBegin != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{closecaseDateBegin}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			<if test="closecaseDateEnd != null and closecaseDateEnd != ''">
+				<![CDATA[
+						  and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{closecaseDateEnd}, '%Y-%m-%d %H:%i:%S')
+					]]>
+			</if>
+			AND t.status ='2'
+		</where>
+	</select>
+	
+	<select id="getByWarnTypeId" resultType="java.util.HashMap">
+		SELECT 
+			IFNULL(t.id, '') AS id,
+			IFNULL(t.`code`, '') AS code,
+			IFNULL(t.`status`, '') AS status,
+			IFNULL(t.action_date, '') AS actionDate,
+			IFNULL(t.closecase_date, '') AS closecaseDate,
+			IFNULL(t.archive_date, '') AS archiveDate,
+			IFNULL(t.is_archive, '') AS isArchive,
+			IFNULL(e.id, '') AS warnId,
+			IFNULL(p.`name`, '') AS planName,
+			IFNULL(u.name, '') AS actionPerson,
+			IFNULL(e.accident_type_name, '') AS accidentName,
+			IFNULL(e.earlywarn_type_name, '') AS warnTypeName,
+			IFNULL(e.eventlevel_name, '') AS warnLevelName
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by` 
+		WHERE e.id = #{warnTypeId} AND t.status ='2'
+		ORDER BY t.create_date DESC ,t.update_date DESC
+	</select>
+	
+	<select id="getProgramMainDetailByWarnTypeId" resultType="java.util.HashMap">
+		SELECT 
+			IFNULL(t.id, '') AS id,
+			IFNULL(t.`code`, '') AS code,
+			IFNULL(t.`status`, '') AS status,
+			IFNULL(t.action_date, '') AS actionDate,
+			IFNULL(t.closecase_date, '') AS closecaseDate,
+			IFNULL(t.archive_date, '') AS archiveDate,
+			IFNULL(t.is_archive, '') AS isArchive,
+			IFNULL(e.id, '') AS warnId,
+			IFNULL(p.`name`, '') AS planName,
+			IFNULL(u.name, '') AS actionPerson,
+			IFNULL(e.accident_type_name, '') AS accidentName,
+			IFNULL(e.earlywarn_type_name, '') AS warnTypeName,
+			IFNULL(e.eventlevel_name, '') AS warnLevelName
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by` 
+		WHERE e.id = #{eventId} AND t.status ='2'
+		ORDER BY t.create_date DESC ,t.update_date DESC
+		limit 0, 6
+	</select>
+	
+	<select id="getByParamName" resultType="java.util.HashMap">
+		SELECT 
+			IFNULL(t.id, '') AS id,
+			IFNULL(t.`code`, '') AS code,
+			IFNULL(t.`status`, '') AS status,
+			IFNULL(t.action_date, '') AS actionDate,
+			IFNULL(t.closecase_date, '') AS closecaseDate,
+			IFNULL(t.archive_date, '') AS archiveDate,
+			IFNULL(t.is_archive, '') AS isArchive,
+			IFNULL(e.id, '') AS warnId,
+			IFNULL(p.`name`, '') AS planName,
+			IFNULL(u.name, '') AS actionPerson,
+			IFNULL(e.accident_type_name, '') AS accidentName,
+			IFNULL(e.earlywarn_type_name, '') AS warnTypeName,
+			IFNULL(e.eventlevel_name, '') AS warnLevelName
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by`
+		<where>  
+	  		  <if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+	  		  <if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+	  		  <if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+	  		  AND t.status ='2'
+		</where> 
+		ORDER BY t.create_date DESC ,t.update_date DESC
+	</select>
+	
+	<select id="getByLostParam" resultType="java.util.HashMap">
+		SELECT 
+			IFNULL(t.id, '') AS id,
+			IFNULL(t.`code`, '') AS code,
+			IFNULL(t.`status`, '') AS status,
+			IFNULL(t.action_date, '') AS actionDate,
+			IFNULL(t.closecase_date, '') AS closecaseDate,
+			IFNULL(t.archive_date, '') AS archiveDate,
+			IFNULL(t.is_archive, '') AS isArchive,
+			IFNULL(e.id, '') AS warnId,
+			IFNULL(p.`name`, '') AS planName,
+			IFNULL(u.name, '') AS actionPerson,
+			IFNULL(e.accident_type_name, '') AS accidentName,
+			IFNULL(e.earlywarn_type_name, '') AS warnTypeName,
+			IFNULL(e.eventlevel_name, '') AS warnLevelName,
+			IFNULL(e.eventdesc, '') AS warnDesc,
+			IFNULL(w.create_date, '') AS WarningTime,
+			(SELECT name from sys_user  where user_id=t.create_by) AS actionBy
+	
+			
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn e ON e.actionprogram_id = t.id
+		LEFT JOIN watch_receiveinfo w ON e.id = w.id
+		LEFT JOIN archive_planmain p ON p.actionprogram_id = t.id
+		LEFT JOIN dispatch_actionprogram_main a ON a.id = t.id
+		LEFT JOIN sys_user u ON u.user_id = a.`create_by`
+		<where>  
+	  		  <if test="accidentName != null and accidentName != ''"> and e.accident_type_name like concat('%',#{accidentName},'%') </if>
+	  		  <if test="warnTypeName != null and warnTypeName != ''"> and e.earlywarn_type_name like concat('%',#{warnTypeName},'%') </if>
+	  		  <if test="warnLevelName != null and warnLevelName != ''"> and e.eventlevel_name like concat('%',#{warnLevelName},'%') </if>
+	  		  <if test="code != null and code != ''"> and t.code like concat('%',#{code},'%') </if>
+	  		  <if test="name != null and name != ''"> and p.name like concat('%',#{name},'%') </if>
+	  		  <if test="beginTime != null and beginTime != ''">
+				<![CDATA[
+				      and DATE_FORMAT(a.`create_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			  </if>
+	  		  <if test="endTime != null and endTime != ''">
+	  		  	<![CDATA[
+				      and DATE_FORMAT(t.`closecase_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%S')
+				]]>
+	  		  </if>
+			<if test="receiveBtime != null and receiveBtime != ''">
+				<![CDATA[
+				      and DATE_FORMAT(w.`create_date`, '%Y-%m-%d %H:%i:%S') >=  DATE_FORMAT(#{receiveBtime}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+			<if test="receiveEtime != null and receiveEtime != ''">
+				<![CDATA[
+				      and DATE_FORMAT(w.`create_date`, '%Y-%m-%d %H:%i:%S') <=  DATE_FORMAT(#{receiveEtime}, '%Y-%m-%d %H:%i:%S')
+				]]>
+			</if>
+	  		  AND t.status ='2'
+		</where> 
+		ORDER BY t.create_date DESC ,t.update_date DESC
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.archive.domain.ArchiveActionprogramMainDO">
+		insert into archive_actionprogram_main
+		(
+			`id`, 
+			`code`, 
+			`status`, 
+			`action_date`, 
+			`closecase_date`, 
+			`archive_date`, 
+			`is_archive`, 
+			`create_by`, 
+			`create_date`, 
+			`update_by`, 
+			`labelContent`,
+			`update_date`
+		)
+		values
+		(
+			#{id}, 
+			#{code}, 
+			#{status}, 
+			#{actionDate}, 
+			#{closecaseDate}, 
+			#{archiveDate}, 
+			#{isArchive}, 
+			#{createBy}, 
+			#{createDate}, 
+			#{updateBy}, 
+			#{labelContent},
+			#{updateDate}
+		)
+	</insert>
+	<insert id="saveFromDispatch" >
+	 INSERT INTO archive_actionprogram_main (SELECT *  from dispatch_actionprogram_main  WHERE id=#{value} )
+	 </insert>
+	<update id="update" parameterType="com.bootdo.archive.domain.ArchiveActionprogramMainDO">
+		update archive_actionprogram_main 
+		<set>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="actionDate != null">`action_date` = #{actionDate}, </if>
+			<if test="closecaseDate != null">`closecase_date` = #{closecaseDate}, </if>
+			<if test="archiveDate != null">`archive_date` = #{archiveDate}, </if>
+			<if test="isArchive != null">`is_archive` = #{isArchive}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="labelContent != null">`labelContent` = #{labelContent}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from archive_actionprogram_main where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from archive_actionprogram_main where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="getCountByCase" resultType="java.util.HashMap">
+	select  count(*)  closeData,
+	(	select count(*)   from(	select
+		e.actionprogram_id as 'action_program_id',
+		a.lat_lon,
+		case when e.actionprogram_id is not null then 5
+		when a.push_is_handle =5 then 1 else 0 end as 'event_state'
+		from watch_receiveinfo a
+		left join dispatch_earlywarn e on a.id = e.id
+		where a.ispush=5 and (e.actionprogram_id is null or not exists (select 1 from archive_actionprogram_main act where act.id = e.actionprogram_id and act.closecase_date is null))
+		order by a.push_handle_time desc) t  where 	action_program_id is  null and event_state !=1
+	) uneventData
+  from archive_actionprogram_main
+	</select>
+
+	<select id="getEventType" resultType="java.util.HashMap">
+		SELECT a.accident_type_name AS name,COUNT(a.id) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		<where>
+			<if test="flag != null and flag != '' and flag == 'year'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y' ) = DATE_FORMAT( CURDATE( ) , '%Y' )
+				]]>
+			</if>
+			<if test="flag != null and flag != '' and flag == 'month'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+				]]>
+			</if>
+		</where>
+		GROUP BY a.accident_type_name
+		ORDER BY VALUE DESC
+	</select>
+
+	<select id="getEventLevel" resultType="java.util.HashMap">
+		SELECT a.eventlevel_name AS name,COUNT(a.id) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		<where>
+			<if test="flag != null and flag != '' and flag == 'year'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y' ) = DATE_FORMAT( CURDATE( ) , '%Y' )
+				]]>
+			</if>
+			<if test="flag != null and flag != '' and flag == 'month'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+				]]>
+			</if>
+		</where>
+		GROUP BY a.eventlevel_name
+		ORDER BY VALUE DESC
+	</select>
+
+	<select id="getEventImport" resultType="java.util.HashMap">
+		SELECT a.accident_type_name AS name,COUNT(a.id) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		<where>
+			<if test="flag != null and flag != '' and flag == 'year'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y' ) = DATE_FORMAT( CURDATE( ) , '%Y' )
+				]]>
+			</if>
+			<if test="flag != null and flag != '' and flag == 'month'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+				]]>
+			</if>
+			and  a.eventlevel_name NOT LIKE '%般%'
+		</where>
+		GROUP BY a.eventlevel_name
+		ORDER BY VALUE DESC
+	</select>
+
+	<select id="getEventDayData" resultType="java.util.HashMap">
+		SELECT a.day day,COUNT(a.id) value
+		FROM (
+			SELECT DATE_FORMAT(closecase_date,'%Y-%m-%d') DAY,id
+			FROM archive_actionprogram_main
+			WHERE DATE_FORMAT( closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+			ORDER BY closecase_date DESC
+		) a
+		GROUP BY a.day
+	</select>
+
+	<select id="getEventMonthsData" resultType="java.util.HashMap">
+		SELECT a.mon mon,COUNT(a.id) value
+		FROM (
+			SELECT DATE_FORMAT(closecase_date,'%m') mon,id
+			FROM archive_actionprogram_main
+			WHERE DATE_FORMAT( closecase_date, '%Y' ) = DATE_FORMAT( CURDATE( ) , '%Y' )
+			ORDER BY closecase_date DESC
+		) a
+		GROUP BY a.mon
+	</select>
+
+
+	<select id="getEventCurMonth" resultType="java.util.HashMap">
+		SELECT a.accident_type_name AS name,COUNT(a.id) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		WHERE DATE_FORMAT( t.closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		GROUP BY a.accident_type_name
+	</select>
+
+	<select id="getEventDataCompared" resultType="java.util.HashMap">
+		SELECT a.accident_type_name AS name,COUNT(a.id) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		<where>
+			<if test="flag != null and flag != '' and flag == 'year'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y' ) = DATE_FORMAT( CURDATE( ) , '%Y' )
+				]]>
+			</if>
+			<if test="flag != null and flag != '' and flag == 'month'">
+				<![CDATA[
+				      and DATE_FORMAT( t.closecase_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+				]]>
+			</if>
+		</where>
+		GROUP BY a.accident_type_name
+	</select>
+
+	<select id="getEventMoMCompared" resultType="java.lang.Integer">
+		SELECT IFNULL(COUNT(a.id),0) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		WHERE a.accident_type_name = #{eventType} and PERIOD_DIFF( DATE_FORMAT( NOW( ) , '%Y%m' ) ,DATE_FORMAT( t.closecase_date, '%Y%m' ) ) =1
+		GROUP BY a.accident_type_name
+	</select>
+
+	<select id="getEventYoYCompared" resultType="java.lang.Integer">
+		SELECT IFNULL(COUNT(a.id),0) AS value
+		FROM archive_actionprogram_main t
+		LEFT JOIN archive_earlywarn a ON a.`actionprogram_id` = t.`id`
+		WHERE a.accident_type_name = #{eventType} and (YEAR(t.closecase_date)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR))) AND (DATE_FORMAT( t.closecase_date, '%m' ) = DATE_FORMAT( CURDATE( ) , '%m' ))
+		GROUP BY a.accident_type_name
+	</select>
+</mapper>

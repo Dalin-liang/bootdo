@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../../layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../../css/main.css" />
+		<link rel="stylesheet" href="../../../css/style.css" />
+		<link rel="stylesheet" href="../../../../client/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../../bootstrap-table/bootstrap-table.min.css" />
+		<script type="text/javascript" src="../../../js/jquery-3.4.1.js"></script>
+		<script type="text/javascript" src="../../../../client/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table.min.js"></script>
+		<script type="text/javascript" src="../../../bootstrap-table/bootstrap-table-zh-CN.js"></script>
+		<style type="text/css">
+			.layui-input-block input {
+				color: black !important;
+			}
+			body {
+				background-color: #f2f2f2;
+			}
+			.fixed-table-toolbar{
+				display:none;
+			}
+			/**字符串过长 转化为 。。。**/
+			table{
+			   width:100px;
+			   table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+			   background-color:#FFFFFF!important;
+			}
+			td{
+			   width:100%;
+			   word-break:keep-all;/* 不换行 */
+			   white-space:nowrap;/* 不换行 */
+			   overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+			   text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
+			   -o-text-overflow:ellipsis;
+			   -icab-text-overflow: ellipsis;
+			   -khtml-text-overflow: ellipsis;
+			   -moz-text-overflow: ellipsis;
+			   -webkit-text-overflow: ellipsis;
+			}
+		</style>
+	</head>
+	<body>
+		<div class=" layui-pad10">
+				<div class="layui-col-md12">
+				  <div class="layui-card">
+					<div class="layui-card-header">知识库信息</div>
+					<div class="layui-card-body" style="height: 300px;">
+						<form class="layui-form"  lay-filter="infoForm" action="">
+							<input type="text" name="id" style="display:none;">
+							<div class="layui-col-xs6">
+								<div class="layui-form-item">
+									<label class="layui-form-label">序号：</label>
+									<div class="layui-input-block">
+									  <input type="text" id="sortNo" name="sortNo" lay-verify="required|number" lay-reqtext="序号是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-col-xs6">
+								<div class="layui-form-item">
+									<label class="layui-form-label">名称：</label>
+									<div class="layui-input-block">
+										<input type="text" id="dangertypename" name="dangertypename" placeholder="请输入" lay-verify="required|nameLong" lay-reqtext="名称是必填项，岂能为空？" autocomplete="off" class="layui-input">
+									</div>
+								</div>					
+							</div>
+							<div class="layui-form-item layui-form-text">
+								<label class="layui-form-label">备注：</label>
+								<div class="layui-input-block">
+								  <textarea id="remarks" name="remarks" lay-verify="remarksLong" placeholder="请输入内容" class="layui-textarea"></textarea>
+								</div>
+							  </div>	
+							<div class="layui-form-item">
+								<label class="layui-form-label">是否启用：</label>
+								<div class="layui-input-block">
+								  <input type="checkbox" id="enabled" name="enabled" checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+								</div>
+							</div>
+							<div class="layui-form-item layui-mt10 layui-text-center" style="margin-top: 0px;margin-bottom: 0px;">
+								<button class="layui-btn layui-btn-radius ifView" lay-submit lay-filter="formSubmit">保 存</button>
+								<button type="button" class="layui-btn layui-btn-danger layui-btn-radius" id="closeForm">关 闭</button>
+							 </div>
+						</form>
+					</div>
+				  </div>
+				</div>
+		</div>
+		
+			<script type="text/javascript" src="../../../layui/layui.js" ></script>
+			 <script>
+			  var prefix = "/support/knowledgeDangertype";
+			  var parentData;
+			  var form;
+			  layui.use(['form', 'layedit','table'], function(){
+				  form = layui.form;
+				  var table = layui.table,
+				  layer = layui.layer,
+				  $ = layui.$;
+				  
+				  //回显
+				  if(parent.editDate !=null && parent.editDate !=""){
+					  parentData = parent.editDate;
+					  parent.editDate =null;
+
+		              changeClassByType(); //根据查看或修改，改变按钮和输入框事件
+					  //form初始化赋值
+					  form.val('infoForm', {
+		            	    "id": parentData.id 
+		            	    ,"sortNo": parentData.sortNo 
+		            	    ,"dangertypename": parentData.dangertypename
+		            	    ,"remarks": parentData.remarks
+		            	    ,"enabled": (parentData.enabled =='0')?false:true
+		              }); 
+				  }
+				  
+					//表单校验
+					form.verify({
+						nameLong:function(value){ 
+							if(value.length > 60){
+				                 return '保管地点长度大于60！请重新输入';
+				             }
+						},
+						remarksLong:function(value){ 
+							if(value.length > 250){
+				                 return '备注长度大于250！请重新输入';
+				             }
+						}
+					});
+					
+				  
+				  form.on('submit(formSubmit)', function(data){ 
+					  if(parentData != null &&parentData.dataType !=null && parentData.dataType == "edit"){
+				  		 	var o = $(".layui-form-switch");
+				  		 	if(o.find("em").text() =="OFF"){
+					  			data.field.enabled = "0";
+					  	    }else {
+					  			data.field.enabled = "1";
+					  	    }
+				  		 	
+				  		  	$.ajax({   
+		   		                  url: prefix + '/update',       
+		   		                  method:'post',       
+		   		                  data : data.field,
+		   		  				  async: false,       
+		   		                  success:function(data){      
+		   		                       if(data.code =='0'){       
+		   		  							var index = parent.layer.getFrameIndex(window.name);
+		   		  							parent.reloadTable();//重载父页表格
+		   		  							parent.layer.msg("修改成功");
+		   		  							parent.layer.close(index);
+		   		                       } else {
+		   		                            var index = parent.layer.getFrameIndex(window.name);
+		   									parent.layer.msg("修改失败");
+		   									parent.layer.close(index); 
+		   		  					   }           
+		   		                  },              
+		   		                  error:function (data) {
+		   		                  		parent.layer.msg("修改失败");
+		   		  				  }           
+		   		           }) ;          
+				  	  }else{
+				  			if(data.field.enabled =="on"){
+					  			data.field.enabled = "1";
+					  	    }else {
+					  			data.field.enabled = "0";
+					  	    }
+				  		  	$.ajax({  
+		 		                  url: prefix + '/save',       
+		 		                  method:'post',       
+		 		                  data : data.field,
+		 		  				  async: false,       
+		 		                  success:function(data){      
+		 		                       if(data.code =='0'){       
+		 		  							var index = parent.layer.getFrameIndex(window.name);
+		 		 							parent.reloadTable();//重载父页表格
+		 		  							parent.layer.msg("保存成功");
+		 		  							parent.layer.close(index);
+		 		                       } else {
+		 		                            var index = parent.layer.getFrameIndex(window.name);
+		 									parent.layer.msg(data.msg);
+		 									parent.layer.close(index); 
+		 		  					   }           
+		 		                  },              
+		 		                  error:function (data) {
+		 		                  		parent.layer.msg("保存失败");
+		 		  				  }           
+		 		           }) ;         
+				  	  }
+		                 
+		          }); 
+				  
+				  $("#closeForm").click(function() {
+					  var index = parent.layer.getFrameIndex(window.name);
+					  parent.layer.close(index);
+				  });
+			  });
+			  
+			function changeClassByType(){
+				if(parentData.dataType !=null && parentData.dataType == "view"){
+					  //====查看样式
+	            	  //$("form input").attr("readonly","readonly").css({"cursor": "not-allowed", "background-color":"#d2d2d2"});
+	            	  $("form input").attr("readonly","readonly").css("cursor", "not-allowed");
+	            	  $("form textarea").attr("disabled","disabled").css("cursor", "not-allowed");
+	            	  $("#enabled").attr('disabled', 'disabled');
+	            	  $(".ifView").attr('disabled', 'disabled').css('cursor', 'not-allowed');
+				}
+			}  
+			
+		</script>
+	</body>
+</html>

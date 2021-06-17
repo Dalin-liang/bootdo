@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<!-- 设置360浏览器渲染模式,webkit 为极速内核，ie-comp 为 IE 兼容内核，ie-stand 为 IE 标准内核。 -->
+	<meta name="renderer" content="webkit">
+	<meta name="google" value="notranslate">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>正果综治形势分析</title>
+	<link rel="stylesheet" href="plugin/bootstrap4/bootstrap.css" />
+	<link rel="stylesheet" href="plugin/font/font-awesome@4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/iconfont.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<script type="text/javascript" src="plugin/jquery-1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="plugin/echarts.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=f298e5e7038506323629972a84492e89"></script>
+	<script type="text/javascript" src="plugin/mapPlugin.js"></script>
+	<style>
+        .content-left .item{
+            margin-bottom: 20px!important;
+        }
+		.content-b{
+			background-color:rgba(0, 41, 133, 0.4)!important;
+		}
+		#map-cont{
+			height: 100%;
+		}
+		.amap-info-close{
+			font-size: 18px;
+			top:10px;
+		}
+		.amap-info-content table th{
+			text-align: center;
+			font-weight: 500;
+		}
+		.amap-info-content table tr{
+			height: 40px;
+		}
+		.amap-info-content table td{
+			line-height: 40px ;
+		}
+		.amap-info-content table .warn{
+			background-color: red;
+		}
+		#planList{
+			position: relative;
+		}
+		.pop_box{
+			width: 400px;
+			padding:5px 10px;
+		}
+		.pop_tl{
+			line-height: 35px;
+			background: #1d90c5;
+			padding: 0 10px;
+		}
+
+		.pop_box table{
+			width: 100%;
+		}
+		.pop_box table tbody tr td{
+			vertical-align: top;
+		}
+		.amap-info-content{
+			border: #03A9F4 thin solid;
+			background: rgba(37,88,139,0.8);
+			padding: 0;
+			font-size: 14px;
+			line-height: 24px;
+		}
+		.bottom-center .amap-info-sharp{
+			border-top-color: #03A9F4;
+		}
+		.amap-info-content table.table-bordered tr{
+			height: auto!important;
+		}
+		.content{
+			top: 80px;
+			bottom: 0;
+		}
+		#map-cont{
+			width: calc(100% - 1120px);
+			height: calc(100% - 80px);
+			top:80px;
+			left:560px;
+		}
+		.topTitle,.header{
+			z-index: 99;
+		}
+    </style>
+</head>
+<body style="background-color: rgb(0,13,55);">
+<div class="toggle_nav" style="top: 110px;width: 688px;margin: 0 auto;">
+			<div class="toggle_nav_btn">
+				<span class="fa fa-angle-double-down fa-angle-double-up"></span>
+			</div>
+			<div class="toggle_nav_con">
+				<a class="" href="party.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/15.png"/>
+						</div>
+						<p>智慧党建</p>
+					</div>
+				</a>
+				<a class="" href="administration.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/14.png"/>
+						</div>
+						<p>政务分析</p>
+					</div>
+				</a>
+				<a class="" href="population.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/10.png"/>
+						</div>
+						<p>人口分析</p>
+					</div>
+				</a>
+				<a class="" href="legalAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/05.png"/>
+						</div>
+						<p>法人分析</p>
+					</div>
+				</a>
+				<a class="" href="travel.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/09.png"/>
+						</div>
+						<p>旅游分析</p>
+					</div>
+				</a>
+				<a class="" href="poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/04.png"/>
+						</div>
+						<p>党内帮扶</p>
+					</div>
+				</a>
+				<a class="" href="traffic.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/13.png"/>
+						</div>
+						<p>正果交通</p>
+					</div>
+				</a>
+				<a class="" href="fireFighting.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/12.png"/>
+						</div>
+						<p>消防安全</p>
+					</div>
+				</a>
+				<a class="" href="specialPop.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/11.png"/>
+						</div>
+						<p>特殊人群</p>
+					</div>
+				</a>
+				<a class="" href="urbanecology.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/03.png"/>
+						</div>
+						<p>城市生态</p>
+					</div>
+				</a>
+				<a class="" href="security.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/17.png"/>
+						</div>
+						<p>综治形势</p>
+					</div>
+				</a>
+				<a class="" href="violation.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/08.png"/>
+						</div>
+						<p>两违监测</p>
+					</div>
+				</a>
+				<a class="" href="safety.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+							<img src="img/01.png"/>
+						</div>
+						<p>安全生产</p>
+					</div>
+				</a>
+				<a class="" href="dangerous.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/16.png"/>
+						</div>
+						<p>重点隐患</p>
+					</div>
+				</a>
+				<a class="" href="industry.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>产业分析</p>
+					</div>
+				</a>
+				<a class="" href="industrialAnalysis.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/06.png"/>
+						</div>
+						<p>工业增加值</p>
+					</div>
+				</a>
+				<a class="" href="development.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/07.png"/>
+						</div>
+						<p>经济发展</p>
+					</div>
+				</a>
+				<a class="" href="http://113.108.176.67:9094/login">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/02.png"/>
+						</div>
+						<p>后台管理</p>
+					</div>
+				</a>
+				<a class="" href="index.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/18.png"/>
+						</div>
+						<p>城市运行特征</p>
+					</div>
+				</a>
+				<a class="" href="http://172.27.162.37:8011/zgrms/Pages/main/mainPage.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/19.png"/>
+						</div>
+						<p>三防监测分析</p>
+					</div>
+				</a>
+				<a class="" href="good_poverty.html">
+					<div class="inblock toggle_nav_li">
+						<div class="img">
+						<img src="img/20.png"/>
+						</div>
+						<p>优秀扶贫项目</p>
+					</div>
+				</a>
+			</div>
+		</div>
+<div class="header flex flex-m">
+	<div class="title PangMen">正果综治形势分析</div>
+</div>
+
+<div class="content content-left flex flex-v" style="width: 550px">
+    <div class="item">
+		<div class="hd"><span>矛盾纠纷情况</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart">
+
+		</div>
+	</div>
+    <div class="item">
+		<div class="hd"><span>信访情况分析</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart1">
+
+		</div>
+	</div>
+</div>
+<div id="map-cont"></div>
+<div class="content content-right flex flex-v" style="width: 550px;">
+    <div class="item">
+		<div class="hd"><span>案件情况统计分析</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart2">
+
+		</div>
+	</div>
+    <div class="item">
+		<div class="hd"><span>服刑人员和吸毒人员情况</span></div>
+		<div class="bd flex flex-m" style="height:350px;width: 100%;color:white;" id="chart3">
+
+		</div>
+	</div>
+</div>
+</body>
+<script>
+	var mapComp;
+	var map;
+	mapComp = new MapComp();
+    mapComp.init();
+	var dom = document.getElementById("chart");
+	var myChart = echarts.init(dom);
+	option = null;
+	option = {
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					crossStyle: {
+						color: '#999'
+					}
+				}
+			},
+			legend: {
+				data:['矛盾纠纷'],
+				textStyle:{
+				    color:'white'
+				}
+			},
+			xAxis: [
+				{
+					type: 'category',
+					data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+					axisLabel:{
+					    textStyle: {
+					        color:'white'
+						}
+					}
+				}
+			],
+			yAxis: [
+				{
+					type: 'value',
+					name: '',
+					axisLabel:{
+					    textStyle: {
+					        color:'white'
+						}
+					}
+				}
+			],
+			series: [
+				{
+					name:'矛盾纠纷',
+					type:'line',
+					smooth: true,
+					data:[20, 22, 33, 35, 43, 29, 20, 23, 23, 16, 12, 6]
+				}
+			]
+		};
+
+
+
+
+	if (option && typeof option === "object") {
+		myChart.setOption(option, true);
+	}
+
+	var dom1 = document.getElementById("chart1");
+
+	$.ajax({
+		url:'/api/nt/allLetter/getLetterCountByMonth',
+		type:'get',
+		dataType:'json',
+		success:function(data){
+		    var m=Array.apply(null,Array(12)).map(()=>0);
+			for(var i in data.data.LetterCount){
+			    var month=new Date(data.data.LetterCount[i].ym+"-01").getMonth();
+			    m[month]=data.data.LetterCount[i].munberCount;
+			}
+			var myChart1 = echarts.init(dom1);
+			option1 = null;
+			var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+
+			option1 = {
+				color: colors,
+
+				tooltip: {
+					trigger: 'none',
+					axisPointer: {
+						type: 'cross'
+					}
+				},
+				legend: {
+					data:['2019信访次数'],
+					textStyle:{
+						color:'white'
+					}
+				},
+				grid: {
+					top: 70,
+					bottom: 50
+				},
+				xAxis: [
+					{
+						type: 'category',
+						axisTick: {
+							alignWithLabel: true
+						},
+						axisLine: {
+							onZero: false,
+							lineStyle: {
+								color: colors[1]
+							}
+						},
+						axisPointer: {
+							label: {
+								formatter: function (params) {
+									return '信访次数  ' + params.value
+										+ (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+								}
+							}
+						},
+						data: ["2019-1", "2019-2", "2019-3", "2019-4", "2019-5", "2019-6", "2019-7", "2019-8", "2019-9", "2019-10", "2019-11", "2019-12"]
+					}
+				],
+				yAxis: [
+					{
+						type: 'value',
+						axisLabel:{
+							textStyle:{
+								color:'white'
+							}
+						}
+					}
+				],
+				series: [
+					{
+						name:'2019信访次数',
+						type:'line',
+						smooth: true,
+						data: m
+					}
+				]
+			};
+
+
+			if (option1 && typeof option1 === "object") {
+				myChart1.setOption(option1, true);
+			}
+		}
+	})
+
+	var dom2 = document.getElementById("chart2");
+	var myChart2 = echarts.init(dom2);
+	option2 = null;
+	option2 = {
+			tooltip: {
+				trigger: 'item',
+				formatter: "{a} <br/>{b}: {c} ({d}%)"
+			},
+			legend: {
+				/*orient: 'vertical',*/
+				/*x: 'left',*/
+				data:['盗窃','故意伤害','寻衅滋事','抢夺','其他','盗窃','殴打他人','寻衅滋事','诈骗','故意损坏公共财物','吸毒'],
+				textStyle:{
+				    color:'white'
+				}
+			},
+			series: [
+				{
+					name:'2018年',
+					type:'pie',
+					selectedMode: 'single',
+					radius: [0, '30%'],
+					label: {
+						normal: {
+							position: 'inner'
+						}
+					},
+					labelLine: {
+					    show:false,
+						normal: {
+							show: false
+						}
+					},
+					data:[
+						{value:56, name:'刑事', selected:true},
+						{value:70, name:'治安'}
+					]
+				},
+				{
+					name:'2018年',
+					type:'pie',
+					radius: ['35%', '50%'],
+					label: {
+						normal: {
+							formatter: function(params){
+							    if(params.percent>5){
+							        console.log(params);
+							        var str1='{a|'+params.seriesName+'}{abg|}\n{hr|}\n  {b|'+params.data.name+'：}'+params.data.value+'  {per|'+params.percent+'%}  ';
+							        return str1;
+								}else{
+							        return "";
+								}
+							},
+							backgroundColor: '#eee',
+							borderColor: '#aaa',
+							borderWidth: 1,
+							borderRadius: 4,
+							// shadowBlur:3,
+							// shadowOffsetX: 2,
+							// shadowOffsetY: 2,
+							// shadowColor: '#999',
+							// padding: [0, 7],
+							rich: {
+								a: {
+									color: '#999',
+									lineHeight: 22,
+									align: 'center'
+								},
+								// abg: {
+								//     backgroundColor: '#333',
+								//     width: '100%',
+								//     align: 'right',
+								//     height: 22,
+								//     borderRadius: [4, 4, 0, 0]
+								// },
+								hr: {
+									borderColor: '#aaa',
+									width: '100%',
+									borderWidth: 0.5,
+									height: 0
+								},
+								b: {
+									fontSize: 16,
+									lineHeight: 33
+								},
+								per: {
+									color: '#eee',
+									backgroundColor: '#334455',
+									padding: [2, 4],
+									borderRadius: 2
+								}
+							}
+						}
+					},
+					data:[
+						{value:33, name:'盗窃'},
+						{value:10, name:'故意伤害'},
+						{value:2, name:'寻衅滋事'},
+						{value:1, name:'抢夺'},
+						{value:10, name:'其他'},
+						{value:25, name:'盗窃'},
+						{value:27, name:'殴打他人'},
+						{value:10, name:'寻衅滋事'},
+						{value:1, name:'诈骗'},
+						{value:1, name:'故意损坏公共财物'},
+						{value:3, name:'吸毒'},
+						{value:3, name:'其他'}
+					]
+				}
+			]
+		};
+	if (option2 && typeof option2 === "object") {
+		myChart2.setOption(option2, true);
+	}
+
+	var dom3 = document.getElementById("chart3");
+	var myChart3 = echarts.init(dom3);
+	option3 = null;
+	option3 = {
+			legend: {textStyle:{color:'white'}},
+			tooltip: {},
+			dataset: {
+				source: [
+					['product', '服刑人员', '吸毒人员'],
+					['2016年', 43, 85],
+					['2017年', 83, 73],
+					['2018年', 86, 65],
+					['2019年', 72, 53]
+				]
+			},
+			xAxis: {type: 'category',axisLabel:{textStyle:{color:'white'}}},
+			yAxis: {axisLabel:{textStyle:{color:'white'}}},
+			// Declare several bar series, each will be mapped
+			// to a column of dataset.source by default.
+			series: [
+				{type: 'bar'},
+				{type: 'bar'}
+			]
+		};
+
+	if (option3 && typeof option3 === "object") {
+		myChart3.setOption(option3, true);
+	}
+
+	function MapComp(){
+		var domId="map-cont";
+		var _center = [113.892436,23.416955];
+		var _map;
+		var _def_zoom=12;
+		var _curr_zoom = _def_zoom;
+		var _max_zoom=20;
+		var _min_zoom=8;
+		this.init = function(){
+			_map = new AMap.Map(domId, {
+				/*mapStyle: "amap://styles/dark"	,*/
+				zoom:_curr_zoom,//级别
+				center: _center,//中心点坐标
+				expandZoomRange:true,
+				zooms:[_min_zoom,_max_zoom],
+				layers:[
+					new AMap.TileLayer.Satellite(),
+					new AMap.TileLayer.RoadNet()
+				]
+			});
+			map=_map;
+		};
+	}
+
+	$(document).ready(function(){
+			$(".toggle_nav_btn").click(function(){
+				$(".toggle_nav_btn").find(".fa").toggleClass("fa-angle-double-down")
+				$(".toggle_nav_con").slideToggle()
+			})
+		})
+</script>
+</html>

@@ -1,0 +1,30 @@
+package com.bootdo.support.service;
+
+import com.bootdo.support.dto.KnowledgeDetailDO;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 基本属性表
+ * 
+ * @author chglee
+ * @email 1992lcg@163.com
+ * @date 2019-10-17 15:23:46
+ */
+public interface KnowledgeDetailService {
+	
+	KnowledgeDetailDO get(String id);
+	
+	List<KnowledgeDetailDO> list(Map<String, Object> map);
+	
+	int count(Map<String, Object> map);
+	
+	int save(KnowledgeDetailDO knowledgeDetail);
+	
+	int update(KnowledgeDetailDO knowledgeDetail);
+	
+	int remove(String id);
+	
+	int batchRemove(String[] ids);
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.device.dao.DeviceruleDao">
+
+	<select id="get" resultType="com.bootdo.device.domain.DeviceruleDO">
+		select `dr_id`,`de_id`,`dr_grade`,`dr_upperlimit`,`dr_lowerlimit`,`dr_typesof`,`dr_is_push`,`dr_description`,`dr_remark` from st_devicerule where dr_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.device.domain.DeviceruleDO">
+		select `dr_id`,`de_id`,`dr_grade`,`dr_upperlimit`,`dr_lowerlimit`,`dr_typesof`,`dr_is_push`,`dr_description`,`dr_remark` from st_devicerule
+        <where>  
+		  		  <if test="drId != null and drId != ''"> and dr_id = #{drId} </if>
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="drGrade != null and drGrade != ''"> and dr_grade = #{drGrade} </if>
+		  		  <if test="drUpperlimit != null and drUpperlimit != ''"> and dr_upperlimit = #{drUpperlimit} </if>
+		  		  <if test="drLowerlimit != null and drLowerlimit != ''"> and dr_lowerlimit = #{drLowerlimit} </if>
+		  		  <if test="drTypesof != null and drTypesof != ''"> and dr_typesof = #{drTypesof} </if>
+		  		  <if test="drIsPush != null and drIsPush != ''"> and dr_is_push = #{drIsPush} </if>
+		  		  <if test="drDescription != null and drDescription != ''"> and dr_description = #{drDescription} </if>
+		  		  <if test="drRemark != null and drRemark != ''"> and dr_remark = #{drRemark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by dr_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from st_devicerule
+		 <where>  
+		  		  <if test="drId != null and drId != ''"> and dr_id = #{drId} </if>
+		  		  <if test="deId != null and deId != ''"> and de_id = #{deId} </if>
+		  		  <if test="drGrade != null and drGrade != ''"> and dr_grade = #{drGrade} </if>
+		  		  <if test="drUpperlimit != null and drUpperlimit != ''"> and dr_upperlimit = #{drUpperlimit} </if>
+		  		  <if test="drLowerlimit != null and drLowerlimit != ''"> and dr_lowerlimit = #{drLowerlimit} </if>
+		  		  <if test="drTypesof != null and drTypesof != ''"> and dr_typesof = #{drTypesof} </if>
+		  		  <if test="drIsPush != null and drIsPush != ''"> and dr_is_push = #{drIsPush} </if>
+		  		  <if test="drDescription != null and drDescription != ''"> and dr_description = #{drDescription} </if>
+		  		  <if test="drRemark != null and drRemark != ''"> and dr_remark = #{drRemark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.device.domain.DeviceruleDO">
+		insert into st_devicerule
+		(
+			`dr_id`, 
+			`de_id`, 
+			`dr_grade`, 
+			`dr_upperlimit`, 
+			`dr_lowerlimit`, 
+			`dr_typesof`, 
+			`dr_is_push`, 
+			`dr_description`, 
+			`dr_remark`
+		)
+		values
+		(
+			#{drId}, 
+			#{deId}, 
+			#{drGrade}, 
+			#{drUpperlimit}, 
+			#{drLowerlimit}, 
+			#{drTypesof}, 
+			#{drIsPush}, 
+			#{drDescription}, 
+			#{drRemark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.device.domain.DeviceruleDO">
+		update st_devicerule 
+		<set>
+			<if test="deId != null">`de_id` = #{deId}, </if>
+			<if test="drGrade != null">`dr_grade` = #{drGrade}, </if>
+			<if test="drUpperlimit != null">`dr_upperlimit` = #{drUpperlimit}, </if>
+			<if test="drLowerlimit != null">`dr_lowerlimit` = #{drLowerlimit}, </if>
+			<if test="drTypesof != null">`dr_typesof` = #{drTypesof}, </if>
+			<if test="drIsPush != null">`dr_is_push` = #{drIsPush}, </if>
+			<if test="drDescription != null">`dr_description` = #{drDescription}, </if>
+			<if test="drRemark != null">`dr_remark` = #{drRemark}</if>
+		</set>
+		where dr_id = #{drId}
+	</update>
+	
+	<delete id="remove">
+		delete from st_devicerule where dr_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from st_devicerule where dr_id in 
+		<foreach item="drId" collection="array" open="(" separator="," close=")">
+			#{drId}
+		</foreach>
+	</delete>
+
+</mapper>

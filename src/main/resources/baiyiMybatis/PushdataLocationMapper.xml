@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.baiyi.dao.PushdataLocationDao">
+
+	<select id="get" resultType="com.bootdo.baiyi.domain.PushdataLocationDO">
+		select `id`,`imei`,`time_begin`,`is_reply`,`is_track`,`city`,`address`,`lon`,`lat`,`type`,from tbl_pushdata_location where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.baiyi.domain.PushdataLocationDO">
+		select `id`,`imei`,`time_begin`,`is_reply`,`is_track`,`city`,`address`,`lon`,`lat`,`type` from tbl_pushdata_location
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="imei != null and imei != ''"> and imei = #{imei} and
+				time_begin >=
+				(select max(date_format(time_begin,'%Y-%m-%d')) from tbl_pushdata_location t where imei =  #{imei})</if>
+			<if test="timeBegin != null and timeBegin != ''"> and time_begin = #{timeBegin} </if>
+			<if test="isReply != null and isReply != ''"> and is_reply = #{isReply} </if>
+			<if test="isTrack != null and isTrack != ''"> and is_track = #{isTrack} </if>
+			<if test="city != null and city != ''"> and city = #{city} </if>
+			<if test="address != null and address != ''"> and address = #{address} </if>
+			<if test="lon != null and lon != ''"> and lon = #{lon} </if>
+			<if test="lat != null and lat != ''"> and lat = #{lat} </if>
+			<if test="type != null and type != ''"> and type = #{type} </if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tbl_pushdata_location
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="imei != null and imei != ''"> and imei = #{imei} </if>
+		  		  <if test="timeBegin != null and timeBegin != ''"> and time_begin = #{timeBegin} </if>
+		  		  <if test="isReply != null and isReply != ''"> and is_reply = #{isReply} </if>
+		  		  <if test="isTrack != null and isTrack != ''"> and is_track = #{isTrack} </if>
+		  		  <if test="city != null and city != ''"> and city = #{city} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="lon != null and lon != ''"> and lon = #{lon} </if>
+		  		  <if test="lat != null and lat != ''"> and lat = #{lat} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.support.dao.KnowledgeDangertypeDao">
+
+	<select id="get" resultType="com.bootdo.support.dto.KnowledgeDangertypeDO">
+		select `id`,`dangerTypeName`,`sort_no`,`enabled`,`create_date`,`remarks` from safeguard_knowledge_dangertype where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.support.dto.KnowledgeDangertypeDO">
+		select `id`,`dangerTypeName`,`sort_no`,`enabled`,`create_date`,`remarks` from safeguard_knowledge_dangertype
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dangertypename != null and dangertypename != ''"> and dangerTypeName like concat('%',#{dangertypename},'%') </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks like concat('%',#{remarks},'%') </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by sort_no asc,id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from safeguard_knowledge_dangertype
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dangertypename != null and dangertypename != ''"> and dangerTypeName like concat('%',#{dangertypename},'%') </if>
+		  		  <if test="sortNo != null and sortNo != ''"> and sort_no = #{sortNo} </if>
+		  		  <if test="enabled != null and enabled != ''"> and enabled = #{enabled} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  	      <if test="remarks != null and remarks != ''"> and remarks like concat('%',#{remarks},'%') </if>
+		  		</where>
+	</select>
+ 	
+ 	<select id="getDangerType" resultType="java.util.HashMap">
+		SELECT d.id,d.dangerTypeName
+		FROM safeguard_knowledge_dangertype d
+		WHERE IFNULL(d.enabled,0) !=0 
+		ORDER BY d.sort_no ASC,d.create_date ASC
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.support.dto.KnowledgeDangertypeDO">
+		insert into safeguard_knowledge_dangertype
+		(
+			`id`, 
+			`dangerTypeName`, 
+			`sort_no`, 
+			`enabled`, 
+			`remarks`, 
+			`create_date`
+		)
+		values
+		(
+			#{id}, 
+			#{dangertypename}, 
+			#{sortNo}, 
+			#{enabled}, 
+			#{remarks}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.support.dto.KnowledgeDangertypeDO">
+		update safeguard_knowledge_dangertype 
+		<set>
+			<if test="dangertypename != null">`dangerTypeName` = #{dangertypename}, </if>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="changeStatus"  parameterType="java.lang.String">
+		update safeguard_knowledge_dangertype set `enabled` = #{enabled}
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from safeguard_knowledge_dangertype where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from safeguard_knowledge_dangertype where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.device.dao.StationDao">
+
+	<select id="get" resultType="com.bootdo.device.domain.StationDO">
+		select `st_id`,`st_name`,`st_code`,`st_image`,`st_address`,`st_log`,`st_lat`,`st_typesof`,`st_buildtime`,`st_department`,`st_responsible`,`st_mobilephone`,`st_description`,`st_remark` from db_station where st_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.device.domain.StationDO">
+		select `st_id`,`st_name`,`st_code`,`st_image`,`st_address`,`st_log`,`st_lat`,`st_typesof`,`st_buildtime`,`st_department`,`st_responsible`,`st_mobilephone`,`st_description`,`st_remark` from db_station
+        <where>  
+		  		  <if test="stId != null and stId != ''"> and st_id = #{stId} </if>
+		  		  <if test="stName != null and stName != ''"> and st_name = #{stName} </if>
+		  		  <if test="stCode != null and stCode != ''"> and st_code = #{stCode} </if>
+		  		  <if test="stImage != null and stImage != ''"> and st_image = #{stImage} </if>
+		  		  <if test="stAddress != null and stAddress != ''"> and st_address = #{stAddress} </if>
+		  		  <if test="stLog != null and stLog != ''"> and st_log = #{stLog} </if>
+		  		  <if test="stLat != null and stLat != ''"> and st_lat = #{stLat} </if>
+		  		  <if test="stTypesof != null and stTypesof != ''"> and st_typesof = #{stTypesof} </if>
+		  		  <if test="stBuildtime != null and stBuildtime != ''"> and st_buildtime = #{stBuildtime} </if>
+		  		  <if test="stDepartment != null and stDepartment != ''"> and st_department = #{stDepartment} </if>
+		  		  <if test="stResponsible != null and stResponsible != ''"> and st_responsible = #{stResponsible} </if>
+		  		  <if test="stMobilephone != null and stMobilephone != ''"> and st_mobilephone = #{stMobilephone} </if>
+		  		  <if test="stDescription != null and stDescription != ''"> and st_description = #{stDescription} </if>
+		  		  <if test="stRemark != null and stRemark != ''"> and st_remark = #{stRemark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by st_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from db_station
+		 <where>  
+		  		  <if test="stId != null and stId != ''"> and st_id = #{stId} </if>
+		  		  <if test="stName != null and stName != ''"> and st_name = #{stName} </if>
+		  		  <if test="stCode != null and stCode != ''"> and st_code = #{stCode} </if>
+		  		  <if test="stImage != null and stImage != ''"> and st_image = #{stImage} </if>
+		  		  <if test="stAddress != null and stAddress != ''"> and st_address = #{stAddress} </if>
+		  		  <if test="stLog != null and stLog != ''"> and st_log = #{stLog} </if>
+		  		  <if test="stLat != null and stLat != ''"> and st_lat = #{stLat} </if>
+		  		  <if test="stTypesof != null and stTypesof != ''"> and st_typesof = #{stTypesof} </if>
+		  		  <if test="stBuildtime != null and stBuildtime != ''"> and st_buildtime = #{stBuildtime} </if>
+		  		  <if test="stDepartment != null and stDepartment != ''"> and st_department = #{stDepartment} </if>
+		  		  <if test="stResponsible != null and stResponsible != ''"> and st_responsible = #{stResponsible} </if>
+		  		  <if test="stMobilephone != null and stMobilephone != ''"> and st_mobilephone = #{stMobilephone} </if>
+		  		  <if test="stDescription != null and stDescription != ''"> and st_description = #{stDescription} </if>
+		  		  <if test="stRemark != null and stRemark != ''"> and st_remark = #{stRemark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.device.domain.StationDO">
+		insert into db_station
+		(
+			`st_id`, 
+			`st_name`, 
+			`st_code`, 
+			`st_image`, 
+			`st_address`, 
+			`st_log`, 
+			`st_lat`, 
+			`st_typesof`, 
+			`st_buildtime`, 
+			`st_department`, 
+			`st_responsible`, 
+			`st_mobilephone`, 
+			`st_description`, 
+			`st_remark`
+		)
+		values
+		(
+			#{stId}, 
+			#{stName}, 
+			#{stCode}, 
+			#{stImage}, 
+			#{stAddress}, 
+			#{stLog}, 
+			#{stLat}, 
+			#{stTypesof}, 
+			#{stBuildtime}, 
+			#{stDepartment}, 
+			#{stResponsible}, 
+			#{stMobilephone}, 
+			#{stDescription}, 
+			#{stRemark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.device.domain.StationDO">
+		update db_station 
+		<set>
+			<if test="stName != null">`st_name` = #{stName}, </if>
+			<if test="stCode != null">`st_code` = #{stCode}, </if>
+			<if test="stImage != null">`st_image` = #{stImage}, </if>
+			<if test="stAddress != null">`st_address` = #{stAddress}, </if>
+			<if test="stLog != null">`st_log` = #{stLog}, </if>
+			<if test="stLat != null">`st_lat` = #{stLat}, </if>
+			<if test="stTypesof != null">`st_typesof` = #{stTypesof}, </if>
+			<if test="stBuildtime != null">`st_buildtime` = #{stBuildtime}, </if>
+			<if test="stDepartment != null">`st_department` = #{stDepartment}, </if>
+			<if test="stResponsible != null">`st_responsible` = #{stResponsible}, </if>
+			<if test="stMobilephone != null">`st_mobilephone` = #{stMobilephone}, </if>
+			<if test="stDescription != null">`st_description` = #{stDescription}, </if>
+			<if test="stRemark != null">`st_remark` = #{stRemark}</if>
+		</set>
+		where st_id = #{stId}
+	</update>
+	
+	<delete id="remove">
+		delete from db_station where st_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from db_station where st_id in 
+		<foreach item="stId" collection="array" open="(" separator="," close=")">
+			#{stId}
+		</foreach>
+	</delete>
+
+</mapper>

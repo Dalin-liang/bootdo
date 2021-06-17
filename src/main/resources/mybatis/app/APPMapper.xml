@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.app.dao.APPMapper">
+    <insert id="personTrajectory" parameterType="java.util.HashMap">
+	insert into t_preson_way_point (ID,USER_ID,LATITUDE,LONGITUDE,CREATE_TIME)
+	 values(#{id},${userid},${latitude},${longitude},${create_time})
+	 </insert>
+
+
+
+	<insert id="savesign" parameterType="java.util.HashMap">
+	insert into  t_app_sign  (id,userid,signtime,cname,lat,lon,address)
+	 values(#{id},#{userid},#{signtime},#{username},#{latitude},#{longitude},#{address})
+	</insert>
+  <select id="getsignByDay"  resultType="Map" parameterType="Map">
+select * from t_app_sign where 1=1
+      <if test="userid != null and userid != ''">
+ and userid=#{userid}
+      </if>
+      <if test="startTime != null and endTime != null">
+ and signtime between    #{startTime}  and #{endTime}
+      </if>
+ order by signtime desc
+      limit #{currIndex} , #{pageSize}
+	</select>
+    <select id="getsignByDaycount"  resultType="java.lang.Integer" parameterType="Map">
+        select count(1) from t_app_sign where 1=1
+        <if test="userid != null and userid != ''">
+            and userid=#{userid}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and signtime between    #{startTime}  and #{endTime}
+        </if>
+    </select>
+    <insert id="dailyreport" parameterType="java.util.HashMap">
+        INSERT INTO t_app_sign_report (
+          id,
+          repname,
+          eventaddr,
+          lat,
+          lon,
+          eventdesc,
+          repdate,
+          create_by,
+          create_date,
+          event_type
+        )
+        VALUES
+          (
+            #{id},
+            #{repname},
+            #{eventaddr},
+            #{lat},
+            #{lon},
+            #{eventdesc},
+            #{repdate},
+            #{create_by},
+            #{create_date},
+            #{event_type}
+          )
+    </insert>
+
+    <update id="update" parameterType="com.bootdo.app.domain.AppSignReportDO">
+        update t_app_sign_report
+        <set>
+            <if test="repname != null">`repname` = #{repname}, </if>
+            <if test="repphone != null">`repphone` = #{repphone}, </if>
+            <if test="sex != null">`sex` = #{sex}, </if>
+            <if test="eventaddr != null">`eventaddr` = #{eventaddr}, </if>
+            <if test="lat != null">`lat` = #{lat}, </if>
+            <if test="lon != null">`lon` = #{lon}, </if>
+            <if test="eventdesc != null">`eventdesc` = #{eventdesc}, </if>
+            <if test="repdate != null">`repdate` = #{repdate}, </if>
+            <if test="sourceType != null">`source_type` = #{sourceType}, </if>
+            <if test="createBy != null">`create_by` = #{createBy}, </if>
+            <if test="createDate != null">`create_date` = #{createDate}, </if>
+            <if test="updateBy != null">`update_by` = #{updateBy}, </if>
+            <if test="updateDate != null">`update_date` = #{updateDate}, </if>
+            <if test="remarks != null">`remarks` = #{remarks}, </if>
+            <if test="eventType != null">`event_type` = #{eventType}, </if>
+            <if test="watchReceiveId != null">`watch_receive_id` = #{watchReceiveId}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getdailyreportByDay"  resultType="Map" parameterType="Map">
+        select t.*,(select source_label from watch_source where id=t.event_type) eventname from t_app_sign_report t where 1=1
+        <if test="userid != null and userid != ''">
+            and create_by=#{userid}
+        </if>
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+        and repdate between    #{startTime}  and #{endTime}
+        </if>
+        order by repdate desc
+        limit #{currIndex} , #{pageSize}
+    </select>
+    <select id="getdailyreportByDaycount"  resultType="java.lang.Integer" parameterType="Map">
+        select count(1) from t_app_sign_report where 1=1
+        <if test="userid != null and userid != ''">
+            and create_by=#{userid}
+        </if>
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+        and repdate between    #{startTime}  and #{endTime}
+        </if>
+    </select>
+    <select id="queryFilelist"  resultType="Map" parameterType="Map">
+        select id,file_type from common_file where 1=1
+        <if test="userid != null and userid != ''">
+            and create_by=#{userid}
+        </if>
+        and relation_id=#{relation_id}
+
+        order by create_date desc
+    </select>
+
+
+    <select id="querylocaleData"  resultType="Map" parameterType="Map">
+        select * from t_data_place_info where 1=1
+        <if test="userid != null and userid != ''">
+            and create_by=#{userid}
+        </if>
+        <if test="type != null and type != ''">
+            and type=#{type}
+        </if>
+        <if test="name != null and name != ''">
+            and name like #{name}
+        </if>
+        <if test="bh != null and bh != ''">
+            and bh like #{bh}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+        and createtime between    #{startTime}  and #{endTime}
+        </if>
+        order by createtime desc
+
+        limit #{currIndex} , #{pageSize}
+    </select>
+    <select id="querylocaleDatacount"  resultType="java.lang.Integer" parameterType="Map">
+        select count(1) from t_data_place_info where 1=1
+        <if test="userid != null and userid != ''">
+            and create_by=#{userid}
+        </if>
+        <if test="type != null and type != ''">
+            and type=#{type}
+        </if>
+        <if test="name != null and name != ''">
+            and name like #{name}
+        </if>
+        <if test="bh != null and bh != ''">
+            and bh like #{bh}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and createtime between    #{startTime}  and #{endTime}
+        </if>
+    </select>
+    <insert id="placeinfoadd" parameterType="java.util.HashMap">
+INSERT INTO t_data_place_info (
+  id,
+  bh,
+  name,
+  address,
+  fzr,
+  phone,
+  lat,
+  lon,
+  bz,
+  type,
+  mainpollutants,
+  createuserid,
+  createtime,
+  createusername
+)
+VALUES
+  (
+    #{id},
+    #{bh},
+    #{name},
+    #{address},
+    #{fzr},
+    #{phone},
+    #{lat},
+    #{lon},
+    #{bz},
+    #{type},
+    #{mainpollutants},
+    #{createuserid},
+    #{createtime},
+    #{createusername}
+  )
+    </insert>
+    <update id="placeinfoedit" parameterType="java.util.HashMap">
+update t_data_place_info set
+  bh=#{bh},
+  name=#{name},
+  address=#{address},
+  fzr=#{fzr},
+  phone=#{phone},
+  lat=#{lat},
+  lon=#{lon},
+  bz=#{bz},
+  type=#{type},
+  mainpollutants=#{mainpollutants},
+  createuserid=#{createuserid},
+  createtime=#{createtime},
+  createusername=#{createusername}
+where id=#{id}
+    </update>
+
+    <select id="queryappmsg"  resultType="Map" parameterType="Map">
+        select * from t_app_msg where 1=1
+        <if test="fsuserid != null and fsuserid != ''">
+            and fsuserid=#{fsuserid}
+        </if>
+        <if test="jsuserid != null and jsuserid != ''">
+            and jsuserid=#{jsuserid}
+        </if>
+        <if test="type != null and type != ''">
+            and type =#{type}
+        </if>
+        <if test="messages != null and messages != ''">
+            and messages like #{messages}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and fstime between    #{startTime}  and #{endTime}
+        </if>
+        order by fstime desc
+        limit #{currIndex} , #{pageSize}
+
+    </select>
+    <select id="queryappmsgcount"  resultType="java.lang.Integer" parameterType="Map">
+        select count(1) from t_app_msg where 1=1
+        <if test="fsuserid != null and fsuserid != ''">
+            and fsuserid=#{fsuserid}
+        </if>
+        <if test="jsuserid != null and jsuserid != ''">
+            and jsuserid=#{jsuserid}
+        </if>
+        <if test="type != null and type != ''">
+            and type =#{type}
+        </if>
+        <if test="messages != null and messages != ''">
+            and messages like #{messages}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and fstime between    #{startTime}  and #{endTime}
+        </if>
+    </select>
+    <insert id="msgadd" parameterType="java.util.HashMap">
+INSERT INTO t_app_msg (
+  id,
+  fsuserid,
+  fsusername,
+  jsuserid,
+  jsusername,
+  messages,
+  fstime,
+  type
+)
+VALUES
+  (
+    #{id},
+    #{fsuserid},
+    #{fsusername},
+    #{jsuserid},
+    #{jsusername},
+    #{messages},
+    #{fstime},
+    #{type}
+  )
+    </insert>
+
+    <update id="msgrd" parameterType="java.util.HashMap">
+update t_app_msg set
+  type="2",
+  rdtime=now()
+where id=#{id}
+    </update>
+
+    <select id="queryphonebook"  resultType="Map" parameterType="Map">
+
+        select * from(
+        /*查询部门和对应的部门人员*/
+        SELECT
+        GROUP_CONCAT(dname) dname,
+        uname,
+        uid,
+        mobile,
+        '1' TYPE
+        FROM
+        (SELECT
+        sd.name dname,
+        sdp.id AS uid,
+        sdp.name AS uname,
+        sdp.mobile AS mobile
+        FROM
+        safeguard_dept sd
+        LEFT JOIN safeguard_deptperson sdp
+        ON sd.id = sdp.dept_id) t
+        WHERE uid IS NOT NULL
+        GROUP BY uname,
+        uid,
+        mobile
+        UNION
+        ALL
+        /*专家*/
+        SELECT
+        GROUP_CONCAT(dname) dname,
+        uname,
+        (SELECT id FROM safeguard_deptperson WHERE t.uname=NAME AND t.mobile=mobile ) uid,
+        mobile,
+        '3' TYPE
+        FROM
+        (SELECT
+        pet.name dname,
+        sei.name AS uname,
+        sei.mobile AS mobile
+        FROM
+        plan_earlywarn_type pet
+        LEFT JOIN safeguard_expert_plantype sep
+        ON sep.earlywarn_type_id = pet.id
+        LEFT JOIN safeguard_expert_info sei
+        ON sei.id = sep.expert_info_id  WHERE sei.id IS NOT NULL) t
+        WHERE 1=1
+        GROUP BY uname,mobile) ta where 1=1
+        <if test="type != null and type != ''">
+         and type=#{type}
+        </if>
+
+        <if test="name != null and name != ''">
+            and (dname like #{name} or uname like #{name})
+        </if>
+
+        limit #{currIndex} , #{pageSize}
+    </select>
+
+    <select id="queryphonebookcount"  resultType="java.lang.Integer" parameterType="Map">
+
+        select count(1) from(
+        /*查询部门和对应的部门人员*/
+        SELECT
+        GROUP_CONCAT(dname) dname,
+        uname,
+        uid,
+        mobile,
+        '1' TYPE
+        FROM
+        (SELECT
+        sd.name dname,
+        sdp.id AS uid,
+        sdp.name AS uname,
+        sdp.mobile AS mobile
+        FROM
+        safeguard_dept sd
+        LEFT JOIN safeguard_deptperson sdp
+        ON sd.id = sdp.dept_id) t
+        WHERE uid IS NOT NULL
+        GROUP BY uname,
+        uid,
+        mobile
+        UNION
+        ALL
+        /*专家*/
+        SELECT
+        GROUP_CONCAT(dname) dname,
+        uname,
+        (SELECT id FROM safeguard_deptperson WHERE t.uname=NAME AND t.mobile=mobile ) uid,
+        mobile,
+        '3' TYPE
+        FROM
+        (SELECT
+        pet.name dname,
+        sei.name AS uname,
+        sei.mobile AS mobile
+        FROM
+        plan_earlywarn_type pet
+        LEFT JOIN safeguard_expert_plantype sep
+        ON sep.earlywarn_type_id = pet.id
+        LEFT JOIN safeguard_expert_info sei
+        ON sei.id = sep.expert_info_id  WHERE sei.id IS NOT NULL) t
+        WHERE 1=1
+        GROUP BY uname,mobile) ta where 1=1
+        <if test="type != null and type != ''">
+            and type=#{type}
+        </if>
+
+        <if test="name != null and name != ''">
+            and (dname like #{name} or uname like #{name})
+        </if>
+    </select>
+
+    <select id="querydisct"  resultType="Map" parameterType="Map">
+<!--select name,value from sys_dict where type=#{type} and del_flag=#{del_flag}-->
+select ws.source_label as name,ws.id as value from watch_source ws where ws.source_type='1' and ws.enabled=1
+    </select>
+</mapper>
